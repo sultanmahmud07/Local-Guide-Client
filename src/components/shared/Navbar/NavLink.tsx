@@ -31,8 +31,8 @@ export default function NavLink({href, className, ...rest}: ComponentProps<typeo
       className={clsx(
         ` ${className}`,
         isActive
-          ? `font-semibold ${isSticky ? "" : "text-primary"} px-2 border-b border-primary`
-          : `px-2 border-b border-transparent ${ isSticky ? "text-[#080808]" : "text-[#080808]" }`
+          ? `font-semibold ${isSticky ? "text-secondary" : "text-secondary"} px-2 border-b border-secondary`
+          : `px-2 border-b border-transparent ${ isSticky ? "text-[#080808]" : "text-white" }`
       )}
       href={href}
       {...rest}

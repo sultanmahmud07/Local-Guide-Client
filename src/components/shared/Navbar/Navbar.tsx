@@ -86,7 +86,7 @@ const handleLogout = async () => {
   return (
     <header>
       <nav className={`z-40  fixed top-[-5px] left-0 right-0 w-full py-2 lg:py-1 ${isSticky ? "border-b bg-background" : "bg-[#00000000]"}`}>
-        <div className={`nav_top text-white bg-primary py-2 ${isSticky ? " hidden" : "hidden md:block"}`}>
+        <div className={`nav_top text-white bg-secondary py-2 ${isSticky ? " hidden" : "hidden md:block"}`}>
           <div className="main-container flex items-center justify-between">
             <div className="email_and_number flex items-center gap-8">
               <p className="flex items-center gap-2 text-white">
