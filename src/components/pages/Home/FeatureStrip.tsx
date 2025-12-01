@@ -65,7 +65,7 @@ export default function FeatureStrip() {
             <div key={i} className="flex items-start gap-5">
               {/* Icon circle */}
               <div
-                className="flex-shrink-0 text-primary w-20 h-20 rounded-md flex items-center justify-center"
+                className="shrink-0 text-primary w-20 h-20 rounded-md flex items-center justify-center"
                 style={{ backgroundColor: "transparent" }}
                 aria-hidden
               >
