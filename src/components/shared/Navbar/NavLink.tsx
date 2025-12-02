@@ -32,7 +32,7 @@ export default function NavLink({href, className, ...rest}: ComponentProps<typeo
         ` ${className}`,
         isActive
           ? `font-semibold ${isSticky ? "text-secondary" : "text-secondary"} px-2 border-b border-secondary`
-          : `px-2 border-b border-transparent ${ isSticky ? "text-[#080808]" : "text-white" }`
+          : `px-2 border-b border-transparent ${ isSticky ? "text-[#080808]" : "" }`
       )}
       href={href}
       {...rest}

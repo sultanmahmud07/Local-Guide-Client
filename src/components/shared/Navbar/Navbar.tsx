@@ -85,13 +85,13 @@ const handleLogout = async () => {
 
   return (
     <header>
-      <nav className={`z-40  fixed top-[-5px] left-0 right-0 w-full py-2 lg:py-1 ${isSticky ? "border-b bg-background" : "backdrop-blur-sm "}`}>
+      <nav className={`z-40  fixed top-[-5px] left-0 right-0 w-full py-2 lg:py-1 ${isSticky ? "border-b bg-background" : " bg-white"}`}>
         <div className={`main-container flex justify-between items-center`}>
           {/* Logo side here >>>>>>>>>>>>>>>> */}
           <div className="nav_logo_side">
             <Link className="flex flex-col items-center" href="/">
               <Image
-                src="/logo/logo.png"
+                src="/logo/site-logo.png"
                 alt="logo"
                 width={200}
                 height={100}
@@ -142,16 +142,15 @@ const handleLogout = async () => {
           {/* Right side here >>>>>>>>>>>>>>>> */}
           <div className="nav_right_side hidden lg:block ">
             <div className="flex justify-end items-center gap-2">
-              {isAdmin ? (
+              {!isAdmin ? (
                 <Button
                   onClick={handleLogout}
-                  variant="outline"
-                  className="text-sm"
+                  className="text-sm rounded-none px-7"
                 >
                   Logout
                 </Button>
               ) :
-                <Button asChild className="text-sm  px-7">
+                <Button asChild className="text-sm rounded-none px-7">
                   <Link href="/login">Login</Link>
                 </Button>
               }
