@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaRegHeart, FaStar, FaRegClock, FaUserFriends, FaCar } from "react-icons/fa";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
 export type TourType = {
   id: number;

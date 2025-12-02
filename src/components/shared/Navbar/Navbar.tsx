@@ -18,7 +18,7 @@ const Navbar = () => {
   const [navToggle, setNavToggle] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-    const router = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     const cookieValue = getCookie("accessToken");
@@ -29,16 +29,16 @@ const Navbar = () => {
     }
   }, []);
 
-const newToken = Cookies.get("accessTokenNew");
+  const newToken = Cookies.get("accessTokenNew");
 
-// You can create a JSON object:
-const cookieData = {
-  accessToken: newToken
-};
+  // You can create a JSON object:
+  const cookieData = {
+    accessToken: newToken
+  };
 
-const jsonString = JSON.stringify(cookieData);
+  const jsonString = JSON.stringify(cookieData);
 
-console.log(jsonString);
+  console.log(jsonString);
 
   const isAdmin = Boolean(token);
   useEffect(() => {
@@ -59,33 +59,30 @@ console.log(jsonString);
     };
   }, []);
 
-// Check token on mount & whenever localStorage/cookie changes
-useEffect(() => {
-  const cookieValue = getCookie("accessToken");
-  const localValue = localStorage.getItem("token");
-  const finalToken = localValue || (cookieValue ? cookieValue.toString() : null);
-  setToken(finalToken);
-}, []);
+  // Check token on mount & whenever localStorage/cookie changes
+  useEffect(() => {
+    const cookieValue = getCookie("accessToken");
+    const localValue = localStorage.getItem("token");
+    const finalToken = localValue || (cookieValue ? cookieValue.toString() : null);
+    setToken(finalToken);
+  }, []);
 
-// Logout handler
-const handleLogout = async () => {
-  await logout();
-  setToken(null);       // ← this ensures Navbar re-renders immediately
-  router.push("/login"); // navigate to login page
-};
+  // Logout handler
+  const handleLogout = async () => {
+    await logout();
+    setToken(null);       // ← this ensures Navbar re-renders immediately
+    router.push("/login"); // navigate to login page
+  };
 
 
   const navigationLinks = [
-    { href: "/", label: "Home", role: "PUBLIC" },
-    { href: "/about", label: "About", role: "PUBLIC" },
-    { href: "/projects", label: "Projects", role: "PUBLIC" },
-    { href: "/blogs", label: "Blogs", role: "PUBLIC" },
-    { href: "/contact", label: "Contact Me", role: "PUBLIC" }
+    { href: "/search", label: "Explore Tours", role: "PUBLIC" },
+    { href: "/guid-register", label: "Become a Guide", role: "PUBLIC" },
   ];
 
   return (
     <header>
-      <nav className={`z-40  fixed top-[-5px] left-0 right-0 w-full py-2 lg:py-1 ${isSticky ? "border-b bg-background" : " bg-white"}`}>
+      <nav className={`z-40  fixed top-[-5px] left-0 right-0 w-full shadow py-2 lg:py-1 ${isSticky ? "border-b bg-background" : " bg-white"}`}>
         <div className={`main-container flex justify-between items-center`}>
           {/* Logo side here >>>>>>>>>>>>>>>> */}
           <div className="nav_logo_side">
@@ -100,48 +97,22 @@ const handleLogout = async () => {
               {/* <span className="text- text-xs uppercase font-bold">Express BD</span> */}
             </Link>
           </div>
-          {/* NAv manu side here >>>>>>>>>>>>>>>> */}
-          <div className={`absolute ${navToggle ? "left-0" : "left-[-120%] w-1/2 "
-            } top-[5.2rem] flex w-full shadow md:shadow-none flex-col py-2 transition-all duration-300  lg:static lg:w-[unset] lg:flex-row  bg-background lg:bg-transparent lg:pb-0 lg:pt-0 `}
-          >
-            <ul className="capitalize flex pb-20 md:pb-0 pl-10 md:pl-0 flex-col lg:flex-row items-start md:items-center justify-center gap-5 md:gap-3 px-1">
-              {
-                navigationLinks.map((link, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      {
-                        link.role === "PUBLIC" && (
-                          <li className=" md:mx-1 py-2 lg:py-6 relative">
-                            <NavLink
-                              onClick={() => setNavToggle(false)}
-                              href={link.href}
-                              className={`flex font-semibold transition uppercase text-sm items-center gap-2 `}
-                            >
-                              {link.label}
-                            </NavLink>
-                          </li>
-                        )
-                      }
-                    </React.Fragment>
-                  )
-                })}
-              {
-                isAdmin &&
-                <li className=" md:mx-1 py-2 lg:py-6 relative">
-                  <NavLink
-                    onClick={() => setNavToggle(false)}
-                    href="/dashboard"
-                    className={`flex font-semibold transition uppercase text-sm items-center gap-2 `}
-                  >
-                    Dashboard
-                  </NavLink>
-                </li>
-              }
-            </ul>
-          </div>
           {/* Right side here >>>>>>>>>>>>>>>> */}
           <div className="nav_right_side hidden lg:block ">
             <div className="flex justify-end items-center gap-2">
+              {
+                navigationLinks.map((link, index) => {
+                  return (
+                    <NavLink
+                      key={index}
+                      onClick={() => setNavToggle(false)}
+                      href={link.href}
+                      className={`flex font-semibold transition text-sm items-center gap-2 `}
+                    >
+                      {link.label}
+                    </NavLink>
+                  )
+                })}
               {!isAdmin ? (
                 <Button
                   onClick={handleLogout}
@@ -149,10 +120,18 @@ const handleLogout = async () => {
                 >
                   Logout
                 </Button>
+
+
               ) :
-                <Button asChild className="text-sm rounded-none px-7">
-                  <Link href="/login">Login</Link>
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button asChild className="text-sm rounded-none px-7">
+                    <Link href="/login">Login</Link>
+                  </Button>
+                  <Button asChild className="text-sm bg-secondary hover:bg-accent rounded-none px-7">
+                    <Link href="/register">Register</Link>
+                  </Button>
+
+                </div>
               }
             </div>
           </div>

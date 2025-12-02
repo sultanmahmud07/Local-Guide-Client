@@ -1,5 +1,5 @@
 // pages/popular-tours.tsx  (or whichever page you use)
-import TourCard, { TourType } from "@/components/module/TourCard";
+import TourCard, { TourType } from "@/components/module/Tour/TourCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
