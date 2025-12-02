@@ -1,4 +1,6 @@
 import LoginForm from "@/components/auth/login-form";
+import TopGap from "@/components/shared/TopGap";
+import Image from "next/image";
 
 
 const LoginPage = async ({
@@ -8,17 +10,30 @@ const LoginPage = async ({
 }) => {
   const params = (await searchParams) || {};
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-6 rounded-lg border p-8 shadow-lg">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Welcome Back</h1>
-          <p className="text-gray-500">
-            Enter your credentials to access your account
-          </p>
+   <> 
+    <div className="min-h-screen flex items-center justify-center pt-20 py-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 bg-primary/10 w-full main-container rounded md:rounded-lg shadow-lg overflow-hidden ">
+        <div className="left-image w-full">
+          <Image
+            src="/auth/login.jpg"
+            alt="Description of image"
+            width={400}
+            height={400}
+            className="w-full h-full object-cover"
+          />
         </div>
-        <LoginForm redirect={params.redirect} />
+        <div className="w-full p-5 md:px-20">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-bold">Traveler login to book</h1>
+            <p className="text-gray-500">
+              Enter your credentials to access your account
+            </p>
+          </div>
+          <LoginForm redirect={params.redirect} />
+        </div>
       </div>
     </div>
+   </>
   );
 };
 
