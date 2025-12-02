@@ -85,41 +85,7 @@ const handleLogout = async () => {
 
   return (
     <header>
-      <nav className={`z-40  fixed top-[-5px] left-0 right-0 w-full py-2 lg:py-1 ${isSticky ? "border-b bg-background" : "bg-[#00000000]"}`}>
-        <div className={`nav_top text-white bg-secondary py-2 ${isSticky ? " hidden" : "hidden md:block"}`}>
-          <div className="main-container flex items-center justify-between">
-            <div className="email_and_number flex items-center gap-8">
-              <p className="flex items-center gap-2 text-white">
-                <span><FaPhone /></span>
-                <span>+8801327357894</span>
-              </p>
-              <p className="flex items-center gap-2 text-white">
-                <span className="text-xl"><MdOutlineEmail /></span>
-                <span>info@gmail.com</span>
-              </p>
-            </div>
-            <div className="social_media_link">
-              <div className="flex items-center gap-3">
-                <span>Follow Us:</span>
-                <a href="https://www.facebook.com/joltorongo.awt" className="flex items-center justify-center transition text-white text-base">
-                  <FaFacebookF />
-                </a>
-                <a href="https://www.instagram.com/jol.torongo.coxbazar" className="flex items-center justify-center transition text-white text-base">
-                  <IoLogoInstagram />
-                </a>
-                <a href="https://www.linkedin.com/company/joltorongo" className="flex items-center justify-center transition text-white text-base">
-                  <FaLinkedinIn />
-                </a>
-                <a
-                  href="https://www.youtube.com/@JoltorongoAWT"
-                  className="flex items-center justify-center transition text-white text-base"
-                >
-                  <FaYoutube />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+      <nav className={`z-40  fixed top-[-5px] left-0 right-0 w-full py-2 lg:py-1 ${isSticky ? "border-b bg-background" : "backdrop-blur-sm "}`}>
         <div className={`main-container flex justify-between items-center`}>
           {/* Logo side here >>>>>>>>>>>>>>>> */}
           <div className="nav_logo_side">
@@ -185,7 +151,7 @@ const handleLogout = async () => {
                   Logout
                 </Button>
               ) :
-                <Button asChild className="text-sm rounded-full px-7">
+                <Button asChild className="text-sm  px-7">
                   <Link href="/login">Login</Link>
                 </Button>
               }

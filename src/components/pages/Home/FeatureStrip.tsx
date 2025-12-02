@@ -58,7 +58,7 @@ const features: Feature[] = [
 
 export default function FeatureStrip() {
   return (
-    <section className="w-full bg-[#f7f7f7]">
+    <section className="w-full bg-[#e6e6e6]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-8 md:gap-x-10 py-8 md:py-10 items-start">
           {features.map((f, i) => (

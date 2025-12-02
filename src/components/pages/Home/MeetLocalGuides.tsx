@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 type Guide = {
   id: number;
@@ -110,16 +112,19 @@ export default function MeetLocalGuides() {
     <section className="w-full bg-[#f7f7f7] py-12 md:py-16 lg:py-20">
       <div className="max-w-6xl mx-auto px-4">
         {/* Small top icon */}
-        <div className="flex justify-center mb-3">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-500 text-lg">
-            👤
-          </span>
+        <div className="flex items-center justify-between my-3 pb-2 md:pb-5">
+           <h2 className="font-oswald relative font-bold text-3xl md:text-4xl lg:text-5xl">
+            Meet your{" "}
+            <span className="text-primary">Local Guides</span>
+          </h2>
+          <Link href="/guides" className="">
+            <Button className="bg-secondary rounded-none shadow cursor-pointer">
+              Explore All Guides
+            </Button>
+          </Link>
         </div>
-
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-center text-gray-900 mb-10">
-          Meet your local guides
-        </h2>
-
+   {/* Title */}
+         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {guides.map((guide) => (
             <article
@@ -179,14 +184,19 @@ export default function MeetLocalGuides() {
               </div>
 
               {/* Message button */}
-              <div className="px-5 pb-4">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-center gap-2 rounded-2xl border border-gray-300 py-2.5 text-sm md:text-base font-medium text-gray-800 bg-white hover:bg-gray-50 transition-colors"
+              <div className="px-5 pb-4 flex items-center justify-between gap-2">
+                <Link href={`/guid/43`} >
+                <Button className="bg-primary hover:bg-accent text-sm rounded cursor-pointer">
+                  View Profile
+                </Button>
+                </Link>
+                 <Link href={`/guid/message/${guide.id}`} >
+                <Button
+                  className=" rounded text-sm bg-secondary hover:bg-accent cursor-pointer"
                 >
-                  <span className="text-lg">💬</span>
                   <span>Message</span>
-                </button>
+                </Button>
+                 </Link>
               </div>
             </article>
           ))}
