@@ -1,5 +1,6 @@
-import DashboardNavbar from "@/components/modules/Dashboard/DashboardNavbar";
-import DashboardSidebar from "@/components/modules/Dashboard/DashboardSidebar";
+
+import DashboardNavbar from "@/components/module/Dashboard/DashboardNavbar";
+import DashboardSidebar from "@/components/module/Dashboard/DashboardSidebar";
 import React from "react";
 
 export const dynamic = "force-dynamic";
