@@ -1,7 +1,5 @@
 export type UserRole = "ADMIN" | "SUPER_ADMIN" | "GUIDE" | "TOURIST";
 
-// exact : ["/my-profile", "settings"]
-//   patterns: [/^\/dashboard/, /^\/patient/], // Routes starting with /dashboard/* /patient/*
 export type RouteConfig = {
     exact: string[],
     patterns: RegExp[],
@@ -68,8 +66,7 @@ export const getDefaultDashboardRoute = (role: UserRole): string => {
         return "/guide/dashboard";
     }
     if (role === "TOURIST") {
-        // return "/dashboard";
-        return "/";
+        return "/dashboard";
     }
     return "/";
 }

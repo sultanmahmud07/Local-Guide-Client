@@ -82,15 +82,7 @@ const Navbar = (props: Props) => {
                   )
                 })}
               {accessToken ? (
-                // <Button
-                //   onClick={handleLogout}
-                //   className="text-sm rounded-none px-7"
-                // >
-                //   Logout
-                // </Button>
                  <UserProfileMenu userInfo={userInfo} />
-
-
               ) :
                 <div className="flex items-center gap-2">
                   <Button asChild className="text-sm rounded-none px-7">
@@ -108,13 +100,7 @@ const Navbar = (props: Props) => {
           <div className="lg:hidden">
             <div className="flex justify-end items-center gap-2">
               {accessToken && (
-                <Button
-                  onClick={handleLogout}
-                  variant="outline"
-                  className="text-xs size-8 px-7"
-                >
-                  Logout
-                </Button>
+               <UserProfileMenu userInfo={userInfo} />
               )}
               {!accessToken && (
                 <Button asChild className="text-xs size-8 px-7">

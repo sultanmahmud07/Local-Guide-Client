@@ -106,17 +106,17 @@ const UserProfileMenu: React.FC<Props> = ({ userInfo = null, onSignOut }) => {
 
                         {/* menu items */}
                         <div className="py-1">
-                              <Link href="/tours" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                              <Link href="/explore-tours" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
                                     <FiMap className="w-4 h-4" />
                                     Explore Tours
                               </Link>
 
-                              <Link href="/bookings" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                              <Link href="/dashboard/my-booking" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
                                     <FiBriefcase className="w-4 h-4" />
                                     My Bookings
                               </Link>
 
-                              <Link href="/profile" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                              <Link href="/my-profile" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
                                     <FiUser className="w-4 h-4" />
                                     Profile
                               </Link>

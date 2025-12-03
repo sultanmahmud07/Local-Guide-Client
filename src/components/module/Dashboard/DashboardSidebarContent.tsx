@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { NavSection } from "@/types/dashboard.interface";
 import { UserInfo } from "@/types/user.interface";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -26,8 +27,14 @@ const DashboardSidebarContent = ({
     <div className="hidden md:flex h-full w-64 flex-col border-r bg-card">
       {/* Logo/Brand */}
       <div className="flex h-16 items-center border-b px-6">
-        <Link href={dashboardHome} className="flex items-center space-x-2">
-          <span className="text-xl font-bold text-primary">PH Healthcare</span>
+        <Link href={"/"} className="flex items-center space-x-2">
+           <Image
+                        src="/logo/site-logo.png"
+                        alt="logo"
+                        width={200}
+                        height={100}
+                        className="w-20"
+                      />
         </Link>
       </div>
 
@@ -51,22 +58,14 @@ const DashboardSidebarContent = ({
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+                        "flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition-all",
                         isActive
-                          ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                          ? "bg-secondary text-primary-foreground"
+                          : "text-muted-foreground"
                       )}
                     >
                       <Icon className="h-4 w-4" />
                       <span className="flex-1">{item.title}</span>
-                      {item.badge && (
-                        <Badge
-                          variant={isActive ? "secondary" : "default"}
-                          className="ml-auto"
-                        >
-                          {item.badge}
-                        </Badge>
-                      )}
                     </Link>
                   );
                 })}
