@@ -1,6 +1,5 @@
 "use client";
 
-import { registerPatient } from "@/services/auth/registerPatient";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import InputFieldError from "../shared/InputFieldError";
@@ -8,9 +7,10 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { registerUser } from "@/services/auth/registerUser";
 
 const RegisterForm = () => {
-  const [state, formAction, isPending] = useActionState(registerPatient, null);
+  const [state, formAction, isPending] = useActionState(registerUser, null);
 
   useEffect(() => {
     if (state && !state.success && state.message) {
@@ -19,6 +19,8 @@ const RegisterForm = () => {
   }, [state]);
   return (
     <form action={formAction}>
+      {/* we pass role=TOURIST as hidden field */}
+      <input type="hidden" name="role" value="TOURIST" />
       <FieldGroup>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Name */}
@@ -40,7 +42,7 @@ const RegisterForm = () => {
             />
             <InputFieldError field="email" state={state} />
           </Field>
-          
+
           {/* Phone */}
           <Field>
             <FieldLabel htmlFor="phone">Phone</FieldLabel>

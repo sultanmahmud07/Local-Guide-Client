@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import z from "zod";
 
-export const registerPatientValidationZodSchema = z.object({
+export const registerUserValidationZodSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
     address: z.string().optional(),
+    role: z.string().optional(),
     phone: z
         .string()
         .optional()
