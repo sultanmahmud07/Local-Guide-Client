@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+
 "use client"
 import Image from "next/image";
 import Link from "next/link";

@@ -7,7 +7,7 @@ const GuideRegisterPage = () => {
   return (
     <main className="min-h-screen bg-gray-50 pt-14">
       {/* Top hero */}
-      <section className="relative bg-gradient-to-r from-primary/10 to-secondary/6">
+      <section className="relative bg-linear-to-r from-primary/10 to-secondary/6">
         <div className="main-container mx-auto py-12 md:py-20 px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1">

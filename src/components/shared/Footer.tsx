@@ -3,7 +3,7 @@ import {
   FaFacebookF,
   FaLinkedinIn,
 } from "react-icons/fa";
-import { IoLogoInstagram, IoLocationSharp } from "react-icons/io5";
+import { IoLogoInstagram } from "react-icons/io5";
 
 const Footer: React.FC = () => {
   return (

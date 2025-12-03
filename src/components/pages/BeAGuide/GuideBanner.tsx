@@ -15,7 +15,7 @@ const GuideBanner = () => {
       />
 
       {/* Color Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-secondary/70 via-secondary/40 to-secondary/20"></div>
+      <div className="absolute inset-0 bg-linear-to-r from-secondary/70 via-secondary/40 to-secondary/20"></div>
 
       {/* Text Content */}
       <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
