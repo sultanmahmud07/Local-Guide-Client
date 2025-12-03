@@ -2,7 +2,7 @@
 import RegisterForm from "@/components/auth/register-form";
 import Image from "next/image";
 
-const RegisterPage = () => {
+const GuideRegisterPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center pt-20 py-10">
          <div className="grid grid-cols-1 md:grid-cols-2 bg-secondary/10 w-full main-container rounded md:rounded-lg shadow-lg overflow-hidden ">
@@ -27,4 +27,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default GuideRegisterPage;

@@ -1,12 +1,10 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client"
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import NavLink from "./NavLink";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
-import { logoutUser } from "@/services/auth/logoutUser";
 import { IUser } from "@/types/user.interface";
 import UserProfileMenu from "./UserProfileMenu";
 
@@ -37,15 +35,10 @@ const Navbar = (props: Props) => {
     };
   }, []);
 
-  // Logout handler
-  const handleLogout = async () => {
-   await logoutUser();   
-  };
-
 
   const navigationLinks = [
     { href: "/search", label: "Explore Tours", role: "PUBLIC" },
-    { href: "/guid-register", label: "Become a Guide", role: "PUBLIC" },
+    { href: "/become-a-guide", label: "Become a Guide", role: "PUBLIC" },
   ];
 
   return (

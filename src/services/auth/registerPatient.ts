@@ -11,8 +11,9 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
     try {
         const payload = {
             name: formData.get('name'),
-            address: formData.get('address'),
             email: formData.get('email'),
+            phone: formData.get('phone'),
+            address: formData.get('address'),
             password: formData.get('password'),
             confirmPassword: formData.get('confirmPassword'),
         }
@@ -23,24 +24,17 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
 
         const validatedPayload: any = zodValidator(payload, registerPatientValidationZodSchema).data;
         const registerData = {
+            name: validatedPayload.name,
+            email: validatedPayload.email,
             password: validatedPayload.password,
-            patient: {
-                name: validatedPayload.name,
-                address: validatedPayload.address,
-                email: validatedPayload.email,
+            phone: validatedPayload.phone,
+            address: validatedPayload.address,
+        }
+        const res = await serverFetch.post("/user/register", {
+             body: JSON.stringify(registerData),
+            headers: {
+                "Content-Type": "application/json",
             }
-        }
-
-        const newFormData = new FormData();
-
-        newFormData.append("data", JSON.stringify(registerData));
-
-        if (formData.get("file")) {
-            newFormData.append("file", formData.get("file") as Blob);
-        }
-
-        const res = await serverFetch.post("/user/create-patient", {
-            body: newFormData,
         })
 
         const result = await res.json();
@@ -55,7 +49,6 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
 
 
     } catch (error: any) {
-        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
         if (error?.digest?.startsWith('NEXT_REDIRECT')) {
             throw error;
         }
