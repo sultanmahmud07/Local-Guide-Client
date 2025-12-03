@@ -111,7 +111,12 @@ p {
   font-family: var(--font-sans);
   line-height: 1.3em;
 }
-
+a{
+  text-decoration: none;
+}
+/* a:hover{
+  text-decoration: underline;
+} */
 .main-container {
   width: 90%;
   margin: auto;

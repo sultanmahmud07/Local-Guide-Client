@@ -6,6 +6,7 @@ import InputFieldError from "../shared/InputFieldError";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const LoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
@@ -28,14 +29,12 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
               id="email"
               name="email"
               type="email"
-              placeholder="m@example.com"
-              //   required
+              placeholder="tourist@example.com"
+              className="bg-white rounded-xs"
             />
 
             <InputFieldError field="email" state={state} />
           </Field>
-
-          {/* Password */}
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input
@@ -43,30 +42,30 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
               name="password"
               type="password"
               placeholder="Enter your password"
-              //   required
+              className="bg-white rounded-xs"
             />
             <InputFieldError field="password" state={state} />
           </Field>
         </div>
-        <FieldGroup className="mt-4">
+        <FieldGroup className="">
           <Field>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Logging in..." : "Login"}
+            <Button type="submit" className="rounded-xs cursor-pointer" disabled={isPending}>
+              {isPending ? "Logging in..." : "Login Now"}
             </Button>
 
             <FieldDescription className="px-6 text-center">
               Don&apos;t have an account?{" "}
-              <a href="/register" className="text-blue-600 hover:underline">
+              <Link href="/register" className="text-primary  hover:underline hover:font-semibold">
                 Sign up
-              </a>
+              </Link>
             </FieldDescription>
-            <FieldDescription className="px-6 text-center">
-              <a
+            <FieldDescription className="text-center">
+              <Link
                 href="/forget-password"
-                className="text-blue-600 hover:underline"
+                className="text-primary hover:underline hover:font-semibold"
               >
                 Forgot password?
-              </a>
+              </Link>
             </FieldDescription>
           </Field>
         </FieldGroup>

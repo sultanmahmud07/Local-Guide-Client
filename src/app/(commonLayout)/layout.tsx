@@ -1,10 +1,10 @@
 import Footer from "@/components/shared/Footer";
-import Navbar from "@/components/shared/Navbar/Navbar";
+import NavbarWrapper from "@/components/shared/Navbar/NavbarWrapper";
 
 const CommonLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
-            <Navbar />
+            <NavbarWrapper />
             {children}
             <Footer />
         </>

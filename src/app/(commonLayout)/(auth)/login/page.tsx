@@ -24,7 +24,7 @@ const LoginPage = async ({
         </div>
         <div className="w-full p-5 md:px-20">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold">Traveler login to book</h1>
+            <h1 className="text2xl md:text-3xl font-bold capitalize font-oswald">Traveler login to book</h1>
             <p className="text-gray-500">
               Enter your credentials to access your account
             </p>

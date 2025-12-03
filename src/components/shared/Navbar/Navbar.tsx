@@ -1,46 +1,24 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client"
-import { FaFacebookF, FaLinkedinIn, FaPhone, FaYoutube } from "react-icons/fa";
-import { IoLogoInstagram } from "react-icons/io5";
-import { MdOutlineEmail } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import NavLink from "./NavLink";
 import { Button } from "@/components/ui/button";
-import { getCookie } from "cookies-next/client";
 import React, { useEffect, useState } from "react";
-import { logout } from "@/utils/logout";
-import Cookies from "js-cookie";
+import { logoutUser } from "@/services/auth/logoutUser";
+import { IUser } from "@/types/user.interface";
+import UserProfileMenu from "./UserProfileMenu";
 
-
-const Navbar = () => {
+type Props = {
+  accessToken?: string | null;
+  userInfo?: IUser | null;
+};
+const Navbar = (props: Props) => {
   const [navToggle, setNavToggle] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-  const router = useRouter();
+   const { accessToken, userInfo } = props;
 
-  useEffect(() => {
-    const cookieValue = getCookie("accessToken");
-    const localValue = localStorage.getItem("token");
-    const finalToken = localValue || (cookieValue ? cookieValue.toString() : null);
-    if (finalToken) {
-      setToken(finalToken);
-    }
-  }, []);
-
-  const newToken = Cookies.get("accessTokenNew");
-
-  // You can create a JSON object:
-  const cookieData = {
-    accessToken: newToken
-  };
-
-  const jsonString = JSON.stringify(cookieData);
-
-  console.log(jsonString);
-
-  const isAdmin = Boolean(token);
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
@@ -59,19 +37,9 @@ const Navbar = () => {
     };
   }, []);
 
-  // Check token on mount & whenever localStorage/cookie changes
-  useEffect(() => {
-    const cookieValue = getCookie("accessToken");
-    const localValue = localStorage.getItem("token");
-    const finalToken = localValue || (cookieValue ? cookieValue.toString() : null);
-    setToken(finalToken);
-  }, []);
-
   // Logout handler
   const handleLogout = async () => {
-    await logout();
-    setToken(null);       // ← this ensures Navbar re-renders immediately
-    router.push("/login"); // navigate to login page
+   await logoutUser();   
   };
 
 
@@ -113,13 +81,14 @@ const Navbar = () => {
                     </NavLink>
                   )
                 })}
-              {!isAdmin ? (
-                <Button
-                  onClick={handleLogout}
-                  className="text-sm rounded-none px-7"
-                >
-                  Logout
-                </Button>
+              {accessToken ? (
+                // <Button
+                //   onClick={handleLogout}
+                //   className="text-sm rounded-none px-7"
+                // >
+                //   Logout
+                // </Button>
+                 <UserProfileMenu userInfo={userInfo} />
 
 
               ) :
@@ -135,11 +104,10 @@ const Navbar = () => {
               }
             </div>
           </div>
-          {/* Right toggle bar for mobile  */}
           {/* Mobile Toggle Button */}
           <div className="lg:hidden">
             <div className="flex justify-end items-center gap-2">
-              {isAdmin && (
+              {accessToken && (
                 <Button
                   onClick={handleLogout}
                   variant="outline"
@@ -148,7 +116,7 @@ const Navbar = () => {
                   Logout
                 </Button>
               )}
-              {!isAdmin && (
+              {!accessToken && (
                 <Button asChild className="text-xs size-8 px-7">
                   <Link href="/login">Login</Link>
                 </Button>
