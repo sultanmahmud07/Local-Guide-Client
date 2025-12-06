@@ -1,169 +1,89 @@
 "use client";
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { changeAppointmentStatus } from "@/services/patient/myListing.service";
-import {
-  AppointmentStatus,
-  IAppointment,
-} from "@/types/appointments.interface";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { BOOKING_STATUS, IBooking } from "@/types/booking.interface";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { changeBookingStatus } from "@/services/booking/myBooking.service";
 
-interface ChangeStatusDialogProps {
-  appointment: IAppointment;
+interface Props {
+  booking: IBooking;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function ChangeBookingStatusDialog({
-  appointment,
-  isOpen,
-  onClose,
-}: ChangeStatusDialogProps) {
-  const [newStatus, setNewStatus] = useState<AppointmentStatus>(
-    appointment.status
-  );
+const OPTIONS = [
+  { value: BOOKING_STATUS.CONFIRMED, label: "Confirm" },
+  { value: BOOKING_STATUS.DECLINED, label: "Decline" },
+  { value: BOOKING_STATUS.CANCELLED, label: "Cancel" },
+  { value: BOOKING_STATUS.COMPLETED, label: "Mark Completed" },
+];
+
+export default function ChangeBookingStatusDialog({ booking, isOpen, onClose }: Props) {
+  const [newStatus, setNewStatus] = useState<BOOKING_STATUS>(booking.status);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const statusOptions = [
-    { value: AppointmentStatus.SCHEDULED, label: "Scheduled" },
-    { value: AppointmentStatus.INPROGRESS, label: "In Progress" },
-    { value: AppointmentStatus.COMPLETED, label: "Completed" },
-    { value: AppointmentStatus.CANCELED, label: "Canceled" },
-  ];
-
   const handleSubmit = async () => {
-    if (newStatus === appointment.status) {
+    if (newStatus === booking.status) {
       toast.info("No changes made");
       onClose();
       return;
     }
 
     setIsSubmitting(true);
-
     try {
-      const result = await changeAppointmentStatus(appointment.id, newStatus);
-
-      if (result.success) {
-        toast.success("Appointment status updated successfully");
-
-        // Show prescription reminder if completed
-        if (
-          newStatus === AppointmentStatus.COMPLETED &&
-          !appointment.prescription
-        ) {
-          setTimeout(() => {
-            toast.info(
-              "Don't forget to provide a prescription for this patient",
-              {
-                duration: 5000,
-              }
-            );
-          }, 1000);
-        }
-
+      const res = await changeBookingStatus(booking._id, newStatus);
+      if (res?.success) {
+        toast.success("Booking status updated");
         onClose();
       } else {
-        toast.error(result.message || "Failed to update status");
+        toast.error(res?.message || "Failed to update status");
       }
-    } catch (error) {
-      toast.error("An error occurred while updating status");
-      console.error(error);
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleClose = () => {
-    if (!isSubmitting) {
-      onClose();
-    }
-  };
-
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Change Appointment Status</DialogTitle>
-          <DialogDescription>
-            Update the status for {appointment.patient?.name}&apos;s appointment
-          </DialogDescription>
+          <DialogTitle>Change Booking Status</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          {/* Current Status */}
-          <div className="space-y-2">
-            <Label>Current Status</Label>
-            <div className="text-sm font-medium">
-              {
-                statusOptions.find((opt) => opt.value === appointment.status)
-                  ?.label
-              }
-            </div>
+          <div>
+            <Label>Booking</Label>
+            <div className="font-medium">{booking.tour?.title}</div>
+            <div className="text-sm text-muted-foreground">{booking.user?.name}</div>
           </div>
 
-          {/* New Status */}
-          <div className="space-y-2">
-            <Label htmlFor="status">New Status</Label>
-            <Select
-              value={newStatus}
-              onValueChange={(value) =>
-                setNewStatus(value as AppointmentStatus)
-              }
-              disabled={isSubmitting}
-            >
-              <SelectTrigger id="status">
+          <div>
+            <Label htmlFor="status">New status</Label>
+            <Select value={newStatus} onValueChange={(v) => setNewStatus(v as BOOKING_STATUS)} disabled={isSubmitting}>
+              <SelectTrigger id="status" className="w-full">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
-                {statusOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                {OPTIONS.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-
-          {/* Warning for Completion */}
-          {newStatus === AppointmentStatus.COMPLETED &&
-            !appointment.prescription && (
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                <div className="flex items-start gap-2">
-                  <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
-                  <div className="text-sm text-amber-800">
-                    <strong>Reminder:</strong> After marking as completed,
-                    please provide a prescription for this patient.
-                  </div>
-                </div>
-              </div>
-            )}
         </div>
 
         <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleClose}
-            disabled={isSubmitting}
-          >
+          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={isSubmitting}>
@@ -173,7 +93,7 @@ export default function ChangeBookingStatusDialog({
                 Updating...
               </>
             ) : (
-              "Confirm Change"
+              "Confirm"
             )}
           </Button>
         </DialogFooter>

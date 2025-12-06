@@ -114,14 +114,14 @@ function ManagementTable<T>({
         )}
 
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-primary/25">
             <TableRow>
               {columns?.map((column, colIndex) => (
                 <TableHead key={colIndex} className={column.className}>
                   {column.sortKey ? (
                     <span
                       onClick={() => handleSort(column.sortKey!)}
-                      className="flex items-center p-2 hover:text-foreground transition-colors font-medium cursor-pointer select-none"
+                      className="flex items-center p-2 transition-colors cursor-pointer select-none"
                     >
                       {column.header}
                       {getSortIcon(column.sortKey)}
@@ -139,10 +139,10 @@ function ManagementTable<T>({
 
           <TableBody>
             {data.length === 0 ? (
-              <TableRow>
+              <TableRow className="">
                 <TableCell
                   colSpan={columns.length + (hasActions ? 1 : 0)}
-                  className="text-center py-8 text-muted-foreground"
+                  className="text-center py-8"
                 >
                   {emptyMessage}
                 </TableCell>
@@ -161,8 +161,8 @@ function ManagementTable<T>({
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button className="bg-transparent rounded text-black font-bold hover:bg-primary/25 cursor-pointer" size="icon-lg">
+                            <MoreHorizontal className="w-5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">

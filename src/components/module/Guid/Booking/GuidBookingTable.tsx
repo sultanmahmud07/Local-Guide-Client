@@ -13,42 +13,27 @@ interface GuideBookingTableProps {
   bookings: IBooking[];
 }
 
-export default function GuideBookingTable({
-  bookings = [],
-}: GuideBookingTableProps) {
+export default function GuideBookingTable({ bookings = [] }: GuideBookingTableProps) {
   const router = useRouter();
-  const [viewingBooking, setViewingBooking] =
-    useState<IBooking | null>(null);
-  const [changingStatusBooking, setChangingStatusBooking] =
-    useState<IBooking | null>(null);
+  const [viewingBooking, setViewingBooking] = useState<IBooking | null>(null);
+  const [changingStatusBooking, setChangingStatusBooking] = useState<IBooking | null>(null);
 
-  const handleView = (booking: IBooking) => {
-    setViewingBooking(booking);
-  };
+  const handleView = (booking: IBooking) => setViewingBooking(booking);
+  const handleStatusChange = (booking: IBooking) => setChangingStatusBooking(booking);
 
-  const handleStatusChange = (booking: IBooking) => {
-    setChangingStatusBooking(booking);
-  };
-
-  // Custom wrapper to conditionally show edit action
   const handleEditClick = (booking: IBooking) => {
-    // Cannot change status for:
-    // 1. Canceled bookings
-    // 2. Completed bookings with prescriptions
+    // Example business rules:
     if (booking.status === BOOKING_STATUS.CANCELLED) {
-      toast.error("Cannot change status for canceled bookings", {
-        description: "Canceled bookings are final and cannot be modified.",
+      toast.error("Cannot change status for cancelled bookings", {
+        description: "Cancelled bookings are final and cannot be modified.",
       });
       return;
     }
 
-    if (
-      booking.status === BOOKING_STATUS.COMPLETED &&
-      !!booking.notes
-    ) {
-      toast.error("Cannot change status once prescription is provided", {
-        description:
-          "booking status is locked after prescription is created to maintain medical record integrity.",
+    // Prevent changing after completed (if notes exist)
+    if (booking.status === BOOKING_STATUS.COMPLETED && !!booking.notes) {
+      toast.error("Cannot change status once notes are present", {
+        description: "Booking status is locked after completion with notes.",
       });
       return;
     }
@@ -67,7 +52,6 @@ export default function GuideBookingTable({
         emptyMessage="No bookings found"
       />
 
-      {/* View Detail Dialog */}
       {viewingBooking && (
         <GuideBookingDetailDialog
           booking={viewingBooking}
@@ -79,7 +63,6 @@ export default function GuideBookingTable({
         />
       )}
 
-      {/* Change Status Dialog */}
       {changingStatusBooking && (
         <ChangeBookingStatusDialog
           booking={changingStatusBooking}

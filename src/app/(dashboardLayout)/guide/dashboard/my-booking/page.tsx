@@ -7,14 +7,10 @@ export default async function GuideBookings() {
   const bookings: IBooking[] = response?.data || [];
 // console.log("My Booking :::", response.data)
   return (
-    <div className="space-y-6">
+    <div className="">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">My Booking</h1>
-        <p className="text-muted-foreground mt-2">
-          Manage your patient bookings and prescriptions
-        </p>
+        <h1 className="text-3xl font-bold mb-4">My Booking</h1>
       </div>
-
       <GuideBookingTable bookings={bookings} />
     </div>
   );
