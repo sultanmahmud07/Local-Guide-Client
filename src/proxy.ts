@@ -35,7 +35,7 @@ export async function proxy(request: NextRequest) {
 
     let userRole: UserRole | null = null;
     if (accessToken) {
-        const verifiedToken: JwtPayload | string = jwt.verify(accessToken, process.env.JWT_SECRET as string);
+        const verifiedToken: JwtPayload | string = jwt?.verify(accessToken, process.env.JWT_SECRET as string);
 
         if (typeof verifiedToken === "string") {
             await deleteCookie("accessToken");

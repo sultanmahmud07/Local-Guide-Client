@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyAccessToken = async (token: string) => {
     try {
-        const verifiedAccessToken = jwt.verify(
+        const verifiedAccessToken = jwt?.verify(
             token,
             process.env.JWT_SECRET!
         ) as jwt.JwtPayload;

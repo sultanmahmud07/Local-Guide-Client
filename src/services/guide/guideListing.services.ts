@@ -20,37 +20,54 @@ export async function getGuideListing(queryString?: string) {
         };
     }
 }
-
-export async function getAvailableSchedules() {
+export async function getTourBySlug(slug: string) {
     try {
-        const response = await serverFetch.get(`/schedule`);
+        const response = await serverFetch.get(`/listing/${slug}`);
         const result = await response.json();
-        return result;
+        return result.data;
     } catch (error: any) {
         console.log(error);
         return {
             success: false,
+            data: [],
             message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
         };
     }
 }
-
-export async function createListing(scheduleIds: string[]) {
+export async function createListing(formData: FormData) {
     try {
-        const response = await serverFetch.post(`/listing`, {
-            body: JSON.stringify({ scheduleIds }),
-            headers: {
-                "Content-Type": "application/json",
-            },
+        const response = await serverFetch.post("/listing/create", {
+            body: formData,
         });
-
         const result = await response.json();
         return result;
     } catch (error: any) {
-        console.log(error);
+        console.error("createListing error:", error);
         return {
             success: false,
-            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error?.message
+                    : "Something went wrong",
+        };
+    }
+}
+
+export async function updateListing(formData: FormData, id: string) {
+    try {
+        const response = await serverFetch.post(`/listing/${id}`, {
+            body: formData,
+        });
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Update Listing error:", error);
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error?.message
+                    : "Something went wrong",
         };
     }
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -10,16 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import {
   createDoctorSchedule,
-  getAvailableSchedules,
 } from "@/services/doctor/doctorScedule.services";
-import { ISchedule } from "@/types/schedule.interface";
-import { format } from "date-fns";
-import { Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface BookScheduleDialogProps {
@@ -27,7 +21,6 @@ interface BookScheduleDialogProps {
   onClose: () => void;
   onSuccess?: () => void;
 }
-
 export default function AddListingDialog({
   open,
   onClose,
