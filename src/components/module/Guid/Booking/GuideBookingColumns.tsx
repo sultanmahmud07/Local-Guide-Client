@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Column } from "@/components/shared/ManagementTable";
 import { Badge } from "@/components/ui/badge";
 import { BOOKING_STATUS, IBooking, PAYMENT_STATUS } from "@/types/booking.interface";

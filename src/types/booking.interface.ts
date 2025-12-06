@@ -11,6 +11,7 @@ export interface IPayment {
     booking: string;
     transactionId: string;
     amount: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     paymentGatewayData?: any
     invoiceUrl?: string
     status: PAYMENT_STATUS
