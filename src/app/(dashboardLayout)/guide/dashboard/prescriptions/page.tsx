@@ -1,5 +1,5 @@
 import DoctorPrescriptionsTable from "@/components/modules/Doctor/DoctorPrescription/DoctorPrescriptionTable";
-import { getMyAppointments } from "@/services/patient/appointment.service";
+import { getMyAppointments } from "@/services/patient/myListing.service";
 import { IAppointment } from "@/types/appointments.interface";
 import { IPrescription } from "@/types/prescription.interface";
 
