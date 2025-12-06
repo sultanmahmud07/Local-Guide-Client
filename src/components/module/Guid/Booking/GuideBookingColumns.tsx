@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Column } from "@/components/shared/ManagementTable";
 import { Badge } from "@/components/ui/badge";
-import {
-  AppointmentStatus,
-  IAppointment,
-} from "@/types/appointments.interface";
+import { AppointmentStatus } from "@/types/appointments.interface";
+import { IBooking } from "@/types/booking.interface";
+
 import { format } from "date-fns";
 
 const statusConfig: Record<
@@ -31,7 +30,7 @@ const statusConfig: Record<
   },
 };
 
-export const guideBookingColumns: Column<IAppointment>[] = [
+export const guideBookingColumns: Column<IBooking>[] = [
   {
     header: "Patient",
     accessor: (appointment) => (

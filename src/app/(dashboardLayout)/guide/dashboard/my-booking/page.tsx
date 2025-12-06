@@ -1,11 +1,11 @@
 import GuideBookingTable from "@/components/module/Guid/Booking/GuidBookingTable";
 import { getMyBookings } from "@/services/booking/myBooking.service";
-import { IAppointment } from "@/types/appointments.interface";
+import { IBooking } from "@/types/booking.interface";
 
 export default async function GuideBookings() {
   const response = await getMyBookings();
-  const bookings: IAppointment[] = response?.data?.data || [];
-console.log(bookings)
+  const bookings: IBooking[] = response?.data || [];
+// console.log("My Booking :::", response.data)
   return (
     <div className="space-y-6">
       <div>
@@ -15,7 +15,7 @@ console.log(bookings)
         </p>
       </div>
 
-      <GuideBookingTable appointments={bookings} />
+      <GuideBookingTable bookings={bookings} />
     </div>
   );
 }

@@ -23,28 +23,109 @@ export enum BOOKING_STATUS {
     COMPLETED = "COMPLETED"
 }
 
+// ------------------
+// TOUR INTERFACE
+// ------------------
+export interface ITour {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  thumbnail?: string;
+  images?: string[];
+  fee: number;
+  durationHours: number;
+  meetingPoint: string;
+  maxGroupSize: number;
+  startTime: string[];
+  itinerary: string[];
+  importantPoints: string[];
+  cancellationPolicy: string[];
+  inclusionsAndExclusions?: {
+    inclusions: string[];
+    exclusions: string[];
+  };
+  author: string;
+  language: string;
+  category: string;
+  destinationCity: string;
+  isActive: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
+// ------------------
+// USER / GUIDE INTERFACE
+// ------------------
+export interface IUserInfo {
+  _id: string;
+  name: string;
+  email: string;
+  role: "TOURIST" | "GUIDE" | "ADMIN" | "SUPER_ADMIN";
+  isActive: string;
+  isDeleted: boolean;
+  isVerified: boolean;
+  auths: {
+    provider: string;
+    providerId: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+  address?: string;
+  phone?: string;
+}
+
+// ------------------
+// PAYMENT INTERFACE
+// ------------------
+export interface IPayment {
+  _id: string;
+  booking: string;
+  transactionId: string;
+  status: PAYMENT_STATUS;
+  amount: number;
+  invoiceUrl?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ------------------
+// STATUS LOG
+// ------------------
+export interface IBookingStatusLog {
+  _id: string;
+  status: BOOKING_STATUS;
+  updatedBy: string;
+  timestamp: string;
+}
+
+// ------------------
+// MAIN BOOKING INTERFACE
+// ------------------
 export interface IBooking {
-    _id: string;
-    tour: string;
-    user: string;
-    guide: string;
-    date: string; // YYYY-MM-DD
-    time: string; // HH:mm
-    groupSize: number;
-    totalPrice: number;
-    payment: string,
-    paymentStatus: PAYMENT_STATUS;
-    status: BOOKING_STATUS;
+  _id: string;
 
-    notes?: string;
-    statusLogs: {
-        status: BOOKING_STATUS;
-        updatedBy: string;
-        timestamp: string;
-    }[];
-    createdAt: string;
-    updatedAt?: string;
+  tour: ITour;
+  user: IUserInfo;
+  guide: IUserInfo;
+
+  date: string;   // YYYY-MM-DD
+  time: string;   // HH:mm
+  groupSize: number;
+  totalPrice: number;
+
+  notes?: string;
+
+  paymentStatus: PAYMENT_STATUS;
+  status: BOOKING_STATUS;
+
+  statusLogs: IBookingStatusLog[];
+
+  createdAt: string;
+  updatedAt: string;
+
+  payment?: IPayment;
 }
 
 export interface IBookingFormData {

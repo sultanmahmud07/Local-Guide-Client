@@ -3,92 +3,89 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import {
-  AppointmentStatus,
-  IAppointment,
-} from "@/types/appointments.interface";
 import ManagementTable from "@/components/shared/ManagementTable";
 import { guideBookingColumns } from "./GuideBookingColumns";
+import { BOOKING_STATUS, IBooking } from "@/types/booking.interface";
 import GuideBookingDetailDialog from "./GuideBookingDetailDialog";
 import ChangeBookingStatusDialog from "./ChangeBookingStatusDialog";
 
 interface GuideBookingTableProps {
-  appointments: IAppointment[];
+  bookings: IBooking[];
 }
 
 export default function GuideBookingTable({
-  appointments = [],
+  bookings = [],
 }: GuideBookingTableProps) {
   const router = useRouter();
-  const [viewingAppointment, setViewingAppointment] =
-    useState<IAppointment | null>(null);
-  const [changingStatusAppointment, setChangingStatusAppointment] =
-    useState<IAppointment | null>(null);
+  const [viewingBooking, setViewingBooking] =
+    useState<IBooking | null>(null);
+  const [changingStatusBooking, setChangingStatusBooking] =
+    useState<IBooking | null>(null);
 
-  const handleView = (appointment: IAppointment) => {
-    setViewingAppointment(appointment);
+  const handleView = (booking: IBooking) => {
+    setViewingBooking(booking);
   };
 
-  const handleStatusChange = (appointment: IAppointment) => {
-    setChangingStatusAppointment(appointment);
+  const handleStatusChange = (booking: IBooking) => {
+    setChangingStatusBooking(booking);
   };
 
   // Custom wrapper to conditionally show edit action
-  const handleEditClick = (appointment: IAppointment) => {
+  const handleEditClick = (booking: IBooking) => {
     // Cannot change status for:
-    // 1. Canceled appointments
-    // 2. Completed appointments with prescriptions
-    if (appointment.status === AppointmentStatus.CANCELED) {
-      toast.error("Cannot change status for canceled appointments", {
-        description: "Canceled appointments are final and cannot be modified.",
+    // 1. Canceled bookings
+    // 2. Completed bookings with prescriptions
+    if (booking.status === BOOKING_STATUS.CANCELLED) {
+      toast.error("Cannot change status for canceled bookings", {
+        description: "Canceled bookings are final and cannot be modified.",
       });
       return;
     }
 
     if (
-      appointment.status === AppointmentStatus.COMPLETED &&
-      !!appointment.prescription
+      booking.status === BOOKING_STATUS.COMPLETED &&
+      !!booking.notes
     ) {
       toast.error("Cannot change status once prescription is provided", {
         description:
-          "Appointment status is locked after prescription is created to maintain medical record integrity.",
+          "booking status is locked after prescription is created to maintain medical record integrity.",
       });
       return;
     }
 
-    handleStatusChange(appointment);
+    handleStatusChange(booking);
   };
 
   return (
     <>
       <ManagementTable
-        data={appointments}
+        data={bookings}
         columns={guideBookingColumns}
         onView={handleView}
         onEdit={handleEditClick}
-        getRowKey={(appointment) => appointment.id}
-        emptyMessage="No appointments found"
+        getRowKey={(booking) => booking._id}
+        emptyMessage="No bookings found"
       />
 
       {/* View Detail Dialog */}
-      {viewingAppointment && (
+      {viewingBooking && (
         <GuideBookingDetailDialog
-          appointment={viewingAppointment}
-          open={!!viewingAppointment}
+          booking={viewingBooking}
+          open={!!viewingBooking}
           onClose={() => {
-            setViewingAppointment(null);
+            setViewingBooking(null);
             router.refresh();
           }}
         />
       )}
 
       {/* Change Status Dialog */}
-      {changingStatusAppointment && (
+      {changingStatusBooking && (
         <ChangeBookingStatusDialog
-          appointment={changingStatusAppointment}
-          isOpen={!!changingStatusAppointment}
+          booking={changingStatusBooking}
+          isOpen={!!changingStatusBooking}
           onClose={() => {
-            setChangingStatusAppointment(null);
+            setChangingStatusBooking(null);
             router.refresh();
           }}
         />
