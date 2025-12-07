@@ -2,7 +2,7 @@
 "use client";
 import Image from "next/image";
 import { FaRegHeart, FaShareAlt, FaStar } from "react-icons/fa";
-import Link from "next/link";
+import { ITourGet } from "@/types/booking.interface";
 
 const images = [
   "/images/amsterdam-1.jpg",
@@ -12,11 +12,9 @@ const images = [
   "/images/amsterdam-5.jpg",
 ];
 
-const TourImages = () => {
-  const handleRequest = (payload: any) => {
-    console.log("booking request", payload);
-    alert("Booking request submitted — check console");
-  };
+const TourImages = ({tour}:{tour:ITourGet}) => {
+
+  console.log(tour)
 
   return (
     <div className="lg:col-span-8 space-y-4">
@@ -64,7 +62,7 @@ const TourImages = () => {
           <section className="mt-6 prose prose-sm prose-neutral">
             <h2>About this tour</h2>
             <p>
-              This private walking tour covers Amsterdam's main highlights with a friendly local guide. Explore historic canals, secret courtyards, and sample local snacks.
+              This private walking tour covers Amsterdam&apos;s main highlights with a friendly local guide. Explore historic canals, secret courtyards, and sample local snacks.
             </p>
             <p>
               Pickup points, accessibility information and more are provided when you request a booking.

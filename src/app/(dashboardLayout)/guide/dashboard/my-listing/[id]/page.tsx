@@ -1,5 +1,5 @@
 // app/guide/dashboard/my-listing/[id]/page.tsx
-import EditTourClient from "@/components/module/Guid/GuideListing/EditTour/EditTourClient";
+import UpdateTourForm from "@/components/module/Guid/GuideListing/AddOrEditTourForm";
 import { getTourBySlug } from "@/services/guide/guideListing.services";
 
 export default async function EditTourPage({
@@ -15,7 +15,8 @@ export default async function EditTourPage({
     <div className="py-8">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-2xl font-semibold mb-4">Edit Tour</h1>
-        <EditTourClient tour={tourData.data ?? tourData} />
+        {/* <EditTourClient tour={tourData.data ?? tourData} /> */}
+        <UpdateTourForm id={tourData?.data?._id} initialData={tourData.data ?? tourData} />
       </div>
     </div>
   );

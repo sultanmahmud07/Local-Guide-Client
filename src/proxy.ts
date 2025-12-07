@@ -62,12 +62,30 @@ export async function proxy(request: NextRequest) {
     }
 
     // Rule 1 & 2 for open public routes and auth routes
-
+    // If no access token is present, the user must be redirected to login.
     if (!accessToken) {
         const loginUrl = new URL("/login", request.url);
-        loginUrl.searchParams.set("redirect", pathname);
+
+        // Default redirect path is just the pathname
+        let redirectPath = pathname;
+
+        // Special logic for 'booking-request' to preserve existing query params
+        if (pathname === "/tour/booking-request") {
+            // Capture the full path including the current query parameters
+            // Example: /booking-request?tourId=123 becomes the redirect value
+            redirectPath = `${pathname}${request.nextUrl.search}`;
+        }
+
+        // Set the 'redirect' query parameter with the determined path
+        loginUrl.searchParams.set("redirect", redirectPath);
+
         return NextResponse.redirect(loginUrl);
     }
+    // if (!accessToken) {
+    //     const loginUrl = new URL("/login", request.url);
+    //     loginUrl.searchParams.set("redirect", pathname);
+    //     return NextResponse.redirect(loginUrl);
+    // }
 
     // Rule 3 : User need password change
 
@@ -93,7 +111,7 @@ export async function proxy(request: NextRequest) {
     }
 
     // Rule 5 : User is trying to access role based protected route
-    if (routerOwner === "SUPER_ADMIN" ||routerOwner === "ADMIN" || routerOwner === "GUIDE" || routerOwner === "TOURIST") {
+    if (routerOwner === "SUPER_ADMIN" || routerOwner === "ADMIN" || routerOwner === "GUIDE" || routerOwner === "TOURIST") {
         if (userRole !== routerOwner) {
             return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url))
         }

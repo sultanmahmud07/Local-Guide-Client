@@ -55,7 +55,40 @@ export interface ITour {
   createdAt: string;
   updatedAt: string;
 }
-
+export interface ITourGet {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  thumbnail?: string;
+  transportation?: string;
+  images?: string[];
+  fee: number;
+  durationHours: number;
+  meetingPoint: string;
+  maxGroupSize: number;
+  startTime: string[];
+  itinerary: string[];
+  importantPoints: string[];
+  cancellationPolicy: string[];
+  inclusionsAndExclusions?: {
+    inclusions: string[];
+    exclusions: string[];
+  };
+  author?: {
+    _id: string;
+    name: string;
+    email?: string;
+    avatar?: string;
+  };
+  language: string;
+  category: string;
+  destinationCity: string;
+  isActive: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 // ------------------
 // USER / GUIDE INTERFACE
 // ------------------
@@ -130,6 +163,12 @@ export interface IBooking {
 }
 
 export interface IBookingFormData {
-    doctorId: string;
-    scheduleId: string;
+  tour: string;       // tourId
+  guide: string;      // guideId
+  date: string;       // YYYY-MM-DD
+  time: string;       // HH:mm
+  groupSize: number;      // optional notes
+  meetingPlace?: string;     // optional notes
+  phone?: string;     // optional notes
+  notes?: string;     // optional notes
 }

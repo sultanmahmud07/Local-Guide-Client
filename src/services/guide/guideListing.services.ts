@@ -55,10 +55,11 @@ export async function createListing(formData: FormData) {
 
 export async function updateListing(formData: FormData, id: string) {
     try {
-        const response = await serverFetch.post(`/listing/${id}`, {
+        const response = await serverFetch.patch(`/listing/update/${id}`, {
             body: formData,
         });
         const result = await response.json();
+        console.log(result)
         return result;
     } catch (error: any) {
         console.error("Update Listing error:", error);

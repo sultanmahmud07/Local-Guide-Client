@@ -66,6 +66,25 @@ export async function getBookingById(bookingId: string) {
         };
     }
 }
+export async function getReservedData(authorId: string) {
+    try {
+        const response = await serverFetch.get(`/booking/reserved/${authorId}`);
+        const result = await response.json();
+        console.log({ result });
+        return result.data;
+
+    } catch (error: any) {
+        console.error("Error fetching reserve data by id:", error);
+        return {
+            success: false,
+            data: null,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Failed to fetch booking by id",
+        };
+    }
+}
 
 export async function changeBookingStatus(
     bookingId: string,

@@ -1,5 +1,4 @@
 import LoginForm from "@/components/auth/login-form";
-import TopGap from "@/components/shared/TopGap";
 import Image from "next/image";
 
 
@@ -9,6 +8,7 @@ const LoginPage = async ({
   searchParams?: Promise<{ redirect?: string }>;
 }) => {
   const params = (await searchParams) || {};
+  // console.log(params.redirect)
   return (
    <> 
     <div className="min-h-screen flex items-center justify-center pt-20 py-10">
