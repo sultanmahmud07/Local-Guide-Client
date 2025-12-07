@@ -51,8 +51,7 @@ export async function getBookingById(bookingId: string) {
     try {
         const response = await serverFetch.get(`/booking/${bookingId}`);
         const result = await response.json();
-        console.log({ result });
-        return result;
+        return result.data;
 
     } catch (error: any) {
         console.error("Error fetching booking by id:", error);

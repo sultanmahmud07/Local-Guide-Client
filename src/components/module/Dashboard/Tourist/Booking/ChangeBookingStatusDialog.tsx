@@ -17,12 +17,11 @@ interface Props {
 }
 
 const OPTIONS = [
-  { value: BOOKING_STATUS.CONFIRMED, label: "CONFIRMED" },
-  { value: BOOKING_STATUS.DECLINED, label: "DECLINED" },
-  { value: BOOKING_STATUS.CANCELLED, label: "CANCELLED" },
-  { value: BOOKING_STATUS.COMPLETED, label: "COMPLETED" },
+  { value: BOOKING_STATUS.CONFIRMED, label: "Confirm" },
+  { value: BOOKING_STATUS.DECLINED, label: "Decline" },
+  { value: BOOKING_STATUS.CANCELLED, label: "Cancel" },
+  { value: BOOKING_STATUS.COMPLETED, label: "Mark Completed" },
 ];
-
 
 export default function ChangeBookingStatusDialog({ booking, isOpen, onClose }: Props) {
   const [newStatus, setNewStatus] = useState<BOOKING_STATUS>(booking.status);

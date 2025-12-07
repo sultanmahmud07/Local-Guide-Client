@@ -109,11 +109,11 @@ const HeartIcon = () => (
 
 export default function MeetLocalGuides() {
   return (
-    <section className="w-full bg-[#f7f7f7] py-12 md:py-16 lg:py-20">
-      <div className="max-w-6xl mx-auto px-4">
+    <section className="w-full bg-[#f7f7f7] py-12 md:py-16 md:pb-20">
+      <div className="main-container">
         {/* Small top icon */}
         <div className="flex items-center justify-between my-3 pb-2 md:pb-5">
-           <h2 className="font-oswald relative font-bold text-3xl md:text-4xl lg:text-5xl">
+          <h2 className="font-oswald relative font-bold text-3xl md:text-4xl lg:text-5xl">
             Meet your{" "}
             <span className="text-primary">Local Guides</span>
           </h2>
@@ -123,8 +123,8 @@ export default function MeetLocalGuides() {
             </Button>
           </Link>
         </div>
-   {/* Title */}
-         
+        {/* Title */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {guides.map((guide) => (
             <article
@@ -186,17 +186,17 @@ export default function MeetLocalGuides() {
               {/* Message button */}
               <div className="px-5 pb-4 flex items-center justify-between gap-2">
                 <Link href={`/guid/43`} >
-                <Button className="bg-primary hover:bg-accent text-sm rounded cursor-pointer">
-                  View Profile
-                </Button>
+                  <Button className="bg-primary text-sm rounded cursor-pointer">
+                    View Profile
+                  </Button>
                 </Link>
-                 <Link href={`/guid/message/${guide.id}`} >
-                <Button
-                  className=" rounded text-sm bg-secondary hover:bg-accent cursor-pointer"
-                >
-                  <span>Message</span>
-                </Button>
-                 </Link>
+                <Link href={`/guid/message/${guide.id}`} >
+                  <Button
+                    className=" rounded text-sm bg-secondary hover:bg-blue-950 cursor-pointer"
+                  >
+                    <span>Message</span>
+                  </Button>
+                </Link>
               </div>
             </article>
           ))}

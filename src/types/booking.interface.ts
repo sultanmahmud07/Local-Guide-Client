@@ -145,6 +145,8 @@ export interface IBooking {
   guide: IUserInfo;
 
   date: string;   // YYYY-MM-DD
+  phone: string;   // YYYY-MM-DD
+  address: string;   // YYYY-MM-DD
   time: string;   // HH:mm
   groupSize: number;
   totalPrice: number;
