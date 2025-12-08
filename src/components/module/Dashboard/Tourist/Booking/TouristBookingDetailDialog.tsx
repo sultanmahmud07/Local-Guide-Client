@@ -17,7 +17,6 @@ interface Props {
 export default function TouristBookingDetailDialog({ booking, open, onClose }: Props) {
   const router = useRouter();
   if (!booking) return null;
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="min-w-[680px] max-h-[85vh] overflow-y-auto">
@@ -97,6 +96,7 @@ export default function TouristBookingDetailDialog({ booking, open, onClose }: P
             {
               booking.status === BOOKING_STATUS.COMPLETED && <Button>Give Review</Button>
             }
+
           </div>
         </div>
 

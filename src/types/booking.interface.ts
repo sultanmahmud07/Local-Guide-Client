@@ -147,6 +147,7 @@ export interface IBooking {
   date: string;   // YYYY-MM-DD
   phone: string;   // YYYY-MM-DD
   address: string;   // YYYY-MM-DD
+  paymentUrl?: string;   // YYYY-MM-DD
   time: string;   // HH:mm
   groupSize: number;
   totalPrice: number;
