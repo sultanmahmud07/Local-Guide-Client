@@ -76,3 +76,11 @@ export interface UserInfo {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IGuide extends UserInfo {
+    role: Role.GUIDE; 
+    guideProfile?: IGuideProfile; 
+    review_count?: number; 
+    avg_rating?: number; 
+    isFeatured?: boolean;
+}

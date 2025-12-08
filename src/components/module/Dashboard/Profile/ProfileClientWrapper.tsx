@@ -8,6 +8,7 @@ import TouristProfileForm from './TouristProfileForm';
 import ProfileSidebar from './ProfileSidebar';
 import { updateProfile } from '@/services/auth/getUserInfo';
 import { toast } from 'sonner';
+import GuideProfileForm from './GuideProfileForm';
 
 interface ProfileClientWrapperProps {
       initialUser: UserInfo;
@@ -21,23 +22,12 @@ export default function ProfileClientWrapper({ initialUser }: ProfileClientWrapp
 
       const handleUpdate = async (
             updatedData: Partial<UserInfo>,
-            profilePictureFile?: File 
+            profilePictureFile?: File
       ) => {
             setIsSubmitting(true);
 
             const formData = new FormData();
-            for (const key in updatedData) {
-                  if (updatedData.hasOwnProperty(key)) {
-                        const value = updatedData[key as keyof typeof updatedData];
-
-                        if (Array.isArray(value)) {
-                              formData.append(key, JSON.stringify(value));
-                        } else if (value !== undefined && value !== null) {
-                              formData.append(key, String(value));
-                        }
-                  }
-            }
-
+            formData.append("data", JSON.stringify(updatedData))
             if (profilePictureFile) {
                   formData.append("file", profilePictureFile);
             }
@@ -74,9 +64,13 @@ export default function ProfileClientWrapper({ initialUser }: ProfileClientWrapp
                   case Role.GUIDE:
                         // Render GuideProfileForm here, passing appropriate props
                         return (
-                              <div className="py-10 text-center text-muted-foreground">
-                                    Guide profile editing is coming soon!
-                              </div>
+                              <GuideProfileForm
+                                    user={currentUser}
+                                    isEditing={isEditing}
+                                    isSubmitting={isSubmitting} // Pass submission state
+                                    onSave={handleUpdate}
+                                    onCancel={() => setIsEditing(false)}
+                              />
                         );
                   default:
                         return <p>User role not supported for profile editing.</p>;
@@ -88,7 +82,10 @@ export default function ProfileClientWrapper({ initialUser }: ProfileClientWrapp
 
                   {/* Left Sidebar */}
                   <div className="lg:col-span-1">
-                        <ProfileSidebar user={currentUser} />
+                        <ProfileSidebar 
+                    user={currentUser} 
+                    onProfilePhotoUpdate={(file) => handleUpdate({}, file)} // Pass handler
+                />
                   </div>
 
                   {/* Right Content Area */}

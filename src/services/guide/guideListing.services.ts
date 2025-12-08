@@ -20,6 +20,7 @@ export async function getGuideListing(queryString?: string) {
         };
     }
 }
+
 export async function getTourBySlug(slug: string) {
     try {
         const response = await serverFetch.get(`/listing/${slug}`);

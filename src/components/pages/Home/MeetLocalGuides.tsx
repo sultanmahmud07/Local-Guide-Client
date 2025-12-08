@@ -1,59 +1,9 @@
+import GuideCard from "@/components/module/Guid/GuideCard/GuideCard";
 import { Button } from "@/components/ui/button";
+import { getFeaturedGuide } from "@/services/public/guide.services";
+import { IGuide } from "@/types/user.interface";
 import Image from "next/image";
 import Link from "next/link";
-
-type Guide = {
-  id: number;
-  name: string;
-  rating: number;
-  reviews: number;
-  location: string;
-  languages: string;
-  image: string;
-};
-
-const guides: Guide[] = [
-  {
-    id: 1,
-    name: "Safiye K.",
-    rating: 5,
-    reviews: 409,
-    location: "Istanbul, Türkiye",
-    languages: "Turkish, English and more",
-    image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    name: "Simonida M.",
-    rating: 5,
-    reviews: 86,
-    location: "Siena, Italy, Florence, Italy",
-    languages: "Serbocroatian, Italian and more",
-    image:
-      "https://images.unsplash.com/photo-1525134479668-1bee5c7c6845?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    name: "Loan D.",
-    rating: 5,
-    reviews: 15,
-    location: "Hanoi, Vietnam, Ninh Binh, Vietnam",
-    languages: "Vietnamese, Mandarin and more",
-    image:
-      "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: 4,
-    name: "Yael N.",
-    rating: 5,
-    reviews: 4,
-    location: "Jerusalem, Israel",
-    languages: "English, Hebrew and more",
-    image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop",
-  },
-];
 
 const StarIcon = () => (
   <svg
@@ -107,7 +57,9 @@ const HeartIcon = () => (
   </svg>
 );
 
-export default function MeetLocalGuides() {
+export default async function MeetLocalGuides() {
+  const guideData = await getFeaturedGuide()
+  console.log(guideData)
   return (
     <section className="w-full bg-[#f7f7f7] py-12 md:py-16 md:pb-20">
       <div className="main-container">
@@ -126,79 +78,8 @@ export default function MeetLocalGuides() {
         {/* Title */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {guides.map((guide) => (
-            <article
-              key={guide.id}
-              className="bg-white rounded-3xl shadow-md overflow-hidden flex flex-col transition-transform duration-150 hover:-translate-y-1 hover:shadow-lg"
-            >
-              {/* Image */}
-              <div className="relative w-full h-56 sm:h-60">
-                <Image
-                  src={guide.image}
-                  alt={guide.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 px-5 pt-4 pb-3">
-                <div className="flex items-start justify-between gap-3 mb-1">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-900 truncate">
-                    {guide.name}
-                  </h3>
-                  <button
-                    type="button"
-                    className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-300 bg-white"
-                    aria-label="Save guide"
-                  >
-                    <HeartIcon />
-                  </button>
-                </div>
-
-                {/* Rating */}
-                <div className="flex items-center gap-1 text-sm mb-2">
-                  <span className="text-gray-800 font-medium">5</span>
-                  <div className="flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <StarIcon key={i} />
-                    ))}
-                  </div>
-                  <span className="text-gray-500 text-xs ml-1">
-                    ({guide.reviews})
-                  </span>
-                </div>
-
-                {/* Location */}
-                <div className="flex items-start gap-2 text-sm text-gray-600 mb-1">
-                  <LocationIcon />
-                  <p className="truncate">{guide.location}</p>
-                </div>
-
-                {/* Languages */}
-                <div className="flex items-start gap-2 text-sm text-gray-600">
-                  <GlobeIcon />
-                  <p className="truncate">{guide.languages}</p>
-                </div>
-              </div>
-
-              {/* Message button */}
-              <div className="px-5 pb-4 flex items-center justify-between gap-2">
-                <Link href={`/guid/43`} >
-                  <Button className="bg-primary text-sm rounded cursor-pointer">
-                    View Profile
-                  </Button>
-                </Link>
-                <Link href={`/guid/message/${guide.id}`} >
-                  <Button
-                    className=" rounded text-sm bg-secondary hover:bg-blue-950 cursor-pointer"
-                  >
-                    <span>Message</span>
-                  </Button>
-                </Link>
-              </div>
-            </article>
+          {guideData?.data.map((guide:IGuide) => (
+           <GuideCard key={guide._id} guide={guide}></GuideCard>
           ))}
         </div>
       </div>

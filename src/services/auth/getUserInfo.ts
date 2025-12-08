@@ -3,6 +3,7 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 import { UserInfo } from "@/types/user.interface";
+import { revalidateTag } from "next/cache";
 
 export const getUserInfo = async (): Promise<UserInfo | any> => {
     let userInfo: UserInfo | any;
@@ -43,6 +44,7 @@ export const updateProfile = async (formData: FormData) => {
             body: formData, 
         });
 
+        revalidateTag("user-info", { expire: 0 });
         const result = await response.json();
         return result;
     } catch (error: any) {

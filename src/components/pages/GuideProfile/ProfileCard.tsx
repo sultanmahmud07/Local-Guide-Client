@@ -1,103 +1,111 @@
-// components/profile/profile-card.tsx
 'use client';
 
 import Image from "next/image";
-import { Star } from "lucide-react"; 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { renderStars } from "@/components/shared/renderStars";
+import { IGuide } from "@/types/user.interface";
 
-// Interface (assuming it's imported or defined here)
-interface GuideProfile {
-  name: string;
-  tagline: string;
-  reviews: number;
-  location: string;
-  languages: string;
-  isVerified: boolean;
-  responseTime: string;
-  imageUrl: string;
-}
 
-const ProfileCard = ({ guide }: { guide: GuideProfile }) => {
+const ProfileCard = ({ guide }: { guide: IGuide }) => {
+  const languagesString = guide.languages?.join(', ') || 'N/A';
+  // Assuming a static response time for now, or fetch it separately
+  const responseTime = "less than 8 hours"; 
+
   return (
-    <Card className="shadow-lg border-none">
+    <Card className="shadow-lg border-none sticky top-24"> {/* Added sticky for sidebar effect */}
       <CardContent className="p-6">
         
-        {/* --- Header (Image, Name, Tagline, Reviews) --- */}
-        <div className="flex items-center space-x-4 mb-4">
+        {/* --- Header (Image, Name, Rating) --- */}
+        <div className="flex items-start space-x-4 mb-4">
           <Image
-            src={guide.imageUrl}
+            src={guide?.picture ? guide.picture : "/default.png"}
             alt={guide.name}
             width={72}
             height={72}
-            className="rounded-full w-16 h-16 object-cover"
+            className="rounded-full w-16 h-16 object-cover shrink-0"
           />
           <div>
             <h2 className="text-xl font-bold text-gray-800">{guide.name}</h2>
-            <p className="text-sm text-gray-600 mb-1">{guide.tagline}</p>
+            
+            {/* Display Daily Rate */}
+            {guide.guideProfile?.dailyRate && (
+                <p className="text-sm font-semibold text-green-700 mt-1 mb-1">
+                    ${guide.guideProfile.dailyRate} / Day
+                </p>
+            )}
+
+            {/* Rating Stars (Using real aggregated data) */}
             <div className="flex items-center space-x-1">
-              {/* Rating Stars (Static representation) */}
-              {/* Note: I'm keeping the star color vibrant with green-600 */}
-              <Star className="w-4 h-4 text-green-600 fill-green-600" />
+              {renderStars(guide.avg_rating || 0)} {/* Use real rating here */}
               <span className="text-xs text-gray-500 font-semibold">
-                {guide.reviews} reviews
+                ({guide.review_count || 0} reviews)
               </span>
             </div>
           </div>
         </div>
 
-        {/* --- Responds Quickly Badge --- */}
-        <div className="mb-6">
-          <Badge 
-            variant="outline" 
-            className="text-xs border-green-600 text-green-600 bg-green-50/50"
-          >
-            Responds quickly
-          </Badge>
+        {/* --- Verified Badge / Responds Quickly --- */}
+        <div className="mb-6 flex flex-wrap gap-2">
+            {guide.isVerified && (
+                 <Badge 
+                    variant="default"
+                    className="bg-blue-500 hover:bg-blue-600 text-xs"
+                >
+                    ✅ Verified
+                </Badge>
+            )}
+            <Badge 
+                variant="outline" 
+                className="text-xs border-green-600 text-green-600 bg-green-50/50"
+            >
+                ⚡ Responds quickly
+            </Badge>
         </div>
 
         {/* --- Details List --- */}
         <div className="space-y-3 text-sm text-gray-700">
           {/* Location */}
           <div className="flex items-center">
-            <span className="text-green-600 mr-2">📍</span> {/* Updated color */}
-            <span>I live in <span className="font-semibold">{guide.location}</span></span>
+            <span className="text-green-600 mr-2">📍</span>
+            <span>Based in <span className="font-semibold">{guide.address || 'Global'}</span></span>
           </div>
 
           {/* Languages */}
           <div className="flex items-center">
-            <span className="text-green-600 mr-2">🗣️</span> {/* Updated color */}
-            <span>I speak <span className="font-semibold">{guide.languages}</span></span>
+            <span className="text-green-600 mr-2">🗣️</span>
+            <span>I speak <span className="font-semibold">{languagesString}</span></span>
           </div>
           
-          {/* Verified Host */}
-          {guide.isVerified && (
-            <div className="flex items-center">
-              <span className="text-green-600 mr-2">✅</span> {/* Updated color */}
-              <span className="font-semibold">Verified Local host</span>
+          {/* Expertise */}
+          {(guide?.guideProfile?.expertise?.length ?? 0) > 0 && (
+             <div className="flex items-center">
+                <span className="text-green-600 mr-2">🌟</span>
+                <span>Expertise: <span className="font-semibold">{guide.guideProfile?.expertise?.slice(0, 2).join(', ')}</span></span>
             </div>
           )}
 
-          {/* Response Time - Kept red for urgency but icon updated */}
+
+          {/* Response Time */}
           <div className="flex items-center">
-            <span className="text-green-600 mr-2">⏰</span> {/* Updated color */}
-            <span>Response time <span className="font-semibold text-red-500">{guide.responseTime}</span></span>
+            <span className="text-green-600 mr-2">⏰</span>
+            <span>Response time <span className="font-semibold text-red-500">{responseTime}</span></span>
           </div>
         </div>
 
-        {/* --- Buttons --- */}
+        {/* --- Action Buttons --- */}
         <div className="flex space-x-3 mt-6">
           <Button 
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white" // Updated color
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white" 
           >
-            Book me
+            Book Now
           </Button>
           <Button 
             variant="outline" 
-            className="flex-1 border-green-600 text-green-600 hover:bg-green-50" // Updated color
+            className="flex-1 border-green-600 text-green-600 hover:bg-green-50" 
           >
-            Contact me
+            Message
           </Button>
         </div>
 
