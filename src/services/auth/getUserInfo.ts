@@ -33,3 +33,26 @@ export const getUserInfo = async (): Promise<UserInfo | any> => {
     }
 
 }
+
+export const updateProfile = async (formData: FormData) => {
+    try {
+        // IMPORTANT: Do NOT set Content-Type: application/json or JSON.stringify(data)
+        // Pass the FormData object directly.
+        const response = await serverFetch.patch("/user/profile", {
+            // Use the FormData object directly as the body
+            body: formData, 
+        });
+
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Error update profile:", error);
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Failed to profile update",
+        };
+    }
+}

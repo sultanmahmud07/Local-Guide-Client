@@ -137,6 +137,17 @@ export interface IBookingStatusLog {
 // ------------------
 // MAIN BOOKING INTERFACE
 // ------------------
+interface IReview {
+  rating: number;
+  comment: string;
+  user: {
+    name: string;
+    email: string;
+    // Assume you have an image URL for the user profile, or use a default
+    profileImage?: string; 
+  };
+  createdAt: string; // The date the review was created
+}
 export interface IBooking {
   _id: string;
 
@@ -147,7 +158,8 @@ export interface IBooking {
   date: string;   // YYYY-MM-DD
   phone: string;   // YYYY-MM-DD
   address: string;   // YYYY-MM-DD
-  paymentUrl?: string;   // YYYY-MM-DD
+  review?: IReview;
+  paymentUrl?: string;   
   time: string;   // HH:mm
   groupSize: number;
   totalPrice: number;

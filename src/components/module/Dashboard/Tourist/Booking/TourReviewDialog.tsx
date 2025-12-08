@@ -7,6 +7,7 @@ import { Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createReview } from "@/services/review/reviews.service";
+import { useRouter } from "next/navigation";
 
 export default function TourReviewDialog({
   open,
@@ -25,7 +26,7 @@ export default function TourReviewDialog({
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+ const router = useRouter();
   const handleSubmit = async () => {
     if (rating === 0) return toast.error("Please select a star rating.");
     if (comment.trim().length < 10)
@@ -46,6 +47,7 @@ export default function TourReviewDialog({
 
     if (result?.success) {
       toast.success("Review submitted successfully!");
+       router.refresh();
       onClose();
     } else {
       toast.error(result.message || "Failed to submit review.");

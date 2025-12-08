@@ -9,6 +9,7 @@ import { useState } from "react";
 import TourReviewDialog from "./TourReviewDialog";
 import { CheckCircle, Clock, XCircle } from "lucide-react"; // Icons for Status
 import PayNowButton from "@/components/shared/PaymentButton";
+import ReviewCard from "./ReviewCard";
 
 export default function TouristBookingDetailView({ booking }: { booking: IBooking }) {
       const [reviewOpen, setReviewOpen] = useState(false);
@@ -142,7 +143,7 @@ export default function TouristBookingDetailView({ booking }: { booking: IBookin
                                     )}
 
                               {/* === ⭐ Review Button if Completed === */}
-                              {booking.status === BOOKING_STATUS.COMPLETED && (
+                              {booking.status === BOOKING_STATUS.COMPLETED && !booking?.review && (
                                     <Button
                                           size="lg"
                                           className="p-4 bg-yellow-500 hover:bg-yellow-600 text-white"
@@ -152,7 +153,13 @@ export default function TouristBookingDetailView({ booking }: { booking: IBookin
                                     </Button>
                               )}
                         </div>
-
+                        <div className="review-card mt-6">
+                              {/* === View Review Card if Review Exists === */}
+                              {booking.review && (
+                                    // Assume booking.review is already populated with the necessary fields
+                                    <ReviewCard review={booking.review} />
+                              )}
+                        </div>
                   </CardContent>
 
                   {/* Review Dialog (keep this outside the main view for modals) */}
