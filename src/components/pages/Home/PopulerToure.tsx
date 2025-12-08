@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default async function PopularTour() {
   const tourData = await getTours();
-  // console.log(tourData)
+  console.log(tourData)
   return (
     <section className="w-full bg-[#f7f7f7] py-12 md:py-16 lg:py-20">
       <div className="main-container">
@@ -24,7 +24,7 @@ export default async function PopularTour() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {tourData?.data?.map((tour:ITourGet) => (
             <TourCard key={tour._id} tour={tour} />
           ))}

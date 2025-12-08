@@ -6,17 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { renderStars } from "@/components/shared/renderStars";
 import { IGuide } from "@/types/user.interface";
+import Link from "next/link";
 
 
 const ProfileCard = ({ guide }: { guide: IGuide }) => {
   const languagesString = guide.languages?.join(', ') || 'N/A';
   // Assuming a static response time for now, or fetch it separately
-  const responseTime = "less than 8 hours"; 
+  const responseTime = "less than 8 hours";
 
   return (
     <Card className="shadow-lg border-none sticky top-24"> {/* Added sticky for sidebar effect */}
       <CardContent className="p-6">
-        
+
         {/* --- Header (Image, Name, Rating) --- */}
         <div className="flex items-start space-x-4 mb-4">
           <Image
@@ -28,12 +29,12 @@ const ProfileCard = ({ guide }: { guide: IGuide }) => {
           />
           <div>
             <h2 className="text-xl font-bold text-gray-800">{guide.name}</h2>
-            
+
             {/* Display Daily Rate */}
             {guide.guideProfile?.dailyRate && (
-                <p className="text-sm font-semibold text-green-700 mt-1 mb-1">
-                    ${guide.guideProfile.dailyRate} / Day
-                </p>
+              <p className="text-sm font-semibold text-green-700 mt-1 mb-1">
+                ${guide.guideProfile.dailyRate} / Day
+              </p>
             )}
 
             {/* Rating Stars (Using real aggregated data) */}
@@ -48,20 +49,20 @@ const ProfileCard = ({ guide }: { guide: IGuide }) => {
 
         {/* --- Verified Badge / Responds Quickly --- */}
         <div className="mb-6 flex flex-wrap gap-2">
-            {guide.isVerified && (
-                 <Badge 
-                    variant="default"
-                    className="bg-blue-500 hover:bg-blue-600 text-xs"
-                >
-                    ✅ Verified
-                </Badge>
-            )}
-            <Badge 
-                variant="outline" 
-                className="text-xs border-green-600 text-green-600 bg-green-50/50"
+          {guide.isVerified && (
+            <Badge
+              variant="default"
+              className="bg-blue-500 hover:bg-blue-600 text-xs"
             >
-                ⚡ Responds quickly
+              ✅ Verified
             </Badge>
+          )}
+          <Badge
+            variant="outline"
+            className="text-xs border-green-600 text-green-600 bg-green-50/50"
+          >
+            ⚡ Responds quickly
+          </Badge>
         </div>
 
         {/* --- Details List --- */}
@@ -77,12 +78,12 @@ const ProfileCard = ({ guide }: { guide: IGuide }) => {
             <span className="text-green-600 mr-2">🗣️</span>
             <span>I speak <span className="font-semibold">{languagesString}</span></span>
           </div>
-          
+
           {/* Expertise */}
           {(guide?.guideProfile?.expertise?.length ?? 0) > 0 && (
-             <div className="flex items-center">
-                <span className="text-green-600 mr-2">🌟</span>
-                <span>Expertise: <span className="font-semibold">{guide.guideProfile?.expertise?.slice(0, 2).join(', ')}</span></span>
+            <div className="flex items-center">
+              <span className="text-green-600 mr-2">🌟</span>
+              <span>Expertise: <span className="font-semibold">{guide.guideProfile?.expertise?.slice(0, 2).join(', ')}</span></span>
             </div>
           )}
 
@@ -96,17 +97,21 @@ const ProfileCard = ({ guide }: { guide: IGuide }) => {
 
         {/* --- Action Buttons --- */}
         <div className="flex space-x-3 mt-6">
-          <Button 
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white" 
+          <Link className="flex-1" href={`/message/${guide?._id}`}>
+          <Button
+            className=" bg-green-600 w-full hover:bg-green-700 text-white"
           >
             Book Now
           </Button>
-          <Button 
-            variant="outline" 
-            className="flex-1 border-green-600 text-green-600 hover:bg-green-50" 
-          >
-            Message
-          </Button>
+          </Link>
+          <Link className="flex-1" href={`/message/${guide?._id}`}>
+            <Button
+              variant="outline"
+              className="cursor-pointer w-full border-green-600 text-green-600 hover:bg-green-50"
+            >
+              Message
+            </Button>
+          </Link>
         </div>
 
       </CardContent>

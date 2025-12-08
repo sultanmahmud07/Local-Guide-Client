@@ -8,7 +8,7 @@ export type RouteConfig = {
 export const authRoutes = ["/login", "/register", "/registration", "/forgot-password"];
 
 export const commonProtectedRoutes: RouteConfig = {
-    exact: ["/tour/booking-request","/my-profile", "/settings", "/change-password", "/reset-password"],
+    exact: ["/tour/booking-request", "/my-profile", "/settings", "/change-password", "/reset-password"],
     patterns: [], // [/password/change-password, /password/reset-password => /password/*]
 }
 
@@ -23,7 +23,7 @@ export const guideProtectedRoutes: RouteConfig = {
 }
 
 export const touristProtectedRoutes: RouteConfig = {
-    patterns: [/^\/dashboard/], // Routes starting with /dashboard/*
+    patterns: [/^\/dashboard/, /^\/message/], // Routes starting with /dashboard/*
     exact: [], // "/dashboard"
 }
 

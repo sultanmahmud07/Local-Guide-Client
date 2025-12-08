@@ -31,3 +31,32 @@ export interface ReviewPayload {
   /** The textual comment or feedback provided for the review. */
   comment: string;
 }
+
+// types/review.interface.ts (or use IReview if already defined)
+
+export interface IReviewForGuide {
+    _id: string;
+    tour: {
+        _id: string;
+        title: string;
+    };
+    user: {
+        _id: string;
+        name: string;
+        // Assuming picture/avatar is populated
+        picture?: string; 
+    };
+    rating: number;
+    comment: string;
+    createdAt: string;
+}
+
+// Interface for the main component props
+export interface GuideReviewsProps {
+    // Aggregated stats from guideInfo
+    guideInfo: {
+        avg_rating: number;
+        review_count: number;
+    };
+    reviews: IReview[];
+}

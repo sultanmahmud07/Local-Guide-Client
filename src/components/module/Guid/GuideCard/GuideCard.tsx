@@ -1,10 +1,9 @@
-// components/guide/GuideCard.tsx
 import { IGuide } from '@/types/user.interface';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button'; // Assuming shadcn/ui Button
-import { Badge } from '@/components/ui/badge';   // Assuming shadcn/ui Badge
-import { Heart, MapPin, Globe, Star, Users } from 'lucide-react'; // Using Lucide Icons
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';   
+import { Heart, MapPin, Globe, Star, Users } from 'lucide-react'; 
 
 const GuideCard = ({ guide }: { guide: IGuide }) => {
     
@@ -14,6 +13,7 @@ const GuideCard = ({ guide }: { guide: IGuide }) => {
     // Calculate full stars and determine if there's a half star
     const avgRating = guide.avg_rating || 0;
     const fullStars = Math.floor(avgRating);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const hasHalfStar = avgRating - fullStars >= 0.25 && avgRating - fullStars < 0.75;
     
     // Get the first location or use a fallback

@@ -5,13 +5,41 @@ import { FaRegHeart, FaStar, FaRegClock, FaUserFriends, FaCar } from "react-icon
 import { Button } from "../../ui/button";
 import { ITourGet } from "@/types/booking.interface";
 
+// Helper function to render stars based on the average rating
+const renderRatingStars = (avgRating: number) => {
+    const fullStars = Math.floor(avgRating);
+    const stars = [];
+
+    for (let i = 0; i < 5; i++) {
+        // Determine if the star should be filled
+        const isFilled = i < fullStars;
+        
+        // Use a consistent size and color scheme
+        stars.push(
+            <FaStar 
+                key={i} 
+                className={`w-3 h-3 inline-block ${isFilled ? "text-yellow-400" : "text-gray-300"}`} 
+            />
+        );
+    }
+    return stars;
+};
+
+
 export default function TourCard({ tour }: { tour: ITourGet }) {
   const thumbnail =
     tour.thumbnail ||
-    (Array.isArray(tour.images) && tour.images.length > 0 ? tour.images[0] : "/images/placeholder-800x520.jpg");
+    (Array.isArray(tour.images) && tour.images.length > 0 ? tour.images[0] : "/default.png");
 
-  const guideAvatar = tour.author?.avatar ?? "/images/avatar-placeholder-48.png";
-  const guideName = tour.author?.name ?? "Unknown Guide";
+  // Access the author object (which includes aggregated stats)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const author = tour.author as any; 
+  console.log(tour)
+  // Use optional chaining for safety when accessing aggregated fields
+  const guideAvatar = author?.picture ?? "/default.png";
+  const guideName = author?.name ?? "Unknown Guide";
+  const avgRating = author?.avg_rating ?? 0;
+  const reviewCount = author?.review_count ?? 0;
 
   return (
     <article className="bg-white rounded-xl shadow-md overflow-hidden border border-transparent hover:shadow-xl transition">
@@ -52,27 +80,30 @@ export default function TourCard({ tour }: { tour: ITourGet }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
-              <Image src={guideAvatar} alt={guideName} width={48} height={48} className="object-cover" />
+              {/* Use guideAvatar which is sourced from author.picture */}
+              <Image src={guideAvatar} alt={guideName} width={48} height={48} className="object-cover w-full h-full" /> 
             </div>
 
             <div>
               <div className="text-sm font-semibold">{guideName}</div>
 
-              {/* rating row */}
+              {/* rating row (UPDATED) */}
               <div className="flex items-center gap-2">
                 <div className="flex items-center text-sm">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <FaStar key={i} className={`inline-block ${i < 5 ? "text-yellow-400" : "text-gray-300"}`} />
-                  ))}
+                  {/* Use the new helper to render dynamic stars */}
+                  {renderRatingStars(avgRating)}
                 </div>
-                <span className="text-xs text-gray-500">(0)</span>
+                {/* Display the calculated average rating and count */}
+                <span className="text-xs font-semibold text-gray-800">
+                    {avgRating.toFixed(2)}
+                </span>
+                <span className="text-xs text-gray-500">
+                    ({reviewCount})
+                </span>
               </div>
             </div>
           </div>
 
-          <div className="text-xs text-gray-400">
-            {tour.destinationCity ?? "Unknown"}
-          </div>
         </div>
 
         {/* title & description */}
@@ -86,6 +117,9 @@ export default function TourCard({ tour }: { tour: ITourGet }) {
           {tour.description?.slice(0, 80) ?? ""}
         </p>
 
+          <div className="text-xs text-gray-400">
+            {tour.destinationCity ?? "Unknown"}
+          </div>
         {/* price */}
         <div className="mt-4 flex items-end justify-between">
           <div>

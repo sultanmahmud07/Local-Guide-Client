@@ -1,8 +1,10 @@
 import TourCard from "@/components/module/Tour/TourCard";
+import GuideReviews from "@/components/pages/BeAGuide/GuideReviews";
 import ProfileCard from "@/components/pages/GuideProfile/ProfileCard";
 import ProfileContent from "@/components/pages/GuideProfile/ProfileContent";
 import TopGap from "@/components/shared/TopGap";
 import { getGuidProfileWithTour } from "@/services/public/guide.services";
+import { getReviewByGuid } from "@/services/review/reviews.service";
 import { ITourGet } from "@/types/booking.interface";
 
 export default async function GuidDetailPage({
@@ -12,12 +14,13 @@ export default async function GuidDetailPage({
 }) {
   const { id } = await params
   const guideInfo = await getGuidProfileWithTour(id)
+  const reviews = await getReviewByGuid(id)
 
-  console.log(guideInfo)
+  // console.log("Review data", reviews)
   return (
     <div className="ll">
       <TopGap></TopGap>
-      <div className="main-container py-10 px-4 md:px-6 lg:px-8 ">
+      <div className="main-container py-10 ">
         {/* Container for the two-column layout */}
         <div className="flex flex-col md:flex-row md:space-x-12">
 
@@ -39,6 +42,7 @@ export default async function GuidDetailPage({
            </div>
           </div>
         </div>
+        <GuideReviews guideInfo={guideInfo} reviews={reviews} />
       </div>
     </div>
   );
