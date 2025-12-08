@@ -50,7 +50,28 @@ export async function updateMyProfile(formData: FormData) {
         };
     }
 }
+export async function changePassword(data:{oldPassword:string, newPassword: string}) {
+    try {
+        const response = await serverFetch.post("/auth/change-password", {
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Error change password:", error);
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Failed to change password",
+        };
+    }
+}
 // Reset Password
 export async function resetPassword(_prevState: any, formData: FormData) {
 

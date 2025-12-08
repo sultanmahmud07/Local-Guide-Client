@@ -59,7 +59,7 @@ export default function TouristProfileForm({ user, isEditing, isSubmitting, onSa
       // Convert comma-separated string back to array
       languages: form.languages.split(',').map(lang => lang.trim()).filter(lang => lang.length > 0),
     };
-    
+    console.log(dataToSave)
     onSave(dataToSave);
   };
 

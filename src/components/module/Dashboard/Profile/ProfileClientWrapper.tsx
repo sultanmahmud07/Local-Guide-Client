@@ -1,6 +1,4 @@
-// components/profile/ProfileClientWrapper.tsx
 'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserInfo, Role } from '@/types/user.interface';
@@ -10,13 +8,10 @@ import TouristProfileForm from './TouristProfileForm';
 import ProfileSidebar from './ProfileSidebar';
 import { updateProfile } from '@/services/auth/getUserInfo';
 import { toast } from 'sonner';
-// import GuideProfileForm from '@/components/profile/GuideProfileForm'; // Implement this for GUIDE role
 
 interface ProfileClientWrapperProps {
       initialUser: UserInfo;
 }
-
-// ------------------------------------------------------------------
 
 export default function ProfileClientWrapper({ initialUser }: ProfileClientWrapperProps) {
       const router = useRouter();
@@ -24,27 +19,18 @@ export default function ProfileClientWrapper({ initialUser }: ProfileClientWrapp
       const [currentUser, setCurrentUser] = useState<UserInfo>(initialUser);
       const [isSubmitting, setIsSubmitting] = useState(false);
 
-      // components/profile/ProfileClientWrapper.tsx (Updated handleUpdate)
-
-      // Assume you pass the updated data AND the file object (if one was selected)
       const handleUpdate = async (
             updatedData: Partial<UserInfo>,
-            profilePictureFile?: File // The file object from the input
+            profilePictureFile?: File 
       ) => {
             setIsSubmitting(true);
 
-            // 1. Create a FormData object
             const formData = new FormData();
-
-            // 2. Append Textual Data from updatedData object
-            // Loop through the fields in the updatedData object
             for (const key in updatedData) {
                   if (updatedData.hasOwnProperty(key)) {
                         const value = updatedData[key as keyof typeof updatedData];
 
-                        // Handle arrays (like languages) by joining them or appending multiple times
                         if (Array.isArray(value)) {
-                              // Example: If languages is ['English', 'Bengali'], send as a JSON string
                               formData.append(key, JSON.stringify(value));
                         } else if (value !== undefined && value !== null) {
                               formData.append(key, String(value));
@@ -52,13 +38,11 @@ export default function ProfileClientWrapper({ initialUser }: ProfileClientWrapp
                   }
             }
 
-            // 3. Append the File
             if (profilePictureFile) {
                   formData.append("file", profilePictureFile);
             }
 
             try {
-                  // 4. Call the service with the FormData object
                   const result = await updateProfile(formData);
                   if (result?.success) {
                         toast.success("Review submitted successfully!");
