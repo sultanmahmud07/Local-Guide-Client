@@ -1,10 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import SearchBar from "../Explore/SearchBar";
 
 export default function Hero() {
+
   return (
     <section className="relative w-full h-[85vh] flex items-center justify-center">
       {/* Background Image */}
@@ -31,20 +28,7 @@ export default function Hero() {
         </p>
 
         {/* Search Box */}
-        <div className="relative max-w-xl mx-auto">
-          <Input
-            type="text"
-            placeholder="Where to?"
-            className="pl-4 pr-12 py-6 text-lg rounded-xl shadow-lg bg-white"
-          />
-
-          <Button
-            size="icon"
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-primary hover:bg-secondary transition text-white"
-          >
-            <Search className="h-5 w-5" />
-          </Button>
-        </div>
+        <SearchBar />
       </div>
     </section>
   );

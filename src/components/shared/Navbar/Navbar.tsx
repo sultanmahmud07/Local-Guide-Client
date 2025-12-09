@@ -37,7 +37,7 @@ const Navbar = (props: Props) => {
 
 
   const navigationLinks = [
-    { href: "/search", label: "Explore Tours", role: "PUBLIC" },
+    { href: "/explore", label: "Explore Tours", role: "PUBLIC" },
     { href: "/become-a-guide", label: "Become a Guide", role: "PUBLIC" },
   ];
 
