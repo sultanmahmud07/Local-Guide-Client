@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { IBooking } from "@/types/booking.interface";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Props {
   booking: IBooking | null;
@@ -26,19 +27,22 @@ export default function GuideBookingDetailDialog({ booking, open, onClose }: Pro
 
         <div className="space-y-6 py-4">
           <div className="grid grid-cols-2 gap-6">
-            <div className="border rounded-lg p-4">
-              <h4 className="font-semibold">Traveller</h4>
-              <p className="font-medium">{booking.user?.name}</p>
-              <p className="text-sm text-muted-foreground">{booking.user?.email}</p>
-              <p className="text-sm">{booking.user?.phone || "-"}</p>
-            </div>
-
-            <div className="border rounded-lg p-4">
-              <h4 className="font-semibold">Tour</h4>
-              <p className="font-medium">{booking.tour?.title}</p>
-              <p className="text-sm text-muted-foreground">{booking.tour?.destinationCity}</p>
-              <p className="text-sm">Fee: ${booking.tour?.fee}</p>
-            </div>
+            <Link href={`/profile/${booking.user?._id}`}>
+              <div className="border rounded-lg p-4 bg-green-50 hover:bg-green-100">
+                <h4 className="font-semibold">Traveller</h4>
+                <p className="font-medium">{booking.user?.name}</p>
+                <p className="text-sm text-muted-foreground">{booking.user?.email}</p>
+                <p className="text-sm">{booking.user?.phone || "-"}</p>
+              </div>
+            </Link>
+            <Link href={`/tour/${booking.tour?.slug}`}>
+              <div className="border rounded-lg p-4 bg-green-50 hover:bg-green-100">
+                <h4 className="font-semibold">Tour</h4>
+                <p className="font-medium">{booking.tour?.title}</p>
+                <p className="text-sm text-muted-foreground">{booking.tour?.destinationCity}</p>
+                <p className="text-sm">Fee: ${booking.tour?.fee}</p>
+              </div>
+            </Link>
           </div>
 
           <div className="grid grid-cols-3 gap-4">

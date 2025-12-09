@@ -14,12 +14,6 @@ export const getCommonNavItems = (role: UserRole): NavSection[] => {
                     icon: "LayoutDashboard",
                     roles: ["TOURIST", "GUIDE", "ADMIN", "SUPER_ADMIN"],
                 },
-                {
-                    title: "My Profile",
-                    href: `/my-profile`,
-                    icon: "User",
-                    roles: ["TOURIST", "GUIDE", "ADMIN", "SUPER_ADMIN"],
-                },
 
             ]
         },
@@ -32,12 +26,41 @@ export const getCommonNavItems = (role: UserRole): NavSection[] => {
                     icon: "Settings", // ✅ String
                     roles: ["TOURIST"],
                 },
+                {
+                    title: "My Profile",
+                    href: `/my-profile`,
+                    icon: "User",
+                    roles: ["TOURIST", "GUIDE", "ADMIN", "SUPER_ADMIN"],
+                },
             ],
         },
     ]
 }
 
 export const guideNavItems: NavSection[] = [
+    {
+        title: "Booking Management",
+        items: [
+            {
+                title: "Upcoming Bookings",
+                href: "/guide/dashboard/upcoming-booking",
+                icon: "Clock", // ✅ String
+                roles: ["GUIDE"],
+            },
+            {
+                title: "My Bookings",
+                href: "/guide/dashboard/my-booking",
+                icon: "BookOpenText", // ✅ String
+                roles: ["GUIDE"],
+            },
+            {
+                title: "Requested Bookings",
+                href: "/guide/dashboard/request-booking",
+                icon: "ShieldQuestionMark", // ✅ String
+                roles: ["GUIDE"],
+            }
+        ],
+    },
     {
         title: "Tour Management",
         items: [
@@ -46,12 +69,6 @@ export const guideNavItems: NavSection[] = [
                 href: "/guide/dashboard/my-listing",
                 icon: "Calendar", // ✅ String
                 badge: "3",
-                roles: ["GUIDE"],
-            },
-            {
-                title: "My Bookings",
-                href: "/guide/dashboard/my-booking",
-                icon: "Clock", // ✅ String
                 roles: ["GUIDE"],
             },
             {

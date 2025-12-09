@@ -1,7 +1,3 @@
-import { UserRole } from "@/lib/auth-utils";
-import { IAdmin } from "./admin.interface";
-import { IDoctor } from "./doctor.interface";
-import { IPatient } from "./patient.interface";
 
 export type AuthProvider = {
   provider: string;

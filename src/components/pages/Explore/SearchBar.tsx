@@ -1,47 +1,35 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react"; // Removed useEffect
+import { useRouter } from "next/navigation"; // Removed useSearchParams
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 
 export default function SearchBar() {
       const router = useRouter();
-      const searchParams = useSearchParams();
+      // NOTE: Removed const searchParams = useSearchParams();
 
-      // 1. Initialize state with the current 'search' param value, or default to empty string
-      const initialQuery = searchParams.get('search') || "";
-      const [query, setQuery] = useState(initialQuery);
+      // 1. Initialize state to an empty string, ignoring current URL parameters.
+      const [query, setQuery] = useState("");
 
       // 2. Handler to update the URL parameter and navigate
       const handleSearch = () => {
-            // Copy current search params to preserve any existing parameters
-            const params = new URLSearchParams(searchParams.toString());
+            // Create a brand NEW URLSearchParams object (no existing params copied)
+            const params = new URLSearchParams();
 
             if (query.trim()) {
                   // Set the input value to the 'search' parameter
                   params.set('search', query.trim());
-            } else {
-                  // Remove the 'search' parameter if the input is empty
-                  params.delete('search');
-            }
+            } 
+            // If query is empty, the search param is simply omitted, as the object is new.
 
-            // Navigate to the /explore page with the updated search string
-            // e.g., /explore?search=Dhaka
+            // Navigate to the /explore page with only the new search string (if present)
+            // e.g., /explore or /explore?search=Dhaka
             router.push(`/explore?${params.toString()}`);
       };
 
-      // Optional: Update the input state if searchParams change (e.g., user hits back button)
-      useEffect(() => {
-            const currentParam = searchParams.get('search') || "";
-            // Only update the state if it's different to prevent resetting cursor position
-            if (query !== currentParam) {
-                  setQuery(currentParam);
-            }
-      }, [searchParams]);
-
+      // NOTE: Removed useEffect block entirely
 
       // Allow search on Enter key press
       const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

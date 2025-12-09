@@ -1,6 +1,5 @@
 'use client';
 import { Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { MapPin, DollarSign, ArrowRight } from 'lucide-react'; // Added ArrowRight for the card link
 import { format } from 'date-fns';
 import Image from 'next/image';

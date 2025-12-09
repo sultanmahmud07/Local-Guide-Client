@@ -111,7 +111,7 @@ const UserProfileMenu: React.FC<Props> = ({ userInfo = null }) => {
                               {userInfo?.role === Role.TOURIST && (
                                     <Link href="/dashboard/my-booking" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
                                           <FiBriefcase className="w-4 h-4" />
-                                          My Bookings
+                                          My Trips
                                     </Link>
                               )}
 
