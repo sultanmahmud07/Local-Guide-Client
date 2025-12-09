@@ -13,6 +13,8 @@ export type IUser = {
   name: string;
   email: string;
   profile?: string
+  picture?: string
+  address?: string
   isActive: string;
   isVerified: boolean;
   isDeleted?: boolean;
@@ -83,4 +85,31 @@ export interface IGuide extends UserInfo {
     review_count?: number; 
     avg_rating?: number; 
     isFeatured?: boolean;
+}
+
+export interface ITourist {
+    _id: string;
+    name: string;
+    email: string;
+    isDeleted: boolean;
+    isActive: 'ACTIVE' | 'INACTIVE'; 
+    isVerified: boolean;
+    role: Role.TOURIST; 
+    address?: string; // Made optional
+    phone?: string;   // Made optional
+    picture?: string; // Profile picture URL
+    bio?: string;
+    languages?: string[]; // Array of languages spoken
+
+    auths: Array<{
+        provider: string;
+        providerId: string;
+    }>;
+    createdAt: string; // ISO date string
+    updatedAt: string; // ISO date string
+    
+    // --- Aggregation Fields (Specific to Tourists, usually 0) ---
+    review_count: number; // Tourist might have written 0 reviews
+    
+    // NOTE: avg_rating and guideProfile are absent as they are Guide-specific.
 }

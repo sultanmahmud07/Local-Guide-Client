@@ -21,7 +21,7 @@ const GuideRegisterPage = () => {
               </p>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <Link href="/explore-tours" className="inline-block px-5 py-3 bg-secondary text-white rounded-md shadow hover:opacity-95">
+                <Link href="/explore" className="inline-block px-5 py-3 bg-secondary text-white rounded-md shadow hover:opacity-95">
                   Explore Tours
                 </Link>
                 <a href="#register" className="inline-block px-5 py-3 border border-secondary text-secondary rounded-md hover:bg-secondary/5">

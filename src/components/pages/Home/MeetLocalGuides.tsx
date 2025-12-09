@@ -7,7 +7,6 @@ import Link from "next/link";
 
 export default async function MeetLocalGuides() {
   const guideData = await getFeaturedGuide()
-  console.log(guideData)
   return (
     <section className="w-full bg-[#f7f7f7] py-12 md:py-16 md:pb-20">
       <div className="main-container">
@@ -17,7 +16,7 @@ export default async function MeetLocalGuides() {
             Meet your{" "}
             <span className="text-primary">Local Guides</span>
           </h2>
-          <Link href="/guides" className="">
+          <Link href="/explore?type=guide" className="">
             <Button className="bg-secondary rounded-none shadow cursor-pointer">
               Explore All Guides
             </Button>

@@ -76,7 +76,7 @@ export const touristNavItems: NavSection[] = [
             },
             {
                 title: "Explore Tours",
-                href: "/explore-tours",
+                href: "/explore",
                 icon: "ClipboardList", // ✅ String
                 roles: ["TOURIST"],
             },

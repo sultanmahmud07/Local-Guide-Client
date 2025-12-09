@@ -10,7 +10,7 @@ import Link from "next/link";
 
 
 const ProfileCard = ({ guide }: { guide: IGuide }) => {
-  const languagesString = guide.languages?.join(', ') || 'N/A';
+  const languagesString = guide?.languages?.join(', ') || 'N/A';
   // Assuming a static response time for now, or fetch it separately
   const responseTime = "less than 8 hours";
 

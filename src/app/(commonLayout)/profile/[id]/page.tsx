@@ -1,19 +1,20 @@
 
-import ProfileCard from "@/components/pages/GuideProfile/ProfileCard";
-import ProfileContent from "@/components/pages/GuideProfile/ProfileContent";
+import TouristProfileCard from "@/components/pages/TouristProfile/ProfileCard";
+import ProfileContent from "@/components/pages/TouristProfile/ProfileContent";
+import TouristReviews from "@/components/pages/TouristProfile/TouristReviews";
 import TopGap from "@/components/shared/TopGap";
-import { getGuidProfileWithTour } from "@/services/public/guide.services";
-import { getReviewByGuid } from "@/services/review/reviews.service";
+import { getTouristById } from "@/services/public/guide.services";
+import { getReviewByTourist } from "@/services/review/reviews.service";
+
 export default async function TouristDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const tourist = await getGuidProfileWithTour(id)
-  const reviews = await getReviewByGuid(id)
+  const tourist = await getTouristById(id)
+    const reviews = await getReviewByTourist(id)
 
-  // console.log("Review data", reviews)
   return (
     <div className="ll">
       <TopGap></TopGap>
@@ -23,15 +24,16 @@ export default async function TouristDetailPage({
 
           {/* === Left Column (Sidebar/Card) === */}
           <div className="w-full md:w-1/3 mb-8 md:mb-0">
-            <ProfileCard guide={tourist} />
+            <TouristProfileCard user={tourist} />
           </div>
 
           {/* === Right Column (Content/Bio) === */}
           <div className="w-full md:w-2/3">
             <ProfileContent guide={tourist} />
+
+                    <TouristReviews reviews={reviews} />
           </div>
         </div>
-        {/* <GuideReviews tourist={tourist} reviews={reviews} /> */}
       </div>
     </div>
   );

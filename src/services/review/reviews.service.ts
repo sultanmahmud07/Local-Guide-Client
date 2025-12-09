@@ -40,6 +40,20 @@ export async function getReviewByGuid(id: string) {
         };
     }
 }
+export async function getReviewByTourist(id: string) {
+    try {
+        const response = await serverFetch.get(`/review/tourist/${id}`);
+        const result = await response.json();
+        return result.data;
+    } catch (error: any) {
+        console.log(error);
+        return {
+            success: false,
+            data: [],
+            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+        };
+    }
+}
 export async function createReview(data: ReviewPayload) {
     try {
         const response = await serverFetch.post("/review/create", {

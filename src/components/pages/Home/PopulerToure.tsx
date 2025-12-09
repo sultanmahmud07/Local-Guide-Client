@@ -7,7 +7,6 @@ import Link from "next/link";
 
 export default async function PopularTour() {
   const tourData = await getTours();
-  console.log(tourData)
   return (
     <section className="w-full bg-[#f7f7f7] py-12 md:py-16 lg:py-20">
       <div className="main-container">
@@ -17,9 +16,9 @@ export default async function PopularTour() {
             Popular <span className="text-emerald-700">tours</span>
           </h2>
 
-          <Link href="/guides" className="">
+          <Link href="/explore?type=tour" className="">
             <Button className="bg-emerald-700 text-white rounded-none shadow cursor-pointer">
-              Explore All Guides
+              Explore All Tours
             </Button>
           </Link>
         </div>
