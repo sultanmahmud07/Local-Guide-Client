@@ -33,8 +33,7 @@ export default function TourCard({ tour }: { tour: ITourGet }) {
 
   // Access the author object (which includes aggregated stats)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const author = tour.author as any; 
-  console.log(tour)
+  const author = tour.author as any;
   // Use optional chaining for safety when accessing aggregated fields
   const guideAvatar = author?.picture ?? "/default.png";
   const guideName = author?.name ?? "Unknown Guide";

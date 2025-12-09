@@ -1,10 +1,24 @@
 import { IAppointment } from "./appointments.interface";
 import { IDoctor } from "./doctor.interface";
 import { IPatient } from "./patient.interface";
+interface ITourBase {
+    _id: string;
+    title: string;
+    slug: string;
+}
 
+interface IUserBase {
+    _id: string;
+    name: string;
+    picture?: string;
+}
 export interface IReview {
     id: string;
+    _id?: string;
     patientId: string;
+    tour?: ITourBase;
+    guide?: IUserBase;
+    user?: IUserBase;
     patient?: IPatient;
     doctorId: string;
     doctor?: IDoctor;
@@ -60,3 +74,4 @@ export interface GuideReviewsProps {
     };
     reviews: IReview[];
 }
+

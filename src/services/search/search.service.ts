@@ -34,6 +34,7 @@ function buildQueryString(params: Partial<IQueryProps> | undefined): string {
 
 
 export async function getAllGuides(queryString?: IQueryProps) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const query = buildQueryString(queryString); // Build the query string from the input object
       try {
             const response = await serverFetch.get(`/user/guide/search`); // Append the query string

@@ -1,21 +1,19 @@
-// components/UserProfileMenu.tsx
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { FiLogOut, FiUser, FiMap, FiBriefcase } from "react-icons/fi";
-import { IUser } from "@/types/user.interface";
+import { FiLogOut, FiUser, FiMap, FiBriefcase, FiSettings, FiLayers, FiUsers } from "react-icons/fi";
+import { IUser, Role } from "@/types/user.interface";
 import Image from "next/image";
 import { logoutUser } from "@/services/auth/logoutUser";
+import { IoListSharp } from "react-icons/io5";
 
 
 type Props = {
       userInfo?: IUser | null;
-      onSignOut?: () => Promise<void> | void;
 };
 
-const DEFAULT_AVATAR = "/images/default-avatar.png"; // replace with your default image path
 
-const UserProfileMenu: React.FC<Props> = ({ userInfo = null, onSignOut }) => {
+const UserProfileMenu: React.FC<Props> = ({ userInfo = null }) => {
       const [open, setOpen] = useState(false);
       const ref = useRef<HTMLDivElement | null>(null);
 
@@ -38,15 +36,9 @@ const UserProfileMenu: React.FC<Props> = ({ userInfo = null, onSignOut }) => {
       }, []);
 
       const displayName = userInfo?.name ?? userInfo?.email?.split?.("@")[0] ?? "Guest";
-      const initials = displayName
-            .split(" ")
-            .map((p) => p[0] ?? "")
-            .slice(0, 2)
-            .join("")
-            .toUpperCase();
 
       const handleSignOut = async () => {
-        await logoutUser();   
+            await logoutUser();
       };
 
       return (
@@ -63,7 +55,6 @@ const UserProfileMenu: React.FC<Props> = ({ userInfo = null, onSignOut }) => {
                         {/* avatar */}
                         <div className="w-10 h-10 border-2 border-primary rounded-full bg-gray-100 overflow-hidden flex items-center justify-center text-sm font-semibold text-gray-700">
                               {userInfo?.profile ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
                                     <Image src={userInfo?.profile} alt={displayName} width={100} height={100} className="w-full h-full object-cover" />
                               ) : (
                                     <Image src="/auth/default-user.jpg" alt={displayName} width={100} height={100} className="w-full h-full object-cover" />
@@ -106,15 +97,57 @@ const UserProfileMenu: React.FC<Props> = ({ userInfo = null, onSignOut }) => {
 
                         {/* menu items */}
                         <div className="py-1">
-                              <Link href="/explore-tours" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
-                                    <FiMap className="w-4 h-4" />
-                                    Explore Tours
-                              </Link>
+                              {/* --- 1. TOURIST / GUIDE Common Item --- */}
+                              {(userInfo?.role === Role.TOURIST || userInfo?.role === Role.GUIDE) && (
+                                    <Link href="/explore-tours" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                          <FiMap className="w-4 h-4" />
+                                          Explore Tours
+                                    </Link>
+                              )}
 
-                              <Link href="/dashboard/my-booking" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
-                                    <FiBriefcase className="w-4 h-4" />
-                                    My Bookings
-                              </Link>
+                              {/* --- 2. ROLE-SPECIFIC DASHBOARD/BOOKING LINKS --- */}
+
+                              {/* TOURIST: My Bookings */}
+                              {userInfo?.role === Role.TOURIST && (
+                                    <Link href="/dashboard/my-booking" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                          <FiBriefcase className="w-4 h-4" />
+                                          My Bookings
+                                    </Link>
+                              )}
+
+                              {/* GUIDE: Dashboard (My Listings, Bookings) */}
+                              {userInfo?.role === Role.GUIDE && (
+                                    <>
+                                          <Link href="/guide/dashboard" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                                <FiLayers className="w-4 h-4" />
+                                                Dashboard
+                                          </Link>
+                                          <Link href="/guide/dashboard" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                                <IoListSharp className="w-4 h-4" />
+                                                My listing
+                                          </Link>
+                                    </>
+                              )}
+
+                              {/* ADMIN/SUPER_ADMIN: Admin Dashboard */}
+                              {(userInfo?.role === Role.ADMIN || userInfo?.role === Role.SUPER_ADMIN) && (
+                                    <>
+                                          <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                                <FiSettings className="w-4 h-4" />
+                                                Admin Dashboard
+                                          </Link>
+                                          <Link href="/admin/manage-users" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                                <FiUsers className="w-4 h-4" />
+                                                Manage Users
+                                          </Link>
+                                          <Link href="/admin/manage-listings" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                                <FiBriefcase className="w-4 h-4" />
+                                                Manage Listings
+                                          </Link>
+                                    </>
+                              )}
+
+                              {/* --- 3. UNIVERSAL LINKS --- */}
 
                               <Link href="/my-profile" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
                                     <FiUser className="w-4 h-4" />

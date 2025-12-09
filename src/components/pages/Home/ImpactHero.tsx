@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 
 const ImpactHero = () => {
   return (
-    <section className="w-full bg-white py-10 md:py-16">
+    <section className="w-full bg-amber-50  py-10 md:py-16">
       <div className="mx-auto w-[92%] max-w-[1200px] grid gap-10 grid-cols-1 lg:grid-cols-[1fr_520px] items-center">
 
         {/* LEFT PANEL */}
@@ -12,10 +13,11 @@ const ImpactHero = () => {
           {/* Logo */}
           <div className="mb-6">
             <Image
-              src="/logo/logo.png"
+              src="/logo/site-logo.png"
               alt="Logo"
               width={80}
-              height={40}
+              height={80}
+              className="bg-white/25 p-2 rounded-2xl"
             />
           </div>
 
@@ -34,14 +36,14 @@ const ImpactHero = () => {
 
           {/* Actions */}
           <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="/tours"
+            <Link
+              href="/explore"
               className="inline-flex items-center rounded-lg bg-amber-100 text-rose-700 px-5 py-3 shadow-md font-semibold"
             >
               Explore Tours
-            </a>
+            </Link>
             <a
-              href="/guides"
+              href="/explore?type=guide"
               className="inline-flex items-center rounded-lg border border-white/20 text-white px-4 py-3 font-medium"
             >
               Meet Guides
@@ -71,7 +73,7 @@ const ImpactHero = () => {
               {/* Square logo */}
               <div className="row-span-2 rounded-lg overflow-hidden bg-secondary flex items-center justify-center">
                 <Image
-                  src="/logo/logo.png"
+                  src="/logo/site-logo.png"
                   alt="Brand"
                   width={70}
                   height={70}

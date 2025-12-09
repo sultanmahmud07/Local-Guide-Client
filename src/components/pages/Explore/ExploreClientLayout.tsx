@@ -34,7 +34,7 @@ const ToggleButton = ({ type, currentType, setType }: { type: string; currentTyp
 );
 
 
-export default function ExploreClientLayout({ initialResults, initialMeta, initialType }: ExploreClientLayoutProps) {
+export default function ExploreClientLayout({ initialResults, initialType }: ExploreClientLayoutProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     
@@ -221,7 +221,7 @@ export default function ExploreClientLayout({ initialResults, initialMeta, initi
                                     />
                                     <Button 
                                         size="icon" 
-                                        className='flex-shrink-0 bg-green-600 hover:bg-green-700'
+                                        className='shrink-0 bg-green-600 hover:bg-green-700'
                                         onClick={handlePriceSubmit}
                                     >
                                         <Plus className='w-4 h-4' />
@@ -234,7 +234,6 @@ export default function ExploreClientLayout({ initialResults, initialMeta, initi
 
                             <Separator />
                             
-                            {/* --- Category Filter (Shadcn Checkbox) --- */}
                             <div className="space-y-3">
                                 <Label className="font-semibold text-gray-800 flex items-center gap-1">
                                     <MapPin className='w-4 h-4 text-green-600' /> Category
@@ -274,7 +273,7 @@ export default function ExploreClientLayout({ initialResults, initialMeta, initi
                                     />
                                      <Button 
                                         size="icon" 
-                                        className='flex-shrink-0 bg-green-600 hover:bg-green-700'
+                                        className='shrink-0 bg-green-600 hover:bg-green-700'
                                         onClick={handleLanguageSubmit}
                                     >
                                         <Plus className='w-4 h-4' />
