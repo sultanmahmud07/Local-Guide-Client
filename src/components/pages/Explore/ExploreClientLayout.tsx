@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// components/explore/ExploreClientLayout.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Search, MapPin, DollarSign, Clock, Users, Globe, Filter } from 'lucide-react';
+import { Search, MapPin, DollarSign, Globe, Filter, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import GuideCard from '@/components/module/Guid/GuideCard/GuideCard';
 import TourCard from '@/components/module/Tour/TourCard';
 
@@ -19,7 +19,7 @@ interface ExploreClientLayoutProps {
     initialType: string;
 }
 
-// 🎯 Filter Data Structure (Simplified)
+// Filter Data Structure (Simplified)
 const CATEGORIES = ["Food", "History", "Adventure", "Art"];
 
 // Helper component for the Toggle (simplified)
@@ -38,14 +38,41 @@ export default function ExploreClientLayout({ initialResults, initialMeta, initi
     const router = useRouter();
     const searchParams = useSearchParams();
     
-    // State management for type and search bar
+    // --- State Initialization ---
     const [searchType, setSearchType] = useState(initialType);
     const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
 
-    // State for sidebar filters (can be expanded)
-    const [priceRange, setPriceRange] = useState(searchParams.get('priceRange') || '');
+    // Price Filter (Min/Max)
+    const priceParam = searchParams.get('priceRange') || ''; // e.g., "50-200"
+    const [minPrice, setMinPrice] = useState(priceParam.split('-')[0] || '');
+    const [maxPrice, setMaxPrice] = useState(priceParam.split('-')[1] || '');
+
+    // Category Filter (e.g., "Adventure")
     const [category, setCategory] = useState(searchParams.get('category') || '');
-    // ... add more filter states as needed
+    
+    // Language Filter (e.g., "English")
+    const [languageInput, setLanguageInput] = useState(searchParams.get('language') || '');
+    // --- End State Initialization ---
+
+    // Sync state with URL parameter on navigation
+    useEffect(() => {
+        const currentSearch = searchParams.get('search') || "";
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        if (searchQuery !== currentSearch) setSearchQuery(currentSearch);
+        
+        const price = searchParams.get('priceRange') || '';
+        const [min, max] = price.split('-');
+        setMinPrice(min || '');
+        setMaxPrice(max || '');
+        
+        const currentCategory = searchParams.get('category') || "";
+        if (category !== currentCategory) setCategory(currentCategory);
+
+        const currentLanguage = searchParams.get('language') || "";
+        if (languageInput !== currentLanguage) setLanguageInput(currentLanguage);
+
+    }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
     // --- Core URL Update Logic ---
     const updateUrlParams = (newParams: Record<string, string | null>) => {
@@ -73,17 +100,45 @@ export default function ExploreClientLayout({ initialResults, initialMeta, initi
     // Handler for the Type Toggle (Tour/Guide)
     const handleTypeToggle = (type: string) => {
         setSearchType(type);
-        updateUrlParams({ type: type, search: searchQuery }); // Maintain search query during switch
+        updateUrlParams({ type: type, search: searchQuery }); 
     };
 
-    // Handler for sidebar filter changes
+    // Handler for general filter changes (used by Checkbox)
     const handleFilterChange = (key: string, value: string) => {
         updateUrlParams({ [key]: value });
     };
 
+    // Handler for Price submission (on Add button click or blur)
+    const handlePriceSubmit = () => {
+        // Construct the "min-max" format
+        const min = minPrice.trim();
+        const max = maxPrice.trim();
+        
+        if (min || max) {
+            updateUrlParams({ 'priceRange': `${min}-${max}` });
+        } else {
+            updateUrlParams({ 'priceRange': null });
+        }
+    };
+    
+    // Handler for Language submission (on Add button click or blur/Enter)
+    const handleLanguageSubmit = () => {
+        if (languageInput.trim()) {
+            updateUrlParams({ 'language': languageInput });
+        } else {
+             updateUrlParams({ 'language': null });
+        }
+    };
+
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            handleMainSearch();
+            // Check if the focus is on the main search bar or language bar
+            if (e.currentTarget.id === 'main-search') {
+                handleMainSearch();
+            } else if (e.currentTarget.id === 'language-input') {
+                handleLanguageSubmit();
+            }
         }
     };
     
@@ -100,9 +155,10 @@ export default function ExploreClientLayout({ initialResults, initialMeta, initi
                     {/* Search Bar */}
                     <div className="relative w-full max-w-lg">
                         <Input
+                            id="main-search"
                             type="text"
                             placeholder="Destination / City (e.g., Dhaka)"
-                            className="w-full pl-4 pr-24 py-3 text-base rounded-lg text-white"
+                            className="w-full pl-4 pr-24 py-3 text-base rounded-lg text-white bg-white/10 border-gray-600 placeholder:text-gray-300 focus:bg-white focus:text-gray-800 transition"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyDown={handleKeyDown}
@@ -134,44 +190,67 @@ export default function ExploreClientLayout({ initialResults, initialMeta, initi
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     
                     {/* A. Sidebar Filters (Col 1) */}
-                    <Card className="lg:col-span-1 h-fit sticky top-4 shadow-md">
+                    <Card className="lg:col-span-1 h-fit sticky top-24 shadow-xl">
                         <CardHeader className='p-4 border-b'>
-                            <CardTitle className='text-xl flex items-center gap-2'><Filter className='w-5 h-5' /> Filters</CardTitle>
+                            <CardTitle className='text-xl flex items-center gap-2'><Filter className='w-5 h-5 text-green-600' /> Filters</CardTitle>
                         </CardHeader>
                         <CardContent className='p-4 space-y-5'>
                             
-                            {/* Price Range Filter */}
+                            {/* --- Price Range Filter (Min/Max) --- */}
                             <div className="space-y-2">
                                 <Label className="font-semibold text-gray-800 flex items-center gap-1">
-                                    <DollarSign className='w-4 h-4' /> Price Range
+                                    <DollarSign className='w-4 h-4 text-green-600' /> Price Range
                                 </Label>
-                                <Input 
-                                    type="text" 
-                                    placeholder="e.g., 50-200"
-                                    value={priceRange}
-                                    onChange={(e) => setPriceRange(e.target.value)}
-                                    onBlur={() => handleFilterChange('priceRange', priceRange)}
-                                />
+                                <div className="flex items-center space-x-2">
+                                    <Input 
+                                        type="number" 
+                                        placeholder="Min"
+                                        value={minPrice}
+                                        onChange={(e) => setMinPrice(e.target.value)}
+                                        className="w-1/2"
+                                        onBlur={handlePriceSubmit}
+                                    />
+                                    <span className='text-gray-400'>-</span>
+                                    <Input 
+                                        type="number" 
+                                        placeholder="Max"
+                                        value={maxPrice}
+                                        onChange={(e) => setMaxPrice(e.target.value)}
+                                        className="w-1/2"
+                                        onBlur={handlePriceSubmit}
+                                    />
+                                    <Button 
+                                        size="icon" 
+                                        className='flex-shrink-0 bg-green-600 hover:bg-green-700'
+                                        onClick={handlePriceSubmit}
+                                    >
+                                        <Plus className='w-4 h-4' />
+                                    </Button>
+                                </div>
+                                {(minPrice || maxPrice) && (
+                                    <p className='text-xs text-gray-500'>Current: ${minPrice || 0} to ${maxPrice || '∞'}</p>
+                                )}
                             </div>
 
                             <Separator />
                             
-                            {/* Category Filter */}
-                            <div className="space-y-2">
+                            {/* --- Category Filter (Shadcn Checkbox) --- */}
+                            <div className="space-y-3">
                                 <Label className="font-semibold text-gray-800 flex items-center gap-1">
-                                    <MapPin className='w-4 h-4' /> Category
+                                    <MapPin className='w-4 h-4 text-green-600' /> Category
                                 </Label>
-                                <div className="space-y-1">
+                                <div className="space-y-2">
                                     {CATEGORIES.map(cat => (
-                                        <div key={cat} className="flex items-center space-x-2">
-                                            <input 
-                                                type="checkbox" 
+                                        <div key={cat} className="flex items-center space-x-3">
+                                            <Checkbox 
                                                 id={cat} 
                                                 checked={category === cat}
-                                                onChange={() => handleFilterChange('category', category === cat ? '' : cat)}
-                                                className="rounded text-green-600 focus:ring-green-500"
+                                                onCheckedChange={() => 
+                                                    handleFilterChange('category', category === cat ? '' : cat)
+                                                }
+                                                className='border-gray-400 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600'
                                             />
-                                            <Label htmlFor={cat} className="font-normal">{cat}</Label>
+                                            <Label htmlFor={cat} className="font-normal cursor-pointer">{cat}</Label>
                                         </div>
                                     ))}
                                 </div>
@@ -179,18 +258,36 @@ export default function ExploreClientLayout({ initialResults, initialMeta, initi
                             
                             <Separator />
 
-                            {/* Language Filter (Example) */}
+                            {/* --- Language Filter (With Add Button) --- */}
                             <div className="space-y-2">
                                 <Label className="font-semibold text-gray-800 flex items-center gap-1">
-                                    <Globe className='w-4 h-4' /> Language
+                                    <Globe className='w-4 h-4 text-green-600' /> Language
                                 </Label>
-                                {/* Add select/input for language here */}
-                                <Input type="text" placeholder="English, Spanish" onBlur={(e) => handleFilterChange('language', e.target.value)} />
+                                <div className='flex gap-2'>
+                                    <Input 
+                                        id="language-input"
+                                        type="text" 
+                                        placeholder="English, Spanish"
+                                        value={languageInput}
+                                        onChange={(e) => setLanguageInput(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleLanguageSubmit()}
+                                    />
+                                     <Button 
+                                        size="icon" 
+                                        className='flex-shrink-0 bg-green-600 hover:bg-green-700'
+                                        onClick={handleLanguageSubmit}
+                                    >
+                                        <Plus className='w-4 h-4' />
+                                    </Button>
+                                </div>
+                                {languageInput && (
+                                    <p className='text-xs text-gray-500'>Current: {languageInput}</p>
+                                )}
                             </div>
 
                             <Button 
                                 variant="outline" 
-                                className='w-full border-gray-300 text-gray-600 hover:bg-gray-50'
+                                className='w-full border-gray-300 text-gray-600 hover:bg-gray-50 mt-6'
                                 onClick={() => router.push('/explore')} // Reset button
                             >
                                 Reset Filters

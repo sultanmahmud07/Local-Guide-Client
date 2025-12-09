@@ -7,7 +7,7 @@ import { getAllGuides, getAllTours } from "@/services/search/search.service";
 interface exploreToursProps {
   searchParams: Promise<{
     search?: string;
-    price?: string;
+    priceRange?: string;
     category?: string;
     type?: string;
     language?: string;
@@ -29,13 +29,11 @@ const ExploreToursPage = async ({
     if (type === 'guide') {
       const res = await getAllGuides(params); // Your service should accept query parameters
       results = res.data;
-      console.log(res)
       meta = res.meta;
     } else {
       // Default: Fetch Tours
       const res = await getAllTours(params);
       results = res.data;
-      console.log(res)
       meta = res.meta;
     }
   } catch (error) {
