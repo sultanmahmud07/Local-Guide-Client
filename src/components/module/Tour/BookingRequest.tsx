@@ -57,8 +57,7 @@ function getDaysArrayForMonth(year: number, month: number) {
 export default function RightBookingCard({ tour, reservedDates }: Props) {
   const router = useRouter();
   const [people, setPeople] = useState<number>(1);
-  const [date, setDate] = useState<string>(""); // YYYY-MM-DD
-  const [address, setAddress] = useState<string>("");
+  const [date, setDate] = useState<string>(""); 
   const [time, setTime] = useState<string>("");
   const [showCalendar, setShowCalendar] = useState(false);
 
@@ -327,7 +326,7 @@ export default function RightBookingCard({ tour, reservedDates }: Props) {
         <button
           onClick={handleRequest}
           disabled={!date || !time}
-          className="w-full bg-emerald-700 hover:bg-emerald-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold shadow-lg shadow-emerald-100 transition-all transform active:scale-[0.98]"
+          className="w-full cursor-pointer bg-emerald-700 hover:bg-emerald-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold shadow-lg shadow-emerald-100 transition-all transform active:scale-[0.98]"
         >
           Request Booking
         </button>

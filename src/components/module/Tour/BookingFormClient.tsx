@@ -50,16 +50,10 @@ export default function BookingFormClient({
   const [date, setDate] = useState<string>(initialDate);
   const [time, setTime] = useState<string>(initialTime);
   const [notes, setNotes] = useState<string>("");
-
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPhone(userInfo?.phone ?? "");
   }, [userInfo]);
-
-  const increase = () => setPeople((p) => Math.min(tour.maxGroupSize ?? 10, p + 1));
-  const decrease = () => setPeople((p) => Math.max(1, p - 1));
-
-  const availableTimes = Array.isArray(tour.startTime) && tour.startTime.length ? tour.startTime : ["10:00", "11:30", "14:00"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +87,7 @@ export default function BookingFormClient({
       address,
       notes,
     };
-  const result = await createBooking(payload);
+    const result = await createBooking(payload);
 
     if (result.success) {
       toast.success("Booking request successfully!");
@@ -134,41 +128,26 @@ export default function BookingFormClient({
         </div>
       </div>
 
+      <div className="flex flex-wrap items-center justify-between md:py-3">
+        <p className="flex items-center gap-2">
+          <span>Data:</span>
+          <span>{date}</span>
+        </p>
+        <p className="flex items-center gap-2">
+          <span>Time:</span>
+          <span>{time}</span>
+        </p>
+        <p className="flex items-center gap-2">
+          <span>Party size:</span>
+          <span>{people}</span>
+        </p>
+      </div>
       {/* Phone */}
       <div>
         <label className="text-sm font-medium">Phone number <span className="text-xs text-gray-400">(Required)</span></label>
         <div className="mt-2 flex items-center gap-2">
           <span className="p-2 rounded-l border bg-gray-50"><FaPhoneAlt /></span>
           <input className="flex-1 p-2 border rounded-r" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1 555 555 5555" />
-        </div>
-      </div>
-
-      {/* Party size */}
-      <div>
-        <label className="text-sm font-medium">Party size</label>
-        <div className="mt-2 flex items-center gap-3">
-          <button type="button" onClick={decrease} className="w-10 h-10 rounded-full border flex items-center justify-center">−</button>
-          <div className="text-lg font-semibold">{people}</div>
-          <button type="button" onClick={increase} className="w-10 h-10 rounded-full border flex items-center justify-center">+</button>
-          <div className="text-sm text-gray-500 ml-auto">Up to {tour.maxGroupSize ?? 10}</div>
-        </div>
-      </div>
-
-      {/* Date & Time */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm font-medium">Select tour date</label>
-          <input type="date" className="mt-2 w-full p-2 border rounded" value={date} onChange={(e) => setDate(e.target.value)} />
-        </div>
-
-        <div>
-          <label className="text-sm font-medium">Select tour start time</label>
-          <select className="mt-2 w-full p-2 py-[11px] border rounded" value={time} onChange={(e) => setTime(e.target.value)}>
-            <option value="">Select start time</option>
-            {availableTimes.map((t) => (
-              <option key={t} value={t}>{t}</option>
-            ))}
-          </select>
         </div>
       </div>
 
@@ -184,8 +163,8 @@ export default function BookingFormClient({
       </div>
 
       <div className="flex gap-3">
-        <button type="submit" className="px-6 py-3 bg-emerald-700 text-white rounded-md font-medium">Confirm & Request</button>
-        <button type="button" className="px-6 py-3 border rounded-md text-gray-700" onClick={() => { /* maybe save draft */ }}>Save as draft</button>
+        <button type="submit" className="px-6 cursor-pointer py-3 bg-emerald-700 text-white rounded-md  font-medium">Confirm & Request</button>
+        <button type="button" className="px-6 py-3 border border-primary cursor-pointer rounded-md text-gray-700" onClick={() => { router.back()}}>Back to tour</button>
       </div>
     </form>
   );

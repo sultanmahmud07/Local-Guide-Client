@@ -1,8 +1,9 @@
-
 "use client";
 import { Button } from "@/components/ui/button";
+import { IUser } from "@/types/user.interface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Calendar, Clock, Users, ShieldCheck, User } from "lucide-react";
 
 type ITourSimple = {
   _id: string;
@@ -16,67 +17,136 @@ type ITourSimple = {
   destinationCity?: string;
 };
 
-export default function BookingSummaryClient({ tour }: { tour: ITourSimple }) {
+export default function BookingSummaryClient({
+  tour,
+  userInfo,
+  initialPeople = 1,
+  initialDate = "Date not selected",
+  initialTime = "Time not selected",
+}: {
+  tour: ITourSimple;
+  userInfo?: IUser | null;
+  initialPeople?: number;
+  initialDate?: string;
+  initialTime?: string;
+}) {
   const router = useRouter();
-  const fee = typeof tour.fee === "number" ? tour.fee : Number(tour.fee ?? 0);
-  const defaultPeople = 1;
-  const subTotal = fee * defaultPeople;
-  const serviceFee = +(subTotal * 0.07); // example 7%
-  const total = +(subTotal + serviceFee);
 
-  const thumbnail = tour.thumbnail ?? (Array.isArray(tour.images) && tour.images.length ? tour.images[0] : "/images/placeholder-800x520.jpg");
+  // --- 1. Logic Fix: Use initialPeople for calculation ---
+  const fee = typeof tour.fee === "number" ? tour.fee : Number(tour.fee ?? 0);
+  const subTotal = fee * initialPeople; 
+  const serviceFee = subTotal * 0.07; // 7% Service Fee
+  const total = subTotal + serviceFee;
+
+  // Image Fallback Logic
+  const thumbnail = tour.thumbnail 
+    ?? (Array.isArray(tour.images) && tour.images.length ? tour.images[0] : "/images/placeholder.jpg");
 
   return (
-    <aside className="sticky top-28">
-      <div className="bg-white rounded-2xl p-4 shadow-sm">
-        <div className="flex gap-3">
-          <div className="w-20 h-14 rounded overflow-hidden bg-gray-100">
-            <Image src={thumbnail} alt={tour.title} width={160} height={120} className="object-cover" />
-          </div>
-          <div className="flex-1">
-            <div className="font-semibold text-sm">{tour.title}</div>
-            <div className="text-xs text-gray-500 mt-1">Tour guide: {tour.author?.name ?? "—"}</div>
-          </div>
+    <aside className="sticky top-28 w-full">
+      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+        
+        {/* --- Header: Tour Info --- */}
+        <div className="p-6 pb-4">
+            <h3 className="text-lg font-extrabold text-gray-900 mb-4">Booking Summary</h3>
+            <div className="flex gap-4 items-start">
+                <div className="relative w-24 h-20 rounded-xl overflow-hidden shrink-0 border border-gray-100">
+                    <Image 
+                        src={thumbnail} 
+                        alt={tour.title} 
+                        fill 
+                        className="object-cover" 
+                    />
+                </div>
+                <div>
+                    <h4 className="font-bold text-gray-800 text-sm line-clamp-2 leading-tight">
+                        {tour.title}
+                    </h4>
+                    <div className="flex items-center gap-1.5 mt-2 text-xs text-gray-500 bg-gray-50 w-fit px-2 py-1 rounded-full">
+                        <User className="w-3 h-3 text-emerald-600" />
+                        <span className="truncate max-w-[120px]">
+                            {tour.author?.name || "Local Guide"}
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div className="mt-4 text-sm">
-          <div className="flex justify-between">
-            <div className="text-gray-600">Party size</div>
-            <div>1 person</div>
-          </div>
-
-          <div className="flex justify-between mt-2">
-            <div className="text-gray-600">Date</div>
-            <div>Choose on left</div>
-          </div>
-
-          <div className="flex justify-between mt-2">
-            <div className="text-gray-600">Tour guide</div>
-            <div>{tour.author?.name ?? "—"}</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4 bg-white rounded-2xl p-4 shadow-sm">
-        <div className="text-lg font-semibold mb-3">Price details</div>
-
-        <div className="flex justify-between text-sm">
-          <div>Tour cost</div>
-          <div>${subTotal.toFixed(2)} USD</div>
+        <div className="px-6">
+            <div className="h-px w-full bg-gray-100 my-2"></div>
         </div>
 
-        <div className="flex justify-between text-sm mt-2">
-          <div>Service fee</div>
-          <div>${serviceFee.toFixed(2)} USD</div>
+        {/* --- Booking Details --- */}
+        <div className="p-6 py-4 space-y-4">
+            <div className="flex items-center justify-between group">
+                <div className="flex items-center gap-3 text-gray-500">
+                    <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                        <Users className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-medium">Guests</span>
+                </div>
+                <span className="text-sm font-bold text-gray-900">{initialPeople} Person{initialPeople > 1 ? 's' : ''}</span>
+            </div>
+
+            <div className="flex items-center justify-between group">
+                <div className="flex items-center gap-3 text-gray-500">
+                    <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                        <Calendar className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-medium">Date</span>
+                </div>
+                <span className="text-sm font-bold text-gray-900">{initialDate}</span>
+            </div>
+
+            <div className="flex items-center justify-between group">
+                <div className="flex items-center gap-3 text-gray-500">
+                    <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
+                        <Clock className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-medium">Time</span>
+                </div>
+                <span className="text-sm font-bold text-gray-900">{initialTime}</span>
+            </div>
         </div>
 
-        <div className="border-t mt-3 pt-3 flex justify-between items-center font-semibold">
-          <div>Total</div>
-          <div>${total.toFixed(2)} USD</div>
-        </div>
+        {/* --- Price Breakdown Section --- */}
+        <div className="bg-gray-50 p-6 border-t border-gray-100">
+            <div className="space-y-3 mb-4">
+                <div className="flex justify-between text-sm text-gray-600">
+                    <span>${fee.toFixed(2)} x {initialPeople} guests</span>
+                    <span className="font-medium text-gray-900">${subTotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-gray-600">
+                    <span className="flex items-center gap-1">
+                        Service fee 
+                        <ShieldCheck className="w-3 h-3 text-gray-400" />
+                    </span>
+                    <span className="font-medium text-gray-900">${serviceFee.toFixed(2)}</span>
+                </div>
+            </div>
 
-        <div className="mt-4">
-          <Button className="w-full bg-emerald-700 text-white" onClick={() => router.push("/")}>Message To Guide</Button>
+            <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
+                <span className="font-bold text-gray-900 text-lg">Total</span>
+                <div className="text-right">
+                    <span className="font-extrabold text-xl text-emerald-700 block">
+                        ${total.toFixed(2)}
+                    </span>
+                    <span className="text-[10px] text-gray-500 uppercase font-medium tracking-wide">USD</span>
+                </div>
+            </div>
+
+            {/* Action Button */}
+            <div className="mt-6">
+                <Button 
+                    className="w-full bg-secondary hover:bg-emerald-800 text-white font-bold py-4 rounded-xl text-base shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02]" 
+                    onClick={() => router.push(`/message/${userInfo?._id}`)}
+                >
+                    Message To Guide
+                </Button>
+                <p className="text-center text-xs text-gray-400 mt-3">
+                    You won&apos;t be charged yet
+                </p>
+            </div>
         </div>
       </div>
     </aside>

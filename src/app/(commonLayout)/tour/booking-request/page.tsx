@@ -43,8 +43,6 @@ export default async function BookingConfirmRequest({
   const initialDate = req?.date ?? "";
   const initialTime = req?.time ?? "";
 
-  // pass server data to client components
-  console.log("Ayseliljslfjlsdjfjsldjfljsldjflsjdlkfjsldjfl")
   return (
     <div>
       <TopGap />
@@ -74,7 +72,12 @@ export default async function BookingConfirmRequest({
 
           {/* RIGHT: summary (col-span 4) */}
           <div className="lg:col-span-4">
-            <BookingSummaryClient tour={tour} />
+            <BookingSummaryClient
+             tour={tour}
+                userInfo={userInfo}
+                initialPeople={initialPeople}
+                initialDate={initialDate}
+                initialTime={initialTime} />
           </div>
         </div>
       </div>
