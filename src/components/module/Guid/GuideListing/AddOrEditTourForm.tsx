@@ -2,12 +2,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Trash2, PlusCircle, Image as ImageIcon } from "lucide-react";
 import { updateListing } from "@/services/guide/guideListing.services"; // your api helper
+import Image from "next/image";
 
+// --- TYPE DEFINITIONS ---
 type TourTransportationMode =
       | "Walking"
       | "Biking"
@@ -29,8 +30,7 @@ interface IExistingTour {
       maxGroupSize?: number;
       destinationCity?: string;
       startTime?: string[];
-      thumbnail?: string | null; // existing thumbnail url
-      images?: string[]; // existing gallery urls
+      images?: string[]; // All media URLs
       childFee?: number;
       meetingPoint?: string;
       transportationMode?: TourTransportationMode;
@@ -61,7 +61,7 @@ const sanitizeSlug = (v = "") =>
 export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps) {
       const router = useRouter();
 
-      // Form state prefilled with initialData
+      // --- STATE INITIALIZATION ---
       const [title, setTitle] = useState(initialData.title || "");
       const [slug, setSlug] = useState(initialData.slug || "");
       const [manualSlugEdit, setManualSlugEdit] = useState(false);
@@ -77,7 +77,7 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
       );
       const [destinationCity, setDestinationCity] = useState(initialData.destinationCity || "");
 
-      // arrays
+      // Arrays
       const [startTime, setStartTime] = useState<string[]>(initialData.startTime || []);
       const [itinerary, setItinerary] = useState<string[]>(initialData.itinerary || []);
       const [importantPoints, setImportantPoints] = useState<string[]>(initialData.importantPoints || []);
@@ -89,7 +89,7 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
             initialData.inclusionsAndExclusions?.exclusions || []
       );
 
-      // meta
+      // Meta/Options
       const [language, setLanguage] = useState<Language>(initialData.language || "English");
       const [category, setCategory] = useState<TourCategory>(initialData.category || "Food");
       const [isActive, setIsActive] = useState<boolean>(initialData.isActive ?? true);
@@ -102,101 +102,59 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
       );
       const [meetingPoint, setMeetingPoint] = useState<string>(initialData.meetingPoint || "");
 
-      // thumbnail: existing url + optional new file
-      const [existingThumbnailUrl, setExistingThumbnailUrl] = useState<string | null>(initialData.thumbnail || null);
-      const [newThumbnailFile, setNewThumbnailFile] = useState<File | null>(null);
-      const [newThumbnailPreview, setNewThumbnailPreview] = useState<string | null>(null);
+      // --- MEDIA STATE ---
+      // All existing images
+      const [existingMediaUrls, setExistingMediaUrls] = useState<string[]>(initialData.images || []);
+      const [markedToDelete, setMarkedToDelete] = useState<string[]>([]);
 
-      // images: existing URLs (editable selection) + new files
-      const [existingImages, setExistingImages] = useState<string[]>(initialData.images || []);
-      const [markedToDelete, setMarkedToDelete] = useState<string[]>([]); // URLs selected to delete
+      // New uploads
       const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
       const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
 
       const [tempInput, setTempInput] = useState<Record<string, string>>({
-            startTime: "",
-            itinerary: "",
-            importantPoints: "",
-            cancellationPolicy: "",
-            inclusion: "",
-            exclusion: "",
+            startTime: "", itinerary: "", importantPoints: "", cancellationPolicy: "", inclusion: "", exclusion: "",
       });
 
       const [isSubmitting, setIsSubmitting] = useState(false);
 
-      // auto-generate slug from title until manual edit
+      // --- EFFECTS ---
       useEffect(() => {
-            if (!manualSlugEdit) {
-                  setSlug(sanitizeSlug(title));
-            }
+            if (!manualSlugEdit) { setSlug(sanitizeSlug(title)); }
       }, [title, manualSlugEdit]);
 
-      // cleanup object URLs
       useEffect(() => {
-            return () => {
-                  newImagePreviews.forEach((p) => p && p.startsWith("blob:") && URL.revokeObjectURL(p));
-                  if (newThumbnailPreview && newThumbnailPreview.startsWith("blob:")) URL.revokeObjectURL(newThumbnailPreview);
-            };
-      }, [newImagePreviews, newThumbnailPreview]);
+            return () => { newImagePreviews.forEach((p) => p && p.startsWith("blob:") && URL.revokeObjectURL(p)); };
+      }, [newImagePreviews]);
 
-      // helper for array add/remove
+
+      // --- ARRAY HELPERS ---
       const addArrayItem = (key: string) => {
             const v = (tempInput as any)[key]?.trim();
             if (!v) return toast.error("Please enter a value");
             switch (key) {
-                  case "startTime":
-                        setStartTime((s) => [...s, v]);
-                        break;
-                  case "itinerary":
-                        setItinerary((s) => [...s, v]);
-                        break;
-                  case "importantPoints":
-                        setImportantPoints((s) => [...s, v]);
-                        break;
-                  case "cancellationPolicy":
-                        setCancellationPolicy((s) => [...s, v]);
-                        break;
-                  case "inclusion":
-                        setInclusions((s) => [...s, v]);
-                        break;
-                  case "exclusion":
-                        setExclusions((s) => [...s, v]);
-                        break;
+                  case "startTime": setStartTime((s) => [...s, v]); break;
+                  case "itinerary": setItinerary((s) => [...s, v]); break;
+                  case "importantPoints": setImportantPoints((s) => [...s, v]); break;
+                  case "cancellationPolicy": setCancellationPolicy((s) => [...s, v]); break;
+                  case "inclusion": setInclusions((s) => [...s, v]); break;
+                  case "exclusion": setExclusions((s) => [...s, v]); break;
             }
             setTempInput((t) => ({ ...t, [key]: "" }));
       };
 
       const removeArrayItem = (key: string, index: number) => {
             switch (key) {
-                  case "startTime":
-                        setStartTime((s) => s.filter((_, i) => i !== index));
-                        break;
-                  case "itinerary":
-                        setItinerary((s) => s.filter((_, i) => i !== index));
-                        break;
-                  case "importantPoints":
-                        setImportantPoints((s) => s.filter((_, i) => i !== index));
-                        break;
-                  case "cancellationPolicy":
-                        setCancellationPolicy((s) => s.filter((_, i) => i !== index));
-                        break;
-                  case "inclusions":
-                        setInclusions((s) => s.filter((_, i) => i !== index));
-                        break;
-                  case "exclusions":
-                        setExclusions((s) => s.filter((_, i) => i !== index));
-                        break;
+                  case "startTime": setStartTime((s) => s.filter((_, i) => i !== index)); break;
+                  case "itinerary": setItinerary((s) => s.filter((_, i) => i !== index)); break;
+                  case "importantPoints": setImportantPoints((s) => s.filter((_, i) => i !== index)); break;
+                  case "cancellationPolicy": setCancellationPolicy((s) => s.filter((_, i) => i !== index)); break;
+                  case "inclusions": setInclusions((s) => s.filter((_, i) => i !== index)); break;
+                  case "exclusions": setExclusions((s) => s.filter((_, i) => i !== index)); break;
             }
       };
 
-      // thumbnail selection
-      const handleThumbnailChange = (f?: File | null) => {
-            if (!f) return;
-            setNewThumbnailFile(f);
-            setNewThumbnailPreview(URL.createObjectURL(f));
-      };
+      // --- MEDIA HANDLERS ---
 
-      // gallery new images selection
       const handleNewImages = (files: FileList | null) => {
             if (!files) return;
             const arr = Array.from(files);
@@ -208,13 +166,18 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
       const removeNewImage = (index: number) => {
             const preview = newImagePreviews[index];
             if (preview && preview.startsWith("blob:")) URL.revokeObjectURL(preview);
+
             setNewImageFiles((p) => p.filter((_, i) => i !== index));
             setNewImagePreviews((p) => p.filter((_, i) => i !== index));
       };
 
       const toggleMarkExistingImage = (url: string) => {
-            setMarkedToDelete((prev) => (prev.includes(url) ? prev.filter((u) => u !== url) : [...prev, url]));
+            setMarkedToDelete((prev) => {
+                  return prev.includes(url) ? prev.filter((u) => u !== url) : [...prev, url];
+            });
       };
+
+      // --- SUBMISSION LOGIC ---
 
       const validate = (): { ok: boolean; message?: string } => {
             if (!title || title.trim().length < 3) return { ok: false, message: "Title must be at least 3 characters." };
@@ -227,75 +190,53 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
             return { ok: true };
       };
 
-      // submit: builds FormData and calls updateListing(fd, id)
       const handleSubmit = async (e?: React.FormEvent) => {
             e?.preventDefault();
             const v = validate();
-            if (!v.ok) {
-                  return toast.error(v.message);
-            }
+            if (!v.ok) { return toast.error(v.message); }
 
             setIsSubmitting(true);
             try {
                   const payload: Record<string, any> = {
-                        title: title.trim(),
-                        slug: slug.trim(),
-                        description: description.trim(),
-                        fee: Number(fee),
-                        durationHours: Number(durationHours),
-                        maxGroupSize: Number(maxGroupSize),
-                        destinationCity: destinationCity.trim(),
-                        startTime,
-                        childFee: childFee === "" ? undefined : Number(childFee),
-                        meetingPoint: meetingPoint || undefined,
-                        transportationMode: transportationMode || undefined,
-                        itinerary,
-                        importantPoints,
-                        cancellationPolicy,
-                        inclusionsAndExclusions: {
-                              inclusions,
-                              exclusions,
-                        },
-                        language,
-                        category,
-                        isActive,
-                        status,
+                        title: title.trim(), slug: slug.trim(), description: description.trim(), fee: Number(fee),
+                        durationHours: Number(durationHours), maxGroupSize: Number(maxGroupSize), destinationCity: destinationCity.trim(),
+                        startTime, childFee: childFee === "" ? undefined : Number(childFee), meetingPoint: meetingPoint || undefined,
+                        transportationMode: transportationMode || undefined, itinerary, importantPoints, cancellationPolicy,
+                        inclusionsAndExclusions: { inclusions, exclusions }, language, category, isActive, status,
                   };
 
                   const fd = new FormData();
 
-                  Object.entries(payload).forEach(([k, v]) => {
-                        if (v === undefined || v === null) return;
+                  // Append JSON/Array/Boolean fields as Blobs
+                  // Object.entries(payload).forEach(([k, v]) => {
+                  //       if (v === undefined || v === null) return;
+                  //       if (Array.isArray(v) || typeof v === "object" || typeof v === "boolean") {
+                  //             const blob = new Blob([JSON.stringify(v)], { type: "application/json" });
+                  //             fd.append(k, blob);
+                  //       } else {
+                  //             fd.append(k, String(v));
+                  //       }
+                  // });
+                 
+                  fd.append("data", JSON.stringify(payload))
+                  // Append ALL new files
+                  if (newImageFiles.length > 0) {
+                        newImageFiles.forEach((f) => {
+                              fd.append("files", f);
+                        })
+                  };
 
-                        // For arrays, objects and booleans send as a JSON Blob so multipart parsers
-                        // can expose a parsable JSON payload rather than a plain string.
-                        if (Array.isArray(v) || typeof v === "object" || typeof v === "boolean") {
-                              const blob = new Blob([JSON.stringify(v)], { type: "application/json" });
-                              fd.append(k, blob);
-                        } else {
-                              fd.append(k, String(v));
-                        }
-                  });
-
-                  // thumbnail file (if selected)
-                  if (newThumbnailFile) {
-                        fd.append("thumbnail", newThumbnailFile);
-                  }
-
-                  // append new gallery images as `files`
-                  newImageFiles.forEach((f) => fd.append("files", f));
-
-                  // send deleteImages array (urls) if any
+                  // Send deleteImages array (URLs) if any
                   if (markedToDelete.length > 0) {
                         fd.append("deleteImages", JSON.stringify(markedToDelete));
                   }
 
-                  // call update API
                   const result = await updateListing(fd, initialData._id);
 
                   if (result?.success) {
                         toast.success(result.message || "Tour updated successfully");
-                        //   router.push("/my-listing");
+                        router.refresh();
+                        router.push("/guide/dashboard/my-listing");
                   } else {
                         toast.error(result?.message || "Update failed");
                   }
@@ -309,51 +250,43 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
 
       return (
             <form onSubmit={handleSubmit} className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow space-y-6">
+                  {/* Basic Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                               <label className="text-sm font-medium">Title</label>
                               <input value={title} onChange={(e) => setTitle(e.target.value)} className="mt-2 w-full p-2 border rounded" />
                         </div>
-
                         <div>
                               <label className="text-sm font-medium">Slug</label>
                               <input
                                     value={slug}
-                                    onChange={(e) => {
-                                          setManualSlugEdit(true);
-                                          setSlug(sanitizeSlug(e.target.value));
-                                    }}
+                                    onChange={(e) => { setManualSlugEdit(true); setSlug(sanitizeSlug(e.target.value)); }}
                                     className="mt-2 w-full p-2 border rounded"
                               />
                         </div>
-
                         <div className="md:col-span-2">
                               <label className="text-sm font-medium">Description</label>
                               <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="mt-2 w-full p-2 border rounded min-h-[120px]" />
                         </div>
-
                         <div>
                               <label className="text-sm font-medium">Fee</label>
                               <input type="number" min={0} value={fee as any} onChange={(e) => setFee(e.target.value === "" ? "" : Number(e.target.value))} className="mt-2 w-full p-2 border rounded" />
                         </div>
-
                         <div>
                               <label className="text-sm font-medium">Duration (hours)</label>
                               <input type="number" min={1} value={durationHours as any} onChange={(e) => setDurationHours(e.target.value === "" ? "" : Number(e.target.value))} className="mt-2 w-full p-2 border rounded" />
                         </div>
-
                         <div>
                               <label className="text-sm font-medium">Max Group Size</label>
                               <input type="number" min={1} value={maxGroupSize as any} onChange={(e) => setMaxGroupSize(e.target.value === "" ? "" : Number(e.target.value))} className="mt-2 w-full p-2 border rounded" />
                         </div>
-
                         <div>
                               <label className="text-sm font-medium">Destination City</label>
                               <input value={destinationCity} onChange={(e) => setDestinationCity(e.target.value)} className="mt-2 w-full p-2 border rounded" />
                         </div>
                   </div>
 
-                  {/* Arrays UI (startTime, itinerary, etc.) */}
+                  {/* Arrays UI */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                               <label className="text-sm font-medium">Start Times</label>
@@ -391,83 +324,68 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
                         </div>
                   </div>
 
-                  {/* Images section */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-3 border rounded">
-                              <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                          <ImageIcon className="w-5 h-5" />
-                                          <h4 className="font-medium">Thumbnail</h4>
-                                    </div>
-                                    <small className="text-xs text-muted-foreground">single</small>
-                              </div>
 
-                              <div className="mt-3">
-                                    {newThumbnailPreview ? (
-                                          <div className="relative w-full h-36 rounded overflow-hidden">
-                                                <img src={newThumbnailPreview} alt="thumb" className="w-full h-full object-cover" />
-                                                <button type="button" onClick={() => { setNewThumbnailFile(null); URL.revokeObjectURL(newThumbnailPreview); setNewThumbnailPreview(null); }} className="absolute top-2 right-2 bg-white p-1 rounded-full"><Trash2 className="w-4 h-4 text-red-600" /></button>
-                                          </div>
-                                    ) : existingThumbnailUrl ? (
-                                          <div className="relative w-full h-36 rounded overflow-hidden">
-                                                {/* use next/image for external url */}
-                                                <Image src={existingThumbnailUrl} alt="thumb" fill style={{ objectFit: "cover" }} />
-                                                <button type="button" onClick={() => setExistingThumbnailUrl(null)} className="absolute top-2 right-2 bg-white p-1 rounded-full"><Trash2 className="w-4 h-4 text-red-600" /></button>
-                                          </div>
-                                    ) : (
-                                          <label className="block cursor-pointer rounded border border-dashed p-4 text-center">
-                                                <input type="file" accept="image/*" className="hidden" onChange={(e) => handleThumbnailChange(e.target.files ? e.target.files[0] : undefined)} />
-                                                <div className="flex flex-col items-center gap-2">
-                                                      <ImageIcon className="w-6 h-6 text-muted-foreground" />
-                                                      <div className="text-sm">Upload thumbnail</div>
-                                                </div>
-                                          </label>
-                                    )}
+                  {/* --- IMAGES SECTION (Single Gallery Layout) --- */}
+                  <div className="border rounded p-4">
+                        <div className="flex items-center justify-between mb-4">
+                              <div className="flex items-center gap-2">
+                                    <ImageIcon className="w-5 h-5" />
+                                    <h4 className="font-medium">Tour Images</h4>
                               </div>
+                              <small className="text-xs text-muted-foreground">Upload multiple files. First image is default.</small>
                         </div>
 
-                        <div className="p-3 border rounded">
-                              <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                          <ImageIcon className="w-5 h-5" />
-                                          <h4 className="font-medium">Gallery Images</h4>
-                                    </div>
-                                    <small className="text-xs text-muted-foreground">multiple</small>
+                        {/* Upload Trigger */}
+                        <label className="block cursor-pointer rounded border border-dashed p-4 text-center hover:bg-gray-50 transition">
+                              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleNewImages(e.target.files)} />
+                              <div className="flex flex-col items-center gap-2">
+                                    <PlusCircle className="w-6 h-6 text-primary" />
+                                    <span className="text-sm font-medium">Click to select images</span>
                               </div>
+                        </label>
 
-                              <div className="mt-3">
-                                    <label className="block cursor-pointer rounded border border-dashed p-3 text-center">
-                                          <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleNewImages(e.target.files)} />
-                                          <div className="text-sm">Select images</div>
-                                          <div className="text-xs text-muted-foreground mt-1">You can upload multiple files</div>
-                                    </label>
+                        {/* Images Grid */}
+                        <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
 
-                                    <div className="mt-3 grid grid-cols-3 gap-2">
-                                          {/* new previews */}
-                                          {newImagePreviews.map((p, i) => (
-                                                <div key={i} className="relative h-24 rounded overflow-hidden bg-gray-50">
-                                                      <img src={p} alt={`new-${i}`} className="w-full h-full object-cover" />
-                                                      <button type="button" onClick={() => removeNewImage(i)} className="absolute top-1 right-1 bg-white p-1 rounded-full"><Trash2 className="w-4 h-4 text-red-600" /></button>
-                                                </div>
-                                          ))}
+                              {/* Existing Images */}
+                              {existingMediaUrls.map((url, idx) => {
+                                    const marked = markedToDelete.includes(url);
+                                    return (
+                                          <div key={`exist-${idx}`} className={`relative h-24 rounded overflow-hidden border ${marked ? "opacity-40" : ""}`}>
+                                                <Image width={200} height={150} src={url} alt={`Tour image ${idx + 1}`} className="w-full h-full object-cover" />
+                                                <button
+                                                      type="button"
+                                                      onClick={() => toggleMarkExistingImage(url)}
+                                                      className="absolute top-1 right-1 bg-white p-1 rounded-full shadow hover:bg-red-50"
+                                                      title={marked ? "Undo remove" : "Mark to delete"}
+                                                >
+                                                      <Trash2 className="w-3 h-3 text-red-600" />
+                                                </button>
+                                          </div>
+                                    );
+                              })}
 
-                                          {/* existing images (mark to delete) */}
-                                          {existingImages.map((url, idx) => {
-                                                const marked = markedToDelete.includes(url);
-                                                return (
-                                                      <div key={idx} className={`relative h-24 rounded overflow-hidden ${marked ? "opacity-40" : ""}`}>
-                                                            {/* next/image for remote url */}
-                                                            <Image src={url} alt={`existing-${idx}`} fill style={{ objectFit: "cover" }} />
-                                                            <button type="button" onClick={() => toggleMarkExistingImage(url)} className="absolute top-1 right-1 bg-white p-1 rounded-full" title={marked ? "Undo remove" : "Mark to delete"}>
-                                                                  <Trash2 className="w-4 h-4 text-red-600" />
-                                                            </button>
-                                                      </div>
-                                                );
-                                          })}
+                              {/* New Image Previews */}
+                              {newImagePreviews.map((p, i) => (
+                                    <div key={`new-${i}`} className="relative h-24 rounded overflow-hidden border bg-gray-50">
+                                          <Image width={200} height={150} src={p} alt={`New upload ${i + 1}`} className="w-full h-full object-cover" />
+                                          <button
+                                                type="button"
+                                                onClick={() => removeNewImage(i)}
+                                                className="absolute top-1 right-1 bg-white p-1 rounded-full shadow hover:bg-red-50"
+                                          >
+                                                <Trash2 className="w-3 h-3 text-red-600" />
+                                          </button>
                                     </div>
-                                    {markedToDelete.length > 0 && <p className="text-xs text-red-600 mt-2">{markedToDelete.length} image(s) marked to delete — these will be removed on update.</p>}
-                              </div>
+                              ))}
                         </div>
+
+                        {/* Deletion Warning */}
+                        {markedToDelete.length > 0 && (
+                              <p className="text-xs text-red-600 mt-2 font-medium">
+                                    {markedToDelete.length} image(s) marked for deletion will be removed upon update.
+                              </p>
+                        )}
                   </div>
 
                   {/* meta / arrays small controls */}
@@ -537,32 +455,12 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
                         </div>
                   </div>
 
+
                   {/* actions */}
                   <div className="flex gap-3 justify-end">
                         <button type="button" onClick={() => {
-                              // reset to initial data
-                              setTitle(initialData.title || "");
-                              setSlug(initialData.slug || "");
-                              setManualSlugEdit(false);
-                              setDescription(initialData.description || "");
-                              setFee(initialData.fee ?? "");
-                              setDurationHours(initialData.durationHours ?? "");
-                              setMaxGroupSize(initialData.maxGroupSize ?? "");
-                              setDestinationCity(initialData.destinationCity || "");
-                              setStartTime(initialData.startTime || []);
-                              setItinerary(initialData.itinerary || []);
-                              setImportantPoints(initialData.importantPoints || []);
-                              setCancellationPolicy(initialData.cancellationPolicy || []);
-                              setInclusions(initialData.inclusionsAndExclusions?.inclusions || []);
-                              setExclusions(initialData.inclusionsAndExclusions?.exclusions || []);
-                              setExistingThumbnailUrl(initialData.thumbnail || null);
-                              setNewThumbnailFile(null);
-                              setNewThumbnailPreview(null);
-                              setExistingImages(initialData.images || []);
-                              setMarkedToDelete([]);
-                              setNewImageFiles([]);
-                              setNewImagePreviews([]);
-                              toast.success("Reset to original values");
+                              window.location.reload();
+                              toast.success("Resetting form...");
                         }} className="px-4 py-2 border rounded">Reset</button>
 
                         <button type="submit" disabled={isSubmitting} className="px-6 py-2 bg-primary text-white rounded">
