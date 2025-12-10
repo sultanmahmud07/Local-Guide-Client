@@ -3,21 +3,25 @@ import { Badge } from "@/components/ui/badge";
 import { ITour } from "@/types/booking.interface";
 import { format } from "date-fns";
 import Image from "next/image";
+import Link from "next/link";
 
 export const myListingColumns: Column<ITour>[] = [
   {
     header: "Title",
     accessor: (tour) => (
       <div className="flex items-center gap-3">
-        {tour.thumbnail ? (
-          <Image src={tour.thumbnail} alt={tour.title} height={100} width={100} className="w-20 h-12 object-cover rounded" />
+        {tour.images?.length > 0 ? (
+          <Image src={tour.images[0]} alt={tour.title} height={100} width={100} className="w-20 h-12 object-cover rounded" />
         ) : (
           <div className="w-20 h-12 bg-muted/30 rounded" />
         )}
 
         <div>
-          <p className="font-medium">{tour.title}</p>
-          <p className="text-xs text-muted-foreground">{tour.slug}</p>
+          
+        <Link href={`/tour/${tour.slug}`}>
+          <p className="font-medium hover:text-primary cursor-pointer">{tour.title.slice(0, 30)} ..</p>
+        </Link>
+          <p className="text-xs text-muted-foreground">{tour.slug.slice(0, 20)}</p>
         </div>
       </div>
     ),
@@ -26,7 +30,7 @@ export const myListingColumns: Column<ITour>[] = [
     header: "Destination",
     accessor: (tour) => (
       <div>
-        <p className="font-medium">{tour.destinationCity || "—"}</p>
+        <p className="font-medium ">{tour.destinationCity.slice(0, 30) || "—"}</p>
         <p className="text-xs text-muted-foreground">{tour.category}</p>
       </div>
     ),

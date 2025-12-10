@@ -64,7 +64,7 @@ export default function MyListingTable({
         columns={myListingColumns}
         onDelete={handleDelete}
         getRowKey={(tour) => tour._id}
-        onView={(tour) => router.push(`/guide/dashboard/my-listing/${tour.slug}`)}
+        onView={(tour) => router.push(`/tour/${tour.slug}`)}
         onEdit={(tour) => router.push(`/guide/dashboard/my-listing/${tour.slug}`)}
         emptyMessage="No tours found. Try adjusting your filters or create a new tour."
       />

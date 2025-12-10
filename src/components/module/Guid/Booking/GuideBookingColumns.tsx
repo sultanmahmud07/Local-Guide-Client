@@ -19,8 +19,8 @@ export const guideBookingColumns: Column<IBooking>[] = [
     header: "Tour",
     accessor: (b) => (
       <div>
-        <p className="font-medium">{b.tour?.title || "N/A"}</p>
-        <p className="text-xs text-muted-foreground">{b.tour?.destinationCity || ""}</p>
+        <p className="font-medium">{b.tour?.title.slice(0, 30) || "N/A"}</p>
+        <p className="text-xs text-muted-foreground">{b.tour?.destinationCity.slice(0, 30) || ""}</p>
       </div>
     ),
     sortKey: "tour.title",

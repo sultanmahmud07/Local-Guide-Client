@@ -45,7 +45,6 @@ interface IExistingTour {
 }
 
 interface UpdateTourFormProps {
-      id: string;
       initialData: IExistingTour;
 }
 
@@ -58,7 +57,7 @@ const sanitizeSlug = (v = "") =>
             .replace(/\s+/g, "-")
             .replace(/-+/g, "-");
 
-export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps) {
+export default function UpdateTourForm({ initialData }: UpdateTourFormProps) {
       const router = useRouter();
 
       // --- STATE INITIALIZATION ---
@@ -206,37 +205,28 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
                   };
 
                   const fd = new FormData();
+                  let payloadWithDeleted = { ...payload };
 
-                  // Append JSON/Array/Boolean fields as Blobs
-                  // Object.entries(payload).forEach(([k, v]) => {
-                  //       if (v === undefined || v === null) return;
-                  //       if (Array.isArray(v) || typeof v === "object" || typeof v === "boolean") {
-                  //             const blob = new Blob([JSON.stringify(v)], { type: "application/json" });
-                  //             fd.append(k, blob);
-                  //       } else {
-                  //             fd.append(k, String(v));
-                  //       }
-                  // });
+                  if (markedToDelete.length >= 0) {
+                        payloadWithDeleted = {
+                              ...payload,
+                              deleteImages: markedToDelete
+                        };
+                  }
+                  fd.append("data", JSON.stringify(payloadWithDeleted))
                  
-                  fd.append("data", JSON.stringify(payload))
-                  // Append ALL new files
                   if (newImageFiles.length > 0) {
                         newImageFiles.forEach((f) => {
                               fd.append("files", f);
                         })
                   };
 
-                  // Send deleteImages array (URLs) if any
-                  if (markedToDelete.length > 0) {
-                        fd.append("deleteImages", JSON.stringify(markedToDelete));
-                  }
-
                   const result = await updateListing(fd, initialData._id);
 
                   if (result?.success) {
                         toast.success(result.message || "Tour updated successfully");
                         router.refresh();
-                        router.push("/guide/dashboard/my-listing");
+                        // router.push("/guide/dashboard/my-listing");
                   } else {
                         toast.error(result?.message || "Update failed");
                   }
@@ -247,7 +237,7 @@ export default function UpdateTourForm({ id, initialData }: UpdateTourFormProps)
                   setIsSubmitting(false);
             }
       };
-
+      console.log(markedToDelete)
       return (
             <form onSubmit={handleSubmit} className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow space-y-6">
                   {/* Basic Info */}

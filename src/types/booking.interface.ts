@@ -33,7 +33,7 @@ export interface ITour {
   slug: string;
   description: string;
   thumbnail?: string;
-  images?: string[];
+  images: string[];
   fee: number;
   durationHours: number;
   meetingPoint: string;
@@ -62,7 +62,7 @@ export interface ITourGet {
   description: string;
   thumbnail?: string;
   transportation?: string;
-  images?: string[];
+  images: string[];
   fee: number;
   durationHours: number;
   meetingPoint: string;
