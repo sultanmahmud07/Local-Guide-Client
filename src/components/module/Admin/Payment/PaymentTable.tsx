@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 import ManagementTable from "@/components/shared/ManagementTable";
 import { IPayment } from "@/types/payment.interface";
 import { paymentColumns } from "./paymentColumns";

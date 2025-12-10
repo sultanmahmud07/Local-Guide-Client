@@ -2,9 +2,7 @@ import PaymentTable from "@/components/module/Admin/Payment/PaymentTable";
 import TablePagination from "@/components/shared/TablePagination";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
-import { getMyBookings } from "@/services/booking/myBooking.service";
 import { getMyPayments } from "@/services/payment/InitialPayment";
-import { IBooking } from "@/types/booking.interface";
 import { IPayment } from "@/types/payment.interface";
 import { Suspense } from "react";
 interface PageProps {
