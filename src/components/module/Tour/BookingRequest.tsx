@@ -3,10 +3,21 @@
 
 import { ITourGet } from "@/types/booking.interface";
 import React, { useEffect, useMemo, useState } from "react";
-import { FaInfoCircle, FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
-import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 
+import {
+  Minus,
+  Plus,
+  CalendarDays,
+  Clock,
+  Users,
+  Timer,
+  Footprints,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-react';
+
+{/* ... inside your component ... */ }
 type Props = {
   tour: ITourGet;
   reservedDates: string[]; // ["2025-12-15", ...] (YYYY-MM-DD)
@@ -47,7 +58,7 @@ export default function RightBookingCard({ tour, reservedDates }: Props) {
   const router = useRouter();
   const [people, setPeople] = useState<number>(1);
   const [date, setDate] = useState<string>(""); // YYYY-MM-DD
-  const [address, setAddress] = useState<string>(""); 
+  const [address, setAddress] = useState<string>("");
   const [time, setTime] = useState<string>("");
   const [showCalendar, setShowCalendar] = useState(false);
 
@@ -131,158 +142,201 @@ export default function RightBookingCard({ tour, reservedDates }: Props) {
   };
 
   return (
-    <aside className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-6 sticky top-24">
 
-      {/* Price Section */}
-      <div className="text-center">
-        <h2 className="text-3xl font-bold">${totalPrice.toFixed(2)} USD</h2>
-        <p className="text-xs text-gray-500 mt-1">Includes all fees</p>
+    <aside className="w-full  bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sticky top-20 transition-all duration-300">
 
-        <button className="text-sm text-blue-600 hover:underline mt-2 flex items-center justify-center gap-1 mx-auto">
-          Book with a 20% deposit
-          <FaInfoCircle className="text-blue-500 text-xs" />
-        </button>
+      {/* Price Header */}
+      <div className="text-center pb-6 border-b border-gray-100">
+        <div className="flex items-baseline justify-center gap-1">
+          <h2 className="text-4xl font-extrabold text-emerald-700">
+            ${totalPrice.toFixed(0)}
+          </h2>
+          <span className="text-lg font-medium text-gray-400">USD</span>
+        </div>
+        <p className="text-xs font-medium text-gray-400 mt-1 uppercase tracking-wide">
+          Total price including fees
+        </p>
       </div>
 
-      <hr className="my-5" />
-
-      {/* Tour Details */}
-      <div className="space-y-3 text-gray-700 text-sm">
-        <div className="flex justify-between">
-          <span className="flex items-center gap-2">👥 Size:</span>
-          <span>Up to {tour.maxGroupSize ?? 1} people</span>
-        </div>
-
-        <div className="flex justify-between">
-          <span className="flex items-center gap-2">⏱ Duration:</span>
-          <span>{tour.durationHours ? `${tour.durationHours} hours` : "N/A"}</span>
-        </div>
-
-        <div className="flex justify-between">
-          <span className="flex items-center gap-2">🚶 Transportation:</span>
-          <span>{(tour.transportation || "Working")}</span>
-        </div>
-      </div>
-
-      {/* Party Size */}
-      <div className="mt-5">
-        <p className="font-medium text-sm mb-1">Party size:</p>
-
-        <div className="flex items-center justify-between border rounded-full px-4 py-2">
-          <button
-            onClick={decrease}
-            aria-label="Decrease"
-            className="text-gray-600 hover:bg-gray-100 p-2 rounded-full"
-          >
-            <HiOutlineMinusSm size={16} />
-          </button>
-
-          <span className="font-semibold text-emerald-700">{people}</span>
-
-          <button
-            onClick={increase}
-            aria-label="Increase"
-            className="text-gray-600 hover:bg-gray-100 p-2 rounded-full"
-          >
-            <HiOutlinePlusSm size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* Date */}
-      <div className="mt-4 relative">
-        <label className="text-sm font-medium mb-1 block">Select tour date</label>
-
-        <button
-          onClick={() => setShowCalendar((s) => !s)}
-          className="w-full text-left border rounded-full px-4 py-2 text-sm pr-10 flex items-center justify-between"
-        >
-          <span className={`${date ? "text-gray-800" : "text-gray-400"}`}>{date || "Select tour date"}</span>
-          <FaRegCalendarAlt className="text-gray-500" />
-        </button>
-
-        {/* Calendar popover */}
-        {showCalendar && (
-          <div className="absolute z-50 left-0 right-0 mt-3 bg-white rounded-xl shadow-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <button onClick={prevMonth} className="px-2 py-1 rounded hover:bg-gray-100">&lt;</button>
-              <div className="font-semibold">
-                {new Date(calYear, calMonth).toLocaleString(undefined, { month: "long", year: "numeric" })}
-              </div>
-              <button onClick={nextMonth} className="px-2 py-1 rounded hover:bg-gray-100">&gt;</button>
-            </div>
-
-            <div className="grid grid-cols-7 text-center text-xs text-gray-500 gap-1">
-              {weekdays.map((w) => (
-                <div key={w} className="py-1">{w}</div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-7 gap-1 mt-2">
-              {daysCells.map((cell, idx) => {
-                if (!cell) {
-                  return <div key={idx} className="h-10" />;
-                }
-                const ymd = formatDateYMD(cell);
-                const isToday = ymd === formatDateYMD(new Date());
-                const isDisabled = reservedSet.has(ymd);
-                const isSelected = date === ymd;
-
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => onSelectDay(cell)}
-                    disabled={isDisabled}
-                    className={`h-10 flex items-center justify-center rounded-full
-                      ${isDisabled ? "cursor-not-allowed bg-red-50 text-red-500 " : "hover:bg-emerald-50"}
-                      ${isSelected ? "ring ring-emerald-400 bg-emerald-50" : ""}
-                      ${isToday && !isSelected ? "border border-gray-200" : ""}
-                    `}
-                    title={isDisabled ? "Not available" : ymd}
-                  >
-                    <span className={`${isSelected ? "text-emerald-700 font-semibold" : ""}`}>{cell.getDate()}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="mt-3 text-center">
-              <button onClick={() => { setDate(""); setShowCalendar(false); }} className="text-sm text-gray-500 hover:underline">Clear</button>
-            </div>
+      {/* Tour Specs */}
+      <div className="py-6 space-y-4">
+        <div className="flex items-center justify-between text-sm group">
+          <div className="flex items-center gap-3 text-gray-500 group-hover:text-emerald-700 transition-colors">
+            <Users className="w-5 h-5" />
+            <span className="font-medium">Group Size</span>
           </div>
-        )}
-      </div>
+          <span className="font-semibold text-gray-800">Up to {tour.maxGroupSize ?? 1} people</span>
+        </div>
 
-      {/* Time */}
-      <div className="mt-4">
-        <label className="text-sm font-medium mb-1 block">Select tour start time</label>
-        <div className="relative">
-          <select
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className="w-full border rounded-full px-4 py-2 text-sm pr-10"
-          >
-            <option value="">{`Select tour start time`}</option>
-            {startTimes.map((t) => (
-              <option key={t} value={t}>{t}</option>
-            ))}
-          </select>
-          <FaRegClock className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500" />
+        <div className="flex items-center justify-between text-sm group">
+          <div className="flex items-center gap-3 text-gray-500 group-hover:text-emerald-700 transition-colors">
+            <Timer className="w-5 h-5" />
+            <span className="font-medium">Duration</span>
+          </div>
+          <span className="font-semibold text-gray-800">
+            {tour.durationHours ? `${tour.durationHours} hours` : "Flexible"}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between text-sm group">
+          <div className="flex items-center gap-3 text-gray-500 group-hover:text-emerald-700 transition-colors">
+            <Footprints className="w-5 h-5" />
+            <span className="font-medium">Transport</span>
+          </div>
+          <span className="font-semibold text-gray-800 capitalize">
+            {tour.transportation || "Walking"}
+          </span>
         </div>
       </div>
 
-      {/* Request Button */}
-      <button
-        onClick={handleRequest}
-        className="mt-6 w-full bg-emerald-700 text-white py-3 rounded-full font-semibold hover:bg-emerald-800"
-      >
-        Request Booking
-      </button>
+      {/* Booking Inputs Container */}
+      <div className="space-y-4 bg-gray-50 p-4 rounded-2xl border border-gray-100">
 
-      {/* Policy */}
-      <button className="w-full text-center mt-3 text-sm text-gray-600 hover:underline">
-        View our cancellation policy
-      </button>
+        {/* Party Size Counter */}
+        <div>
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+            Party Size
+          </label>
+          <div className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-2 py-1.5 shadow-sm">
+            <button
+              onClick={decrease}
+              aria-label="Decrease guests"
+              className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            >
+              <Minus className="w-4 h-4" />
+            </button>
+
+            <span className="font-bold text-gray-900 text-lg w-8 text-center select-none">
+              {people}
+            </span>
+
+            <button
+              onClick={increase}
+              aria-label="Increase guests"
+              className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Date Picker */}
+        <div className="relative">
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+            Date
+          </label>
+          <button
+            onClick={() => setShowCalendar((s) => !s)}
+            className={`w-full flex items-center justify-between bg-white border px-4 py-3 rounded-xl text-sm font-medium transition-all shadow-sm
+            ${date ? "border-emerald-500 text-gray-900 ring-1 ring-emerald-100" : "border-gray-200 text-gray-500 hover:border-emerald-300"}`}
+          >
+            <span>{date || "Select a date"}</span>
+            <CalendarDays className={`w-4 h-4 ${date ? "text-emerald-600" : "text-gray-400"}`} />
+          </button>
+
+          {/* Calendar Popover */}
+          {showCalendar && (
+            <div className="absolute z-50 top-full left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 animate-in fade-in zoom-in-95 duration-200">
+              {/* Calendar Header */}
+              <div className="flex items-center justify-between mb-4">
+                <button onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded-lg text-gray-600">
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <div className="font-bold text-gray-800">
+                  {new Date(calYear, calMonth).toLocaleString(undefined, { month: "long", year: "numeric" })}
+                </div>
+                <button onClick={nextMonth} className="p-1 hover:bg-gray-100 rounded-lg text-gray-600">
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Weekdays */}
+              <div className="grid grid-cols-7 text-center mb-2">
+                {weekdays.map((w) => (
+                  <div key={w} className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
+                    {w.substring(0, 2)}
+                  </div>
+                ))}
+              </div>
+
+              {/* Days Grid */}
+              <div className="grid grid-cols-7 gap-1">
+                {daysCells.map((cell, idx) => {
+                  if (!cell) return <div key={idx} />;
+
+                  const ymd = formatDateYMD(cell);
+                  const isToday = ymd === formatDateYMD(new Date());
+                  const isDisabled = reservedSet.has(ymd);
+                  const isSelected = date === ymd;
+
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => onSelectDay(cell)}
+                      disabled={isDisabled}
+                      className={`
+                      h-9 w-9 rounded-full flex items-center justify-center text-sm font-medium transition-all
+                      ${isDisabled
+                          ? "text-red-300 cursor-not-allowed box-decoration-slice line-through"
+                          : isSelected
+                            ? "bg-emerald-600 text-white shadow-md shadow-emerald-200 scale-110"
+                            : "text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"}
+                      ${isToday && !isSelected ? "ring-1 ring-emerald-400 text-emerald-600 font-bold" : ""}
+                    `}
+                    >
+                      {cell.getDate()}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => { setDate(""); setShowCalendar(false); }}
+                className="w-full mt-4 text-xs font-semibold text-gray-400 hover:text-red-500 transition-colors py-1"
+              >
+                Clear Selection
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Time Picker */}
+        <div>
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+            Start Time
+          </label>
+          <div className="relative">
+            <select
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className={`w-full appearance-none bg-white border px-4 py-3 rounded-xl text-sm font-medium shadow-sm transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-100
+              ${time ? "border-emerald-500 text-gray-900" : "border-gray-200 text-gray-500"}`}
+            >
+              <option value="" disabled>Select time</option>
+              {startTimes.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+            <Clock className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none ${time ? "text-emerald-600" : "text-gray-400"}`} />
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="mt-6 space-y-3">
+        <button
+          onClick={handleRequest}
+          disabled={!date || !time}
+          className="w-full bg-emerald-700 hover:bg-emerald-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold shadow-lg shadow-emerald-100 transition-all transform active:scale-[0.98]"
+        >
+          Request Booking
+        </button>
+
+        <button className="w-full text-center text-xs font-semibold text-gray-500 hover:text-gray-800 underline decoration-gray-300 underline-offset-2 transition-colors">
+          Read cancellation policy
+        </button>
+      </div>
+
     </aside>
   );
 }

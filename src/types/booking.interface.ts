@@ -79,7 +79,10 @@ export interface ITourGet {
     _id: string;
     name: string;
     email?: string;
-    avatar?: string;
+    avg_rating?: string;
+    review_count?: string;
+    picture?: string;
+    bio?: string;
   };
   language: string;
   category: string;

@@ -69,7 +69,6 @@ export async function getReservedData(authorId: string) {
     try {
         const response = await serverFetch.get(`/booking/reserved/${authorId}`);
         const result = await response.json();
-        console.log({ result });
         return result.data;
 
     } catch (error: any) {
