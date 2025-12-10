@@ -1,25 +1,31 @@
-
+export type UserRole = "TOURIST" | "GUIDE" | "ADMIN" | "SUPER_ADMIN";
+export type UserStatus = "ACTIVE" | "BLOCKED" | "DELETED"; // Assuming string based on your data
 export type AuthProvider = {
   provider: string;
   providerId?: string;
 };
 
-export type IUser = {
+export interface IUser {
   _id: string;
   name: string;
   email: string;
-  profile?: string
-  picture?: string
-  address?: string
-  isActive: string;
+  picture?: string;
+  role: UserRole;
+  isActive: UserStatus; // String based on your JSON ("ACTIVE")
   isVerified: boolean;
-  isDeleted?: boolean;
-  role: string;
-  createdAt?: string;
-  updatedAt?: string;
-  auths?: AuthProvider[];
-  // add any other fields you need
-};
+  phone?: string;
+  address?: string;
+  bio?: string;
+  createdAt: string;
+  updatedAt: string;
+  guideProfile?: {
+    expertise: string[];
+    dailyRate: number;
+    verified: boolean;
+    languages: string[];
+  };
+  languages?: string[];
+}
 
 export enum Role {
   SUPER_ADMIN = "SUPER_ADMIN",

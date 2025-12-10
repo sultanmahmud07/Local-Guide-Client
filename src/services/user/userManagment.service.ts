@@ -2,41 +2,41 @@
 import { serverFetch } from "@/lib/server-fetch";
 
 export async function initPaymentAction(bookingId: string) {
-      try {
-            const response = await serverFetch.post(`/payment/init-payment/${bookingId}`, {
-                  body: null
-            });
+    try {
+        const response = await serverFetch.post(`/payment/init-payment/${bookingId}`, {
+            body: null
+        });
 
-            const result = await response.json();
+        const result = await response.json();
 
-            const paymentUrl = result?.data?.paymentUrl;
-            // Open payment gateway in new tab immediately
-            window.open(paymentUrl, "_blank", "noopener,noreferrer");
+        const paymentUrl = result?.data?.paymentUrl;
+        // Open payment gateway in new tab immediately
+        window.open(paymentUrl, "_blank", "noopener,noreferrer");
 
-            return result;
-      } catch (error: any) {
-            console.error("Error creating booking:", error);
-            return {
-                  success: false,
-                  message:
-                        process.env.NODE_ENV === "development"
-                              ? error.message
-                              : "Failed to book booking",
-            };
-      }
+        return result;
+    } catch (error: any) {
+        console.error("Error creating booking:", error);
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Failed to book booking",
+        };
+    }
 }
 
 
-export async function getMyPayments(queryString?: string) {
+export async function getAllUsers(queryString?: string) {
     try {
         const response = await serverFetch.get(
-            `/payment${queryString ? `?${queryString}` : "?sort=-createdAt"}`
+            `/user/all-users${queryString ? `?${queryString}` : "?sort=-createdAt"}`
         );
         const result = await response.json();
         console.log({ result });
         return result;
     } catch (error: any) {
-        console.error("Error fetching Payment:", error);
+        console.error("Error fetching User:", error);
         return {
             success: false,
             data: [],
@@ -48,9 +48,9 @@ export async function getMyPayments(queryString?: string) {
     }
 }
 
-export async function getPaymentById(paymentId: string) {
+export async function getUserById(paymentId: string) {
     try {
-        const response = await serverFetch.get(`/payment/${paymentId}`);
+        const response = await serverFetch.get(`/user/${paymentId}`);
         const result = await response.json();
         return result.data;
 
@@ -68,18 +68,16 @@ export async function getPaymentById(paymentId: string) {
 }
 
 
-export async function changePaymentStatus(
+export async function updateUserStatus(
     paymentId: string,
-    status: string
+    data: any
 ) {
+
     try {
         const response = await serverFetch.patch(
-            `/payment/${paymentId}`,
+            `/user/${paymentId}`,
             {
-                body: JSON.stringify({ status }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                body: JSON.stringify(data)
             }
         );
 
