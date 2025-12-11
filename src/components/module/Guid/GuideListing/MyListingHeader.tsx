@@ -36,11 +36,11 @@ const MyListingHeader = () => {
 
       <ManagementPageHeader
         title="My Listing"
-        action={{
-          label: "Add Listing",
-          icon: Plus,
-          onClick: handleOpenDialog,
-        }}
+        // action={{
+        //   label: "Add Listing",
+        //   icon: Plus,
+        //   onClick: handleOpenDialog,
+        // }}
       />
     </>
   );

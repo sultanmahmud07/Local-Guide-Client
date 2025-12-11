@@ -114,7 +114,7 @@ export default function AddTourForm() {
 
     if (result.success) {
       toast.success("Tour created successfully!");
-      router.push("/my-listing");
+      router.push("/guide/dashboard/my-listing");
     } else {
       toast.error(result.message || "Failed to create tour");
     }

@@ -61,14 +61,14 @@ const TourDetails = ({ tour }: { tour: ITourGet }) => {
                         {tour.title}
                     </h1>
 
-                    <div className="flex items-center gap-6 text-sm text-gray-600">
+                    {/* <div className="flex items-center gap-6 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
                             <FaStar className="text-yellow-400 text-lg" />
                             <span className="font-bold text-gray-900">5.0</span>
                             <span className="text-gray-400 underline">(115 reviews)</span>
                         </div>
                         <div>ID: <span className="font-mono">#{tour._id.slice(-6).toUpperCase()}</span></div>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Quick Stats Grid */}

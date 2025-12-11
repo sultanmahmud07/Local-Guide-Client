@@ -21,7 +21,7 @@ export async function initPaymentAction(bookingId: string) {
                   message:
                         process.env.NODE_ENV === "development"
                               ? error.message
-                              : "Failed to book booking",
+                              : "Payment request failed!",
             };
       }
 }

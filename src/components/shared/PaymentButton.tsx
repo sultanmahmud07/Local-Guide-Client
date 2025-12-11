@@ -12,7 +12,7 @@ export default function PayNowButton({ bookingId }: { bookingId: string }) {
     const result = await initPaymentAction(bookingId);
 
     if (result.success) {
-      toast.success("Booking request successfully!");
+      toast.success("Payment request successfully!");
     } else {
       toast.error(result.message || "Payment failed");
     }
