@@ -4,7 +4,7 @@ import { serverFetch } from "@/lib/server-fetch";
 
 export async function getGuideListing(queryString?: string) {
     try {
-        const response = await serverFetch.get(`/listing${queryString ? `?${queryString}` : ""}`);
+        const response = await serverFetch.get(`/listing/guide${queryString ? `?${queryString}` : ""}`);
         const result = await response.json();
         return {
             success: result.success,
