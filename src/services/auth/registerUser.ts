@@ -59,3 +59,23 @@ export const registerUser = async (_currentState: any, formData: any): Promise<a
         return { success: false, message: `${process.env.NODE_ENV === 'development' ? error.message : "Registration Failed. Please try again."}` };
     }
 }
+
+export const createAdmin = async (payload: any) => {
+    try {
+        const res = await serverFetch.post("/user/register", {
+             body: JSON.stringify(payload),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        const result = await res.json();
+
+        return result;
+    } catch (error: any) {
+        if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        }
+        console.log(error);
+        return { success: false, message: `${process.env.NODE_ENV === 'development' ? error.message : "Registration Failed. Please try again."}` };
+    }
+}

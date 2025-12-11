@@ -1,42 +1,23 @@
-import PaymentTable from "@/components/module/Admin/Payment/PaymentTable";
-import TablePagination from "@/components/shared/TablePagination";
-import { TableSkeleton } from "@/components/shared/TableSkeleton";
-import { queryStringFormatter } from "@/lib/formatters";
-import { getMyBookings } from "@/services/booking/myBooking.service";
-import { getMyPayments } from "@/services/payment/InitialPayment";
-import { IBooking } from "@/types/booking.interface";
-import { IPayment } from "@/types/payment.interface";
-import { Suspense } from "react";
-interface PageProps {
-  searchParams: Promise<{
-    page?: string;
-    limit?: string;
-    isBooked?: string;
-  }>;
-}
-export default async function PaymentManagementPage({
-  searchParams,
-}: PageProps) {
-  const params = await searchParams;
+import CreateAdminForm from "@/components/module/Admin/CreateAdminForm";
+import { Metadata } from "next";
 
-  const queryString = queryStringFormatter(params);
-  const response = await getMyPayments(queryString);
-  const payments: IPayment[] = response?.data || [];
-  // console.log("My Booking :::", response.data)
-  const meta = response?.meta;
-  const totalPages = Math.ceil((meta?.total || 1) / (meta?.limit || 1));
+export const metadata: Metadata = {
+  title: "Create Admin | Dashboard",
+  description: "Create a new administrator account",
+};
+
+export default function MakeAdminPage() {
   return (
-    <div className="">
-      <div>
-        <h1 className="text-3xl font-bold mb-4">Booking Management</h1>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-3xl font-bold text-gray-900">Create Admin</h1>
+        <p className="text-gray-500">
+            Add a new administrator to help manage the platform.
+        </p>
       </div>
-      <Suspense fallback={<TableSkeleton columns={5} rows={10} />}>
-        <PaymentTable payments={payments} />
-        <TablePagination
-          currentPage={meta?.page || 1}
-          totalPages={totalPages || 1}
-        />
-      </Suspense>
+      
+      {/* The interactive form component */}
+      <CreateAdminForm />
     </div>
   );
 }

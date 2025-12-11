@@ -1,83 +1,54 @@
 // src/components/FeatureStrip.tsx
 import React from "react";
+import { Settings2, Users, ShieldCheck, LucideIcon } from "lucide-react";
 
 type Feature = {
   title: string;
   subtitle: string;
-  svg: React.JSX.Element;
+  icon: LucideIcon;
 };
 
 const features: Feature[] = [
   {
     title: "All Tours Customizable",
-    subtitle: "Start By Messaging Your Guide",
-    svg: (
-      <svg viewBox="0 0 24 24" width="56" height="56" aria-hidden>
-        <path
-          d="M3 12l3-1 7-7 1 1-7 7-1 3-3 1v-4zM21 11c0 3-2 5-5 5-1 0-2-.3-2.9-.9l4.1-4.1C19.7 10 21 10.9 21 11z"
-          fill="currentColor"
-        />
-      </svg>
-    ),
+    subtitle: "Start by messaging your guide to tailor your trip.",
+    icon: Settings2,
   },
   {
     title: "100% Private Tours",
-    subtitle: "Just You and Your Local Tour Guide",
-    svg: (
-      <svg viewBox="0 0 24 24" width="56" height="56" aria-hidden>
-        <path
-          d="M16 11a3 3 0 1 0-6 0 3 3 0 0 0 6 0zm4 7v-1a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v1"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="8" cy="7" r="2.2" fill="currentColor" />
-        <circle cx="16" cy="7" r="2.2" fill="currentColor" />
-      </svg>
-    ),
+    subtitle: "Just you and your local tour guide.",
+    icon: Users,
   },
   {
     title: "Quality Assured Guides",
-    subtitle: "Screened and Verified via Interviews",
-    svg: (
-      <svg viewBox="0 0 24 24" width="56" height="56" aria-hidden>
-        <path
-          d="M12 2l6 3v5c0 5-3.6 9.7-6 11-2.4-1.3-6-6-6-11V5l6-3z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-        />
-        <path d="M9.2 12.5l1.9 1.9 3.7-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
+    subtitle: "Screened and verified via strict interviews.",
+    icon: ShieldCheck,
   },
 ];
 
 export default function FeatureStrip() {
   return (
-    <section className="w-full bg-[#e6e6e6]">
+    <section className="w-full bg-white border-y border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-8 md:gap-x-10 py-8 md:py-10 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-10 md:gap-x-12 py-12 md:py-16">
           {features.map((f, i) => (
-            <div key={i} className="flex items-start gap-5">
-              {/* Icon circle */}
-              <div
-                className="shrink-0 text-primary w-20 h-20 rounded-md flex items-center justify-center"
-                style={{ backgroundColor: "transparent" }}
-                aria-hidden
-              >
-               {f.svg}
+            <div key={i} className="flex items-start gap-5 group">
+              {/* Icon Circle */}
+              <div className="shrink-0 relative">
+                <div className="w-14 h-14 rounded-2xl bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:border-primary/20 transition-all duration-300">
+                  <f.icon 
+                    className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" 
+                    strokeWidth={1.5} 
+                  />
+                </div>
               </div>
 
-              {/* Text */}
-              <div className="min-w-0">
-                <h3 className="text-lg font-semibold  leading-snug">
+              {/* Text Content */}
+              <div className="pt-1">
+                <h3 className="text-lg font-bold text-gray-900 leading-snug group-hover:text-primary transition-colors duration-300">
                   {f.title}
                 </h3>
-                <p className="mt-2 text-sm ">
+                <p className="mt-2 text-sm text-gray-500 leading-relaxed">
                   {f.subtitle}
                 </p>
               </div>

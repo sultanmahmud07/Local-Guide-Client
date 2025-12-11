@@ -3,7 +3,7 @@ import UserTable from "@/components/module/Admin/User/UserTable";
 import TablePagination from "@/components/shared/TablePagination";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
-import { getAllUsers } from "@/services/user/userManagment.service";
+import { getAllUsers } from "@/services/user/userManagment.services";
 import { IUser } from "@/types/user.interface";
 import { Suspense } from "react";
 interface PageProps {

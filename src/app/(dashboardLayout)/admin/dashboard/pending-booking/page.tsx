@@ -1,10 +1,9 @@
-
-import UserTable from "@/components/module/Admin/User/UserTable";
+import GuideBookingTable from "@/components/module/Guid/Booking/GuidBookingTable";
 import TablePagination from "@/components/shared/TablePagination";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
-import { getAllUsers } from "@/services/user/userManagment.services";
-import { IUser, Role } from "@/types/user.interface";
+import { getMyBookings } from "@/services/booking/myBooking.service";
+import { IBooking } from "@/types/booking.interface";
 import { Suspense } from "react";
 interface PageProps {
   searchParams: Promise<{
@@ -13,24 +12,25 @@ interface PageProps {
     isBooked?: string;
   }>;
 }
-export default async function AdminManagementPage({
+export default async function PendingBookings({
   searchParams,
 }: PageProps) {
   const params = await searchParams;
 
-  const queryString = queryStringFormatter({...params, role:Role.ADMIN});
-  const response = await getAllUsers(queryString);
-  const users: IUser[] = response?.data || [];
+  const queryString = queryStringFormatter({...params, status: "PENDING"});
+  const response = await getMyBookings(queryString);
+  const bookings: IBooking[] = response?.data || [];
   // console.log("My Booking :::", response.data)
   const meta = response?.meta;
   const totalPages = Math.ceil((meta?.total || 1) / (meta?.limit || 1));
+
   return (
     <div className="">
       <div>
-        <h1 className="text-3xl font-bold mb-4">Admin Management</h1>
+        <h1 className="text-3xl font-bold mb-4">Pending Management</h1>
       </div>
       <Suspense fallback={<TableSkeleton columns={5} rows={10} />}>
-        <UserTable users={users} />
+        <GuideBookingTable bookings={bookings} />
         <TablePagination
           currentPage={meta?.page || 1}
           totalPages={totalPages || 1}

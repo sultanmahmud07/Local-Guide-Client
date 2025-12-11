@@ -130,14 +130,14 @@ export const adminNavItems: NavSection[] = [
         title: "Listing Management",
         items: [
             {
-                title: "Bookings",
+                title: "All Bookings",
                 href: "/admin/dashboard/booking-management",
                 icon: "Calendar", // ✅ String
                 roles: ["ADMIN"],
             },
             {
-                title: "Schedules",
-                href: "/admin/dashboard/schedules-management",
+                title: "Pending Bookings",
+                href: "/admin/dashboard/pending-booking",
                 icon: "Clock", // ✅ String
                 roles: ["ADMIN"],
             },

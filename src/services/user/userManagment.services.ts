@@ -69,15 +69,18 @@ export async function getUserById(paymentId: string) {
 
 
 export async function updateUserStatus(
-    paymentId: string,
+    userId: string,
     data: any
 ) {
 
     try {
         const response = await serverFetch.patch(
-            `/user/${paymentId}`,
+            `/user/${userId}`,
             {
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                }
             }
         );
 
@@ -91,6 +94,19 @@ export async function updateUserStatus(
                 process.env.NODE_ENV === "development"
                     ? error.message
                     : "Failed to change payment status",
+        };
+    }
+}
+export async function DeleteUser(id: string) {
+    try {
+        const response = await serverFetch.delete(`/user/${id}`)
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.log(error);
+        return {
+            success: false,
+            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
         };
     }
 }
