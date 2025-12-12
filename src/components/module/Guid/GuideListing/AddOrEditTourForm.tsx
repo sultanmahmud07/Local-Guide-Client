@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -226,7 +227,7 @@ export default function UpdateTourForm({ initialData }: UpdateTourFormProps) {
                   if (result?.success) {
                         toast.success(result.message || "Tour updated successfully");
                         router.refresh();
-                        // router.push("/guide/dashboard/my-listing");
+                        router.push("/guide/dashboard/my-listing");
                   } else {
                         toast.error(result?.message || "Update failed");
                   }

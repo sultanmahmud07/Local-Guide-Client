@@ -7,8 +7,8 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
+// import { useRouter } from "next/navigation";
+// import { FcGoogle } from "react-icons/fc";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 
@@ -16,15 +16,15 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const router = useRouter();
+  // const router = useRouter();
   useEffect(() => {
     if (state && !state.success && state.message) {
       toast.error(state.message);
     }
   }, [state]);
-  const handleGoogleLogin = () => {
-    router.push(`${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/google`)
-  }
+  // const handleGoogleLogin = () => {
+  //   router.push(`${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/google`)
+  // }
   return (
     <form action={formAction}>
       {redirect && <input type="hidden" name="redirect" value={redirect} />}
@@ -77,22 +77,22 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
             <Button type="submit" className="rounded-xs cursor-pointer" disabled={isPending}>
               {isPending ? "Logging in..." : "Login Now"}
             </Button>
-            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+            {/* <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
               <span className="relative z-10  px-2 ">
                 Or continue with
               </span>
-            </div>
+            </div> */}
 
             {/*//* http://localhost:5000/api/v1/auth/google */}
-            <Button
+            {/* <Button
               onClick={() => handleGoogleLogin()}
               type="button"
               variant="outline"
               className="w-full cursor-pointer flex items-center justify-center gap-1.5"
             >
               <FcGoogle /> Login with Google
-            </Button>
-            <FieldDescription className="px-6 text-center">
+            </Button> */}
+            <FieldDescription className="px-6 text-center pt-5">
               Don&apos;t have an account?{" "}
               <Link href="/register" className="text-primary  hover:underline hover:font-semibold">
                 Sign up
