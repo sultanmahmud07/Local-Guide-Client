@@ -10,9 +10,9 @@ export async function initPaymentAction(bookingId: string) {
 
         const result = await response.json();
 
-        const paymentUrl = result?.data?.paymentUrl;
-        // Open payment gateway in new tab immediately
-        window.open(paymentUrl, "_blank", "noopener,noreferrer");
+        // const paymentUrl = result?.data?.paymentUrl;
+        // // Open payment gateway in new tab immediately
+        // window.open(paymentUrl, "_blank", "noopener,noreferrer");
 
         return result;
     } catch (error: any) {
