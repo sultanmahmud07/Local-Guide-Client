@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function PopularTour() {
-  const tourData = await getTours();
+  const tourData = await getTours("limit=4");
   return (
     <section className="w-full bg-[#f7f7f7] py-6 md:py-16">
       <div className="main-container">

@@ -5,7 +5,7 @@ import TouristCard from "./TouristCard";
 
 export default async function HappyTravelers() {
       // Assuming getFeaturedTourist returns { data: IUser[] }
-      const touristResponse = await getFeaturedTourist();
+      const touristResponse = await getFeaturedTourist("limit=4");
       const featuredTourists: IUser[] = touristResponse?.data || [];
       
       return (

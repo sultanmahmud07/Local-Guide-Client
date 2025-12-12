@@ -1,6 +1,5 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import ManagementPageHeader from "@/components/shared/ManagementPageHeader";
@@ -18,9 +17,7 @@ const MyListingHeader = () => {
     });
   };
 
-  const handleOpenDialog = () => {
-    setIsDialogOpen(true);
-  };
+
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);

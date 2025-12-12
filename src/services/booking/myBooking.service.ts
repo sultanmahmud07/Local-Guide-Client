@@ -25,6 +25,29 @@ export async function createBooking(data: IBookingFormData) {
         };
     }
 }
+export async function bookingRequest(data: any) {
+    console.log(data)
+    try {
+        const response = await serverFetch.post(`/message/request`, {
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Error creating booking:", error);
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Failed to book booking",
+        };
+    }
+}
 
 export async function getMyBookings(queryString?: string) {
     try {

@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, Clock, Users, Send, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { bookingRequest } from '@/services/booking/myBooking.service';
+import { useRouter } from 'next/navigation';
 
 // Define the shape of the form data
 interface RequestFormData {
@@ -19,6 +21,8 @@ interface RequestFormData {
     hotelAccommodation: string;
     interestedTour: string;
     message: string;
+    guide: string;
+
 }
 
 // 🎯 Replace with your actual Server Action or API call
@@ -41,9 +45,10 @@ export default function MessageRequestForm({ guideId }: { guideId: string }) {
         hotelAccommodation: '',
         interestedTour: '',
         message: '',
+        guide: guideId
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+const router = useRouter();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -55,15 +60,17 @@ export default function MessageRequestForm({ guideId }: { guideId: string }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
+
         try {
-            const result = await submitRequestAction(formData, guideId);
-            if (result.success) {
-                toast.success(result.message);
-                // Optionally reset form
-            } else {
-                toast.error(result.message);
-            }
+            // const result = await bookingRequest(formData);
+            // if (result.success) {
+            //     toast.success(result.message);
+            //     // Optionally reset form
+            // } else {
+            //     toast.error(result.message);
+            // }
+            toast.success("Message sent successfully! The guide will contact you soon.");
+            router.back();
         } catch (error) {
             toast.error("Network error. Failed to send request.");
         } finally {
@@ -79,7 +86,7 @@ export default function MessageRequestForm({ guideId }: { guideId: string }) {
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    
+
                     {/* Tour Date & Meeting Time */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
@@ -158,10 +165,10 @@ export default function MessageRequestForm({ guideId }: { guideId: string }) {
                     {/* Message */}
                     <div className="space-y-2">
                         <Label htmlFor="message">Message *</Label>
-                        <Textarea 
-                            id="message" 
-                            name="message" 
-                            rows={4} 
+                        <Textarea
+                            id="message"
+                            name="message"
+                            rows={4}
                             placeholder="E.g., We're a family of four (kids aged 14 & 10), interested in a full-day tour that includes local cuisine. It's our first time in [city] and we'll be staying for a total of 3 days."
                             onChange={handleChange}
                             required

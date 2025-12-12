@@ -10,7 +10,6 @@ import {
     Share2,
     Heart,
 } from "lucide-react";
-import { FaStar } from "react-icons/fa";
 
 import ImageSlider from "./ImagesSlider";
 import { Button } from "@/components/ui/button";

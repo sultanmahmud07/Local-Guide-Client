@@ -7,7 +7,7 @@ import Link from "next/link";
 
 
 export default async function MeetLocalGuides() {
-  const guideData = await getFeaturedGuide()
+  const guideData = await getFeaturedGuide("limit=4");
   return (
     <section className="w-full bg-[#f7f7f7] py-7 md:py-16">
       <div className="main-container">
