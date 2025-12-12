@@ -19,7 +19,7 @@ export const touristBookingColumns: Column<IBooking>[] = [
     header: "Tour",
     accessor: (b) => (
       <div>
-        <p className="font-medium">{b.tour?.title || "N/A"}</p>
+        <p className="font-medium">{b.tour?.title.slice(0, 30) || "N/A"}</p>
         <p className="text-xs text-muted-foreground">{b.tour?.destinationCity || ""}</p>
       </div>
     ),
