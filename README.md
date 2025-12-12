@@ -7,9 +7,9 @@ This repository contains the full UI/UX implementation for tourists, guides, and
 ---
 
 ## 🔗 Live Website  
-**Production:** https://your-frontend-domain.com  
-**Explore Page:** https://your-frontend-domain.com/explore  
-**Admin Dashboard:** https://your-frontend-domain.com/admin  
+**Production:** https://local-guide-client-fz9u.vercel.app 
+**Explore Page:** https://local-guide-client-fz9u.vercel.app/explore  
+**Backend API:** https://native-ways-api.onrender.com  
 
 ---
 
@@ -109,50 +109,12 @@ This repository contains the full UI/UX implementation for tourists, guides, and
 
 ---
 
-## 📂 Folder Structure
-```
-src/
- ├── app/
- │    ├── explore/
- │    ├── tour-view/[slug]/
- │    ├── guide/[id]/
- │    ├── dashboard/
- │    │     ├── tourist/
- │    │     ├── guide/
- │    │     └── admin/
- │    ├── auth/
- │    ├── payment/
- │
- ├── components/
- │    ├── ui/
- │    ├── shared/
- │    ├── layouts/
- │    ├── module/
- │         ├── Tour/
- │         ├── Booking/
- │         ├── Guide/
- │         ├── Review/
- │
- ├── services/
- │    ├── tour/
- │    ├── booking/
- │    ├── review/
- │    ├── payment/
- │
- ├── hooks/
- ├── lib/
- ├── types/
- ├── utils/
-```
-
----
-
 ## ⚙️ Installation & Setup  
 
 ### 1️⃣ Clone the repository
 ```sh
-git clone https://github.com/yourusername/local-guide-frontend.git
-cd local-guide-frontend
+git clone https://github.com/sultanmahmud07/local-guide-client.git
+cd local-guide-client
 ```
 
 ### 2️⃣ Install dependencies
@@ -160,14 +122,12 @@ cd local-guide-frontend
 npm install
 ```
 
-### 3️⃣ Create `.env.local`
+### 3️⃣ Create `.env`
 ```
-NEXT_PUBLIC_API_BASE_URL=https://your-api-domain.com
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=xxxx
-NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=xxxx
-NEXT_PUBLIC_SSL_SUCCESS_URL=https://your-domain.com/payment/success
-NEXT_PUBLIC_SSL_FAIL_URL=https://your-domain.com/payment/fail
-NEXT_PUBLIC_SSL_CANCEL_URL=https://your-domain.com/payment/cancel
+JWT_SECRET= your_access_secret
+NODE_ENV=development
+
+NEXT_PUBLIC_BASE_API_URL=https://native-ways-api.onrender.com/api/v1
 ```
 
 ### 4️⃣ Run Development Server
@@ -183,19 +143,3 @@ npm start
 
 ---
 
-## 🤝 Contribution Guide  
-1. Fork the repo  
-2. Create a feature branch  
-3. Commit with meaningful messages  
-4. Submit a Pull Request  
-
----
-
-## 📜 License  
-Licensed under the **MIT License**.
-
----
-
-## 📧 Contact  
-For support or collaboration:  
-support@localguide.com
