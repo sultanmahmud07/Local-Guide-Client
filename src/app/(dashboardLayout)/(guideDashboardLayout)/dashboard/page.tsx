@@ -165,7 +165,6 @@ const TouristDashboardPage = async () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     {recentPayments.length > 0 ? recentPayments.slice(0, 5).map((pay: any) => (
                       <tr key={pay._id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4 font-medium text-gray-900">
@@ -213,7 +212,6 @@ const TouristDashboardPage = async () => {
             <CardContent className="p-0 flex-1 overflow-y-auto max-h-[600px]">
               {recentBookings && recentBookings.length > 0 ? (
                 <div className="divide-y divide-gray-100">
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {recentBookings.map((booking: any) => (
                     <div key={booking._id} className="p-5 hover:bg-gray-50 transition-colors group">
                       <div className="flex justify-between items-start mb-2">
