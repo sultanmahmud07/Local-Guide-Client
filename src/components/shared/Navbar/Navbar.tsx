@@ -1,4 +1,3 @@
-
 "use client"
 import Image from "next/image";
 import Link from "next/link";
@@ -12,10 +11,19 @@ type Props = {
   accessToken?: string | null;
   userInfo?: IUser | null;
 };
+
 const Navbar = (props: Props) => {
   const [navToggle, setNavToggle] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
-   const { accessToken, userInfo } = props;
+  const { accessToken, userInfo } = props;
+
+  // Add an effect to prevent background scrolling when the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = navToggle ? 'hidden' : 'auto';
+    return () => {
+      document.body.style.overflow = 'auto'; // Clean up on unmount
+    };
+  }, [navToggle]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +51,7 @@ const Navbar = (props: Props) => {
 
   return (
     <header>
-      <nav className={`z-40  fixed top-[-5px] left-0 right-0 w-full shadow py-2 lg:py-1 ${isSticky ? "border-b bg-background" : " bg-white"}`}>
+      <nav className={`z-40 fixed top-[-5px] left-0 right-0 w-full shadow py-2 lg:py-1 ${isSticky ? "border-b bg-background" : " bg-white"}`}>
         <div className={`main-container flex justify-between items-center`}>
           {/* Logo side here >>>>>>>>>>>>>>>> */}
           <div className="nav_logo_side">
@@ -58,7 +66,8 @@ const Navbar = (props: Props) => {
               {/* <span className="text- text-xs uppercase font-bold">Express BD</span> */}
             </Link>
           </div>
-          {/* Right side here >>>>>>>>>>>>>>>> */}
+
+          {/* Right side for desktop (remains unchanged) >>>>>>>>>>>>>>>> */}
           <div className="nav_right_side hidden lg:block ">
             <div className="flex justify-end items-center gap-2">
               {
@@ -75,25 +84,25 @@ const Navbar = (props: Props) => {
                   )
                 })}
               {accessToken ? (
-                 <UserProfileMenu userInfo={userInfo} />
+                <UserProfileMenu userInfo={userInfo} />
               ) :
                 <div className="flex items-center gap-2">
                   <Button asChild className="text-sm rounded-none px-7">
                     <Link href="/login">Login</Link>
                   </Button>
-                  <Button asChild className="text-sm bg-secondary hover:bg-accent rounded-none px-7">
+                  <Button asChild className="text-sm bg-secondary hover:bg-blue-900 rounded-none px-7">
                     <Link href="/register">Register</Link>
                   </Button>
-
                 </div>
               }
             </div>
           </div>
-          {/* Mobile Toggle Button */}
+
+          {/* Mobile Toggle Button and Profile Menu (condensed) */}
           <div className="lg:hidden">
             <div className="flex justify-end items-center gap-2">
               {accessToken && (
-               <UserProfileMenu userInfo={userInfo} />
+                <UserProfileMenu userInfo={userInfo} />
               )}
               {!accessToken && (
                 <Button asChild className="text-xs size-8 px-7">
@@ -101,7 +110,8 @@ const Navbar = (props: Props) => {
                 </Button>
               )}
 
-              <label className="cursor-pointer">
+              {/* Toggle Icon */}
+              <label className="cursor-pointer z-50">
                 <input
                   type="checkbox"
                   className="hidden"
@@ -133,6 +143,49 @@ const Navbar = (props: Props) => {
             </div>
           </div>
         </div>
+
+        {/* ======================================================= */}
+        {/* MOBILE NAVIGATION MENU (Responsive Implementation) */}
+        {/* ======================================================= */}
+        {/* Use navToggle to conditionally apply the 'translate-x-0' or '-translate-x-full' classes */}
+        <div
+          className={`
+            fixed top-[70px] lg:hidden w-full h-full bg-white shadow-xl 
+            transition-transform duration-300 ease-in-out transform z-30 p-4 space-y-4
+            ${navToggle ? 'translate-x-0' : 'translate-x-full'}
+          `}
+        >
+          {/* Navigation Links */}
+          <div className="flex flex-col space-y-2 border-b pb-4">
+            {navigationLinks.map((link, index) => (
+              <NavLink
+                key={index}
+                onClick={() => setNavToggle(false)}
+                href={link.href}
+                className="block text-lg font-medium text-gray-800 hover:text-primary transition p-2 hover:bg-gray-50 rounded-md"
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* Login/Register Buttons (Only if not logged in) */}
+          {!accessToken && (
+            <div className="flex flex-col gap-3 pt-4">
+              <Button asChild className="w-full text-base py-2 rounded-xs px-4">
+                <Link href="/login" onClick={() => setNavToggle(false)}>
+                  Login
+                </Link>
+              </Button>
+              <Button asChild variant="secondary" className="w-full text-base py-2 rounded-xs px-4">
+                <Link href="/register" onClick={() => setNavToggle(false)}>
+                  Register
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
+
       </nav>
     </header>
   );
