@@ -1,3 +1,4 @@
+// app/tours/[slug]/page.tsx (or wherever your page is located)
 import RightBookingCard from "@/components/module/Tour/BookingRequest";
 import TourDetails from "@/components/module/Tour/TourDetails";
 import Breadcrumb from "@/components/shared/Breadcrumb";
@@ -18,13 +19,20 @@ export default async function TourDetailPage({
     <div>
       <TopGap />
       <Breadcrumb title={tour.title} />
-      <div className="main-container flex gap-5">
-        <div className="w-2/3">
+      <div className="main-container flex gap-5 relative">
+        <div className="w-full md:w-2/3 pb-24 md:pb-0"> {/* Add padding-bottom for mobile to prevent overlap with fixed footer */}
           <TourDetails tour={tour} />
         </div>
-        <div className="w-1/3">
+        
+        {/* Desktop Sidebar (Hidden on Mobile) */}
+        <div className="w-full md:w-1/3 hidden md:block">
           <RightBookingCard tour={tour} reservedDates={reservedDates.data} />
         </div>
+      </div>
+
+      {/* Mobile Bottom Bar Instance (Hidden on Desktop) */}
+      <div className="md:hidden">
+        <RightBookingCard tour={tour} reservedDates={reservedDates.data} isMobileView={true} />
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ export default async function PopularTour() {
 
           {/* Left: Heading & Subtitle */}
           <div className="space-y-1">
-            <h2 className="font-oswald text-4xl md:text-5xl font-bold uppercase tracking-tight text-gray-900">
+            <h2 className="font-oswald text-3xl md:text-5xl font-bold uppercase tracking-tight text-gray-900">
               Popular <span className="text-emerald-700">Tours</span>
             </h2>
             <p className="text-gray-500 text-sm md:text-base font-medium max-w-md">
@@ -25,9 +25,9 @@ export default async function PopularTour() {
           </div>
 
           {/* Right: Action Button */}
-          <Link href="/explore?type=tour">
+          <Link href="/explore?type=tour" className="hidden md:block">
             <Button
-              className="group bg-emerald-700 hover:bg-emerald-800 text-white rounded-none px-8 py-6 text-sm font-semibold shadow-md transition-all duration-300"
+              className="group cursor-pointer bg-emerald-700 hover:bg-emerald-800 text-white rounded-none px-8 py-6 text-sm font-semibold shadow-md transition-all duration-300"
             >
               Explore All Tours
               <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -41,6 +41,15 @@ export default async function PopularTour() {
             <TourCard key={tour._id} tour={tour} />
           ))}
         </div>
+           {/* Right: Action Button */}
+          <Link href="/explore?type=tour" className="md:hidden">
+            <Button
+              className="group cursor-pointer bg-emerald-700 hover:bg-emerald-800 w-full mt-4 text-white rounded-none px-8 py-4 text-xs font-semibold shadow-md transition-all duration-300"
+            >
+              Explore All Tours
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Button>
+          </Link>
       </div>
     </section>
   );

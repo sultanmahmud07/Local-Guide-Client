@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Search, MapPin, DollarSign, Globe, Filter, Plus } from 'lucide-react';
+import { Search, MapPin, DollarSign, Globe, Filter, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,6 +41,7 @@ export default function ExploreClientLayout({ initialResults, initialType }: Exp
     // --- State Initialization ---
     const [searchType, setSearchType] = useState(initialType);
     const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false); // New State for Mobile Modal
 
     // Price Filter (Min/Max)
     const priceParam = searchParams.get('priceRange') || ''; // e.g., "50-200"
@@ -141,9 +142,110 @@ export default function ExploreClientLayout({ initialResults, initialType }: Exp
             }
         }
     };
+
+    // --- Reusable Filter UI Content ---
+    const renderFilters = () => (
+        <div className='space-y-5'>
+            {/* --- Price Range Filter (Min/Max) --- */}
+            <div className="space-y-2">
+                <Label className="font-semibold text-gray-800 flex items-center gap-1">
+                    <DollarSign className='w-4 h-4 text-green-600' /> Price Range
+                </Label>
+                <div className="flex items-center space-x-2">
+                    <Input 
+                        type="number" 
+                        placeholder="Min"
+                        value={minPrice}
+                        onChange={(e) => setMinPrice(e.target.value)}
+                        className="w-1/2"
+                        onBlur={handlePriceSubmit}
+                    />
+                    <span className='text-gray-400'>-</span>
+                    <Input 
+                        type="number" 
+                        placeholder="Max"
+                        value={maxPrice}
+                        onChange={(e) => setMaxPrice(e.target.value)}
+                        className="w-1/2"
+                        onBlur={handlePriceSubmit}
+                    />
+                    <Button 
+                        size="icon" 
+                        className='shrink-0 bg-green-600 hover:bg-green-700'
+                        onClick={handlePriceSubmit}
+                    >
+                        <Plus className='w-4 h-4' />
+                    </Button>
+                </div>
+                {(minPrice || maxPrice) && (
+                    <p className='text-xs text-gray-500'>Current: ${minPrice || 0} to ${maxPrice || '∞'}</p>
+                )}
+            </div>
+
+            <Separator />
+            
+            <div className="space-y-3">
+                <Label className="font-semibold text-gray-800 flex items-center gap-1">
+                    <MapPin className='w-4 h-4 text-green-600' /> Category
+                </Label>
+                <div className="space-y-2">
+                    {CATEGORIES.map(cat => (
+                        <div key={cat} className="flex items-center space-x-3">
+                            <Checkbox 
+                                id={cat} 
+                                checked={category === cat}
+                                onCheckedChange={() => 
+                                    handleFilterChange('category', category === cat ? '' : cat)
+                                }
+                                className='border-gray-400 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600'
+                            />
+                            <Label htmlFor={cat} className="font-normal cursor-pointer">{cat}</Label>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            
+            <Separator />
+
+            {/* --- Language Filter (With Add Button) --- */}
+            <div className="space-y-2">
+                <Label className="font-semibold text-gray-800 flex items-center gap-1">
+                    <Globe className='w-4 h-4 text-green-600' /> Language
+                </Label>
+                <div className='flex gap-2'>
+                    <Input 
+                        id="language-input"
+                        type="text" 
+                        placeholder="English, Spanish"
+                        value={languageInput}
+                        onChange={(e) => setLanguageInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleLanguageSubmit()}
+                    />
+                    <Button 
+                        size="icon" 
+                        className='shrink-0 bg-green-600 hover:bg-green-700'
+                        onClick={handleLanguageSubmit}
+                    >
+                        <Plus className='w-4 h-4' />
+                    </Button>
+                </div>
+                {languageInput && (
+                    <p className='text-xs text-gray-500'>Current: {languageInput}</p>
+                )}
+            </div>
+
+            <Button 
+                variant="outline" 
+                className='w-full border-gray-300 text-gray-600 hover:bg-gray-50 mt-6'
+                onClick={() => router.push('/explore')} // Reset button
+            >
+                Reset Filters
+            </Button>
+        </div>
+    );
     
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col relative">
             
             {/* 1. Small Top Banner/Search Section */}
             <div className="bg-gray-800 py-10 text-white shadow-xl pt-20 md:pt-32">
@@ -176,122 +278,38 @@ export default function ExploreClientLayout({ initialResults, initialType }: Exp
             </div>
 
             {/* 2. Main Content Layout */}
-            <div className="main-container py-10">
-                <div className="flex justify-between items-center mb-6">
+            <div className="main-container py-4 md:py-10">
+                <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                     <div className="flex space-x-2 p-1 border rounded-lg bg-gray-50">
                         <ToggleButton type="tour" currentType={searchType} setType={handleTypeToggle} />
                         <ToggleButton type="guide" currentType={searchType} setType={handleTypeToggle} />
                     </div>
-                    <p className="text-sm text-gray-600">
-                         Showing {initialResults.length} results
-                    </p>
+                    
+                    <div className="flex items-center gap-3">
+                         {/* MOBILE FILTER BUTTON */}
+                        <Button 
+                            variant="outline" 
+                            className="md:hidden border-green-600 text-sm text-green-700 hover:bg-green-50"
+                            onClick={() => setIsMobileFilterOpen(true)}
+                        >
+                            <Filter className="w-3 h-3 mr-2" /> Filters
+                        </Button>
+
+                        {/* <p className="text-sm text-gray-600">
+                             Showing {initialResults.length} results
+                        </p> */}
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     
-                    {/* A. Sidebar Filters (Col 1) */}
-                    <Card className="lg:col-span-1 h-fit sticky top-24 shadow-xl">
+                    {/* A. Sidebar Filters (Desktop - Hidden on mobile) */}
+                    <Card className="lg:col-span-1 hidden md:block h-fit sticky top-24 shadow-xl">
                         <CardHeader className='p-4 border-b'>
                             <CardTitle className='text-xl flex items-center gap-2'><Filter className='w-5 h-5 text-green-600' /> Filters</CardTitle>
                         </CardHeader>
-                        <CardContent className='p-4 space-y-5'>
-                            
-                            {/* --- Price Range Filter (Min/Max) --- */}
-                            <div className="space-y-2">
-                                <Label className="font-semibold text-gray-800 flex items-center gap-1">
-                                    <DollarSign className='w-4 h-4 text-green-600' /> Price Range
-                                </Label>
-                                <div className="flex items-center space-x-2">
-                                    <Input 
-                                        type="number" 
-                                        placeholder="Min"
-                                        value={minPrice}
-                                        onChange={(e) => setMinPrice(e.target.value)}
-                                        className="w-1/2"
-                                        onBlur={handlePriceSubmit}
-                                    />
-                                    <span className='text-gray-400'>-</span>
-                                    <Input 
-                                        type="number" 
-                                        placeholder="Max"
-                                        value={maxPrice}
-                                        onChange={(e) => setMaxPrice(e.target.value)}
-                                        className="w-1/2"
-                                        onBlur={handlePriceSubmit}
-                                    />
-                                    <Button 
-                                        size="icon" 
-                                        className='shrink-0 bg-green-600 hover:bg-green-700'
-                                        onClick={handlePriceSubmit}
-                                    >
-                                        <Plus className='w-4 h-4' />
-                                    </Button>
-                                </div>
-                                {(minPrice || maxPrice) && (
-                                    <p className='text-xs text-gray-500'>Current: ${minPrice || 0} to ${maxPrice || '∞'}</p>
-                                )}
-                            </div>
-
-                            <Separator />
-                            
-                            <div className="space-y-3">
-                                <Label className="font-semibold text-gray-800 flex items-center gap-1">
-                                    <MapPin className='w-4 h-4 text-green-600' /> Category
-                                </Label>
-                                <div className="space-y-2">
-                                    {CATEGORIES.map(cat => (
-                                        <div key={cat} className="flex items-center space-x-3">
-                                            <Checkbox 
-                                                id={cat} 
-                                                checked={category === cat}
-                                                onCheckedChange={() => 
-                                                    handleFilterChange('category', category === cat ? '' : cat)
-                                                }
-                                                className='border-gray-400 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600'
-                                            />
-                                            <Label htmlFor={cat} className="font-normal cursor-pointer">{cat}</Label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            
-                            <Separator />
-
-                            {/* --- Language Filter (With Add Button) --- */}
-                            <div className="space-y-2">
-                                <Label className="font-semibold text-gray-800 flex items-center gap-1">
-                                    <Globe className='w-4 h-4 text-green-600' /> Language
-                                </Label>
-                                <div className='flex gap-2'>
-                                    <Input 
-                                        id="language-input"
-                                        type="text" 
-                                        placeholder="English, Spanish"
-                                        value={languageInput}
-                                        onChange={(e) => setLanguageInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleLanguageSubmit()}
-                                    />
-                                     <Button 
-                                        size="icon" 
-                                        className='shrink-0 bg-green-600 hover:bg-green-700'
-                                        onClick={handleLanguageSubmit}
-                                    >
-                                        <Plus className='w-4 h-4' />
-                                    </Button>
-                                </div>
-                                {languageInput && (
-                                    <p className='text-xs text-gray-500'>Current: {languageInput}</p>
-                                )}
-                            </div>
-
-                            <Button 
-                                variant="outline" 
-                                className='w-full border-gray-300 text-gray-600 hover:bg-gray-50 mt-6'
-                                onClick={() => router.push('/explore')} // Reset button
-                            >
-                                Reset Filters
-                            </Button>
-
+                        <CardContent className='p-4'>
+                            {renderFilters()}
                         </CardContent>
                     </Card>
 
@@ -313,11 +331,47 @@ export default function ExploreClientLayout({ initialResults, initialType }: Exp
                                 </div>
                             )}
                         </div>
-                        {/* Pagination component would go here */}
                     </div>
 
                 </div>
             </div>
+
+            {/* --- MOBILE FILTER MODAL (Overlay) --- */}
+            {isMobileFilterOpen && (
+                <div className="fixed inset-0 z-50 flex items-end justify-center md:hidden">
+                    {/* Backdrop */}
+                    <div 
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+                        onClick={() => setIsMobileFilterOpen(false)}
+                    />
+                    
+                    {/* Modal Content */}
+                    <div className="relative w-full h-[90vh] bg-white rounded-t-2xl shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-300">
+                        <div className="flex items-center justify-between p-4 border-b">
+                            <h2 className="text-lg font-semibold flex items-center gap-2">
+                                <Filter className="w-5 h-5 text-green-600" /> Filters
+                            </h2>
+                            <Button variant="ghost" size="icon" onClick={() => setIsMobileFilterOpen(false)}>
+                                <X className="w-5 h-5" />
+                            </Button>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto p-4">
+                            {renderFilters()}
+                        </div>
+                        
+                        <div className="p-4 border-t bg-gray-50">
+                            <Button 
+                                className="w-full bg-green-600 hover:bg-green-700" 
+                                onClick={() => setIsMobileFilterOpen(false)}
+                            >
+                                Apply Filters
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

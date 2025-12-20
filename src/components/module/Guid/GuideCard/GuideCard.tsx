@@ -127,12 +127,12 @@ const GuideCard = ({ guide }: { guide: IGuide }) => {
             {/* Action Buttons */}
             <div className="p-4 flex items-center justify-between gap-3 border-t">
                 <Link href={`/view-guide/${guide._id}`} className="flex-1">
-                    <Button variant="outline" className="w-full text-green-600 border-green-600 hover:bg-green-50">
+                    <Button variant="outline" className="w-full cursor-pointer text-green-600 border-green-600 hover:bg-green-50">
                         View Profile
                     </Button>
                 </Link>
                 <Link href={`/message/${guide._id}`} className="flex-1">
-                    <Button className="w-full bg-green-600 hover:bg-green-700">
+                    <Button className="w-full cursor-pointer bg-secondary hover:bg-green-700">
                         Message
                     </Button>
                 </Link>

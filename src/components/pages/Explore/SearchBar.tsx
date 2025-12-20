@@ -53,9 +53,10 @@ export default function SearchBar() {
                   <Button
                         size="icon"
                         onClick={handleSearch} // Call the new handler
-                        className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-primary hover:bg-secondary transition text-white"
+                        className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2 rounded-lg bg-primary hover:bg-secondary transition text-white"
                   >
                         <Search className="h-5 w-5" />
+                        {/* Search */}
                   </Button>
             </div>
       );

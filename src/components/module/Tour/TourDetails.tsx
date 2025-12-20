@@ -32,7 +32,7 @@ const TourDetails = ({ tour }: { tour: ITourGet }) => {
                 <ImageSlider images={tour.images} />
 
                 {/* Mobile-only Title Overlay (Optional style preference) */}
-                <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 to-transparent p-6 md:hidden">
+                <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/90 to-transparent p-6 md:hidden">
                     <Badge className="bg-primary text-white mb-2">{tour.category}</Badge>
                     <h1 className="text-2xl font-bold text-white leading-tight">{tour.title}</h1>
                 </div>

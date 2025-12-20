@@ -12,11 +12,11 @@ export default async function MeetLocalGuides() {
     <section className="w-full bg-[#f7f7f7] py-7 md:py-16">
       <div className="main-container">
         {/* Top Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-3 ">
 
           {/* Left: Heading & Subtitle */}
           <div className="space-y-1">
-            <h2 className="font-oswald text-4xl md:text-5xl font-bold uppercase tracking-tight text-gray-900">
+            <h2 className="font-oswald text-3xl md:text-5xl font-bold uppercase tracking-tight text-gray-900">
               Meet <span className="text-emerald-700">Your Guide</span>
             </h2>
             <p className="text-gray-500 text-sm md:text-base font-medium max-w-md">
@@ -25,7 +25,7 @@ export default async function MeetLocalGuides() {
           </div>
 
           {/* Right: Action Button */}
-          <Link href="/explore?type=guide">
+          <Link href="/explore?type=guide" className="hidden md:block">
             <Button
               className="group bg-emerald-700 hover:bg-emerald-800 text-white rounded-none px-8 py-6 text-sm font-semibold shadow-md transition-all duration-300"
             >
@@ -42,6 +42,15 @@ export default async function MeetLocalGuides() {
             <GuideCard key={guide._id} guide={guide}></GuideCard>
           ))}
         </div>
+        {/* Right: Action Button */}
+          <Link href="/explore?type=guide" className=" md:hidden ">
+            <Button
+              className="group bg-emerald-700 hover:bg-emerald-800 mt-4 w-full text-white rounded-none px-8 py-6 text-sm font-semibold shadow-md transition-all duration-300"
+            >
+              Explore All Guides
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Button>
+          </Link>
       </div>
     </section>
   );

@@ -14,13 +14,14 @@ import {
   Timer,
   Footprints,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  X 
 } from 'lucide-react';
 
-{/* ... inside your component ... */ }
 type Props = {
   tour: ITourGet;
-  reservedDates: string[]; // ["2025-12-15", ...] (YYYY-MM-DD)
+  reservedDates: string[];
+  isMobileView?: boolean; 
 };
 
 const weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -39,38 +40,38 @@ function startOfMonth(year: number, month: number) {
 function getDaysArrayForMonth(year: number, month: number) {
   const first = startOfMonth(year, month);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const startWeekday = first.getDay(); // 0-6
+  const startWeekday = first.getDay(); 
   const cells: (Date | null)[] = [];
 
-  // previous month's trailing days as null (we'll show blanks)
   for (let i = 0; i < startWeekday; i++) cells.push(null);
-
   for (let d = 1; d <= daysInMonth; d++) {
     cells.push(new Date(year, month, d));
   }
-
-  // pad to 7*n
   while (cells.length % 7 !== 0) cells.push(null);
   return cells;
 }
 
-export default function RightBookingCard({ tour, reservedDates }: Props) {
+export default function RightBookingCard({ tour, reservedDates, isMobileView = false }: Props) {
   const router = useRouter();
   const [people, setPeople] = useState<number>(1);
-  const [date, setDate] = useState<string>(""); 
+  const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
   const [showCalendar, setShowCalendar] = useState(false);
+  
+  // Mobile Modal State
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
 
   // calendar state
+  // 1. UPDATE: Normalize today to midnight to correctly compare past dates
   const today = new Date();
-  const [calYear, setCalYear] = useState<number>(today.getFullYear());
-  const [calMonth, setCalMonth] = useState<number>(today.getMonth()); // 0-index
+  today.setHours(0, 0, 0, 0);
 
-  // Normalized reserved set for quick lookup
+  const [calYear, setCalYear] = useState<number>(today.getFullYear());
+  const [calMonth, setCalMonth] = useState<number>(today.getMonth());
+
   const reservedSet = useMemo(() => new Set((reservedDates || []).map((d) => d)), [reservedDates]);
 
   useEffect(() => {
-    // if the currently selected date becomes reserved (due to prop change), unset it
     if (date && reservedSet.has(date)) {
       setDate("");
     }
@@ -79,16 +80,13 @@ export default function RightBookingCard({ tour, reservedDates }: Props) {
   const increase = () => setPeople((p) => Math.min(tour.maxGroupSize ?? 10, p + 1));
   const decrease = () => setPeople((p) => Math.max(1, p - 1));
 
-  // times coming from tour.startTime or fallback
   const startTimes: string[] = Array.isArray(tour.startTime) && tour.startTime.length > 0
     ? tour.startTime
     : ["10:00", "11:30"];
 
-  // Price calc
   const fee = typeof tour.fee === "number" ? tour.fee : Number(tour.fee ?? 0);
   const totalPrice = useMemo(() => +(fee * people), [fee, people]);
 
-  // Calendar helpers
   const daysCells = useMemo(() => getDaysArrayForMonth(calYear, calMonth), [calYear, calMonth]);
 
   const prevMonth = () => {
@@ -110,8 +108,12 @@ export default function RightBookingCard({ tour, reservedDates }: Props) {
 
   const onSelectDay = (d: Date | null) => {
     if (!d) return;
+
+    // 2. UPDATE: Block selection if date is before today
+    if (d < today) return;
+
     const picked = formatDateYMD(d);
-    if (reservedSet.has(picked)) return; // disabled
+    if (reservedSet.has(picked)) return;
     setDate(picked);
     setShowCalendar(false);
   };
@@ -126,9 +128,8 @@ export default function RightBookingCard({ tour, reservedDates }: Props) {
       return;
     }
 
-    // Build query params
     const params = new URLSearchParams({
-      slug: String(tour.slug ?? tour.slug ?? ""),
+      slug: String(tour.slug ?? ""),
       people: String(people),
       date,
       time,
@@ -136,206 +137,168 @@ export default function RightBookingCard({ tour, reservedDates }: Props) {
       total: String(totalPrice),
     });
 
-    // navigate to booking-confirm with query
     router.push(`/tour/booking-request?${params.toString()}`);
   };
 
+  // --- REUSABLE FORM CONTENT ---
+  const BookingFormContent = (
+    <div className="space-y-3">
+      {/* Tour Specs */}
+      <div className="py-2 space-y-1 border-b border-gray-100 pb-2">
+         <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-500 flex items-center gap-2"><Users className="w-4 h-4"/> Max Size</span>
+            <span className="font-medium">{tour.maxGroupSize ?? 1} people</span>
+         </div>
+         <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-500 flex items-center gap-2"><Timer className="w-4 h-4"/> Duration</span>
+            <span className="font-medium">{tour.durationHours ? `${tour.durationHours}h` : "Flexible"}</span>
+         </div>
+      </div>
+
+      {/* Party Size */}
+      <div>
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Party Size</label>
+        <div className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-2 py-1 shadow-sm">
+          <button onClick={decrease} className="w-8 h-8 flex items-center justify-center text-gray-400 hover:bg-emerald-50 rounded-lg"><Minus className="w-4 h-4" /></button>
+          <span className="font-bold text-gray-900 text-lg w-8 text-center">{people}</span>
+          <button onClick={increase} className="w-8 h-8 flex items-center justify-center text-gray-400 hover:bg-emerald-50 rounded-lg"><Plus className="w-4 h-4" /></button>
+        </div>
+      </div>
+
+      {/* Date Picker */}
+      <div className="relative">
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Date</label>
+        <button
+          onClick={() => setShowCalendar((s) => !s)}
+          className={`w-full flex items-center justify-between bg-white border px-4 py-2 rounded-xl text-sm font-medium shadow-sm ${date ? "border-emerald-500 text-gray-900" : "border-gray-200 text-gray-500"}`}
+        >
+          <span>{date || "Select a date"}</span>
+          <CalendarDays className={`w-4 h-4 ${date ? "text-emerald-600" : "text-gray-400"}`} />
+        </button>
+
+        {showCalendar && (
+          <div className={`absolute z-50 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 ${isMobileView ? "bottom-full mb-[-100px]" : "top-full mt-0"}`}>
+            <div className="flex items-center justify-between mb-4">
+              <button onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded-lg"><ChevronLeft className="w-5 h-5" /></button>
+              <div className="font-bold text-gray-800">{new Date(calYear, calMonth).toLocaleString(undefined, { month: "long", year: "numeric" })}</div>
+              <button onClick={nextMonth} className="p-1 hover:bg-gray-100 rounded-lg"><ChevronRight className="w-5 h-5" /></button>
+            </div>
+            <div className="grid grid-cols-7 text-center mb-2">{weekdays.map((w) => <div key={w} className="text-[10px] font-bold text-gray-400 uppercase">{w.substring(0, 2)}</div>)}</div>
+            <div className="grid grid-cols-7 gap-1">
+              {daysCells.map((cell, idx) => {
+                if (!cell) return <div key={idx} />;
+                
+                const ymd = formatDateYMD(cell);
+                const isSelected = date === ymd;
+                const isReserved = reservedSet.has(ymd);
+                
+                // 3. UPDATE: Determine logic for past dates
+                const isPast = cell < today;
+                const isDisabled = isReserved || isPast;
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => onSelectDay(cell)}
+                    disabled={isDisabled}
+                    // 4. UPDATE: Dynamic styling for Past (Gray) vs Reserved (Red)
+                    className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-medium 
+                      ${isReserved ? "text-red-300 line-through cursor-not-allowed" : 
+                        isPast ? "text-gray-300 cursor-not-allowed" : // Gray out past dates
+                        isSelected ? "bg-emerald-600 text-white" : 
+                        "hover:bg-emerald-50 text-gray-700"
+                      }`}
+                  >
+                    {cell.getDate()}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Time Picker */}
+      <div>
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Start Time</label>
+        <div className="relative">
+          <select value={time} onChange={(e) => setTime(e.target.value)} className={`w-full appearance-none bg-white border px-4 py-2 rounded-xl text-sm font-medium shadow-sm focus:outline-none ${time ? "border-emerald-500 text-gray-900" : "border-gray-200 text-gray-500"}`}>
+            <option value="" disabled>Select time</option>
+            {startTimes.map((t) => <option key={t} value={t}>{t}</option>)}
+          </select>
+          <Clock className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none ${time ? "text-emerald-600" : "text-gray-400"}`} />
+        </div>
+      </div>
+
+      {/* Action Button */}
+      <button
+        onClick={handleRequest}
+        disabled={!date || !time}
+        className="mt-3 w-full cursor-pointer bg-emerald-700 hover:bg-emerald-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2 md:py-3 rounded md:rounded-xl font-bold shadow-lg shadow-emerald-100 transition-all text-sm md:text-base"
+      >
+        Request Booking - ${totalPrice.toFixed(0)}
+      </button>
+    </div>
+  );
+
+
+  // --- RENDER LOGIC ---
+
+  // 1. MOBILE VIEW
+  if (isMobileView) {
+    return (
+      <>
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 p-4 pb-6 shadow-[0_-4px_15px_rgba(0,0,0,0.05)] flex items-center justify-between md:hidden">
+          <div className="flex flex-col">
+            <span className="text-sm text-gray-500">Total Price</span>
+            <div className="flex items-baseline gap-1">
+               <span className="text-2xl font-extrabold text-emerald-700">${totalPrice.toFixed(0)}</span>
+               <span className="text-sm font-medium text-gray-400">USD</span>
+            </div>
+          </div>
+          <button 
+            onClick={() => setIsMobileModalOpen(true)}
+            className="bg-emerald-700 text-white px-8 py-3 rounded md:rounded-xl font-bold shadow-lg shadow-emerald-100 active:scale-95 transition-transform"
+          >
+            Check Availability
+          </button>
+        </div>
+
+        {isMobileModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center md:hidden">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileModalOpen(false)}></div>
+            <div className="relative w-full bg-white rounded-t-3xl p-6 shadow-2xl animate-in slide-in-from-bottom duration-300 max-h-[90vh] overflow-y-auto">
+               <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-gray-900">Book your tour</h3>
+                  <button onClick={() => setIsMobileModalOpen(false)} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
+                    <X className="w-5 h-5 text-gray-600" />
+                  </button>
+               </div>
+               {BookingFormContent}
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  // 2. DESKTOP VIEW
   return (
-
-    <aside className="w-full  bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sticky top-20 transition-all duration-300">
-
-      {/* Price Header */}
+    <aside className="w-full bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sticky top-20 transition-all duration-300">
       <div className="text-center pb-6 border-b border-gray-100">
         <div className="flex items-baseline justify-center gap-1">
-          <h2 className="text-4xl font-extrabold text-emerald-700">
-            ${totalPrice.toFixed(0)}
-          </h2>
+          <h2 className="text-4xl font-extrabold text-emerald-700">${totalPrice.toFixed(0)}</h2>
           <span className="text-lg font-medium text-gray-400">USD</span>
         </div>
-        <p className="text-xs font-medium text-gray-400 mt-1 uppercase tracking-wide">
-          Total price including fees
-        </p>
+        <span className="text-xs font-medium text-gray-400 mt-1 uppercase tracking-wide">Total price including fees</span>
       </div>
+      
+      <div className="h-6"></div> 
+      {BookingFormContent}
 
-      {/* Tour Specs */}
-      <div className="py-6 space-y-4">
-        <div className="flex items-center justify-between text-sm group">
-          <div className="flex items-center gap-3 text-gray-500 group-hover:text-emerald-700 transition-colors">
-            <Users className="w-5 h-5" />
-            <span className="font-medium">Group Size</span>
-          </div>
-          <span className="font-semibold text-gray-800">Up to {tour.maxGroupSize ?? 1} people</span>
-        </div>
-
-        <div className="flex items-center justify-between text-sm group">
-          <div className="flex items-center gap-3 text-gray-500 group-hover:text-emerald-700 transition-colors">
-            <Timer className="w-5 h-5" />
-            <span className="font-medium">Duration</span>
-          </div>
-          <span className="font-semibold text-gray-800">
-            {tour.durationHours ? `${tour.durationHours} hours` : "Flexible"}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between text-sm group">
-          <div className="flex items-center gap-3 text-gray-500 group-hover:text-emerald-700 transition-colors">
-            <Footprints className="w-5 h-5" />
-            <span className="font-medium">Transport</span>
-          </div>
-          <span className="font-semibold text-gray-800 capitalize">
-            {tour.transportation || "Walking"}
-          </span>
-        </div>
-      </div>
-
-      {/* Booking Inputs Container */}
-      <div className="space-y-4 bg-gray-50 p-4 rounded-2xl border border-gray-100">
-
-        {/* Party Size Counter */}
-        <div>
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
-            Party Size
-          </label>
-          <div className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-2 py-1.5 shadow-sm">
-            <button
-              onClick={decrease}
-              aria-label="Decrease guests"
-              className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-            >
-              <Minus className="w-4 h-4" />
-            </button>
-
-            <span className="font-bold text-gray-900 text-lg w-8 text-center select-none">
-              {people}
-            </span>
-
-            <button
-              onClick={increase}
-              aria-label="Increase guests"
-              className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        {/* Date Picker */}
-        <div className="relative">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
-            Date
-          </label>
-          <button
-            onClick={() => setShowCalendar((s) => !s)}
-            className={`w-full flex items-center justify-between bg-white border px-4 py-3 rounded-xl text-sm font-medium transition-all shadow-sm
-            ${date ? "border-emerald-500 text-gray-900 ring-1 ring-emerald-100" : "border-gray-200 text-gray-500 hover:border-emerald-300"}`}
-          >
-            <span>{date || "Select a date"}</span>
-            <CalendarDays className={`w-4 h-4 ${date ? "text-emerald-600" : "text-gray-400"}`} />
-          </button>
-
-          {/* Calendar Popover */}
-          {showCalendar && (
-            <div className="absolute z-50 top-full left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 animate-in fade-in zoom-in-95 duration-200">
-              {/* Calendar Header */}
-              <div className="flex items-center justify-between mb-4">
-                <button onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded-lg text-gray-600">
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <div className="font-bold text-gray-800">
-                  {new Date(calYear, calMonth).toLocaleString(undefined, { month: "long", year: "numeric" })}
-                </div>
-                <button onClick={nextMonth} className="p-1 hover:bg-gray-100 rounded-lg text-gray-600">
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Weekdays */}
-              <div className="grid grid-cols-7 text-center mb-2">
-                {weekdays.map((w) => (
-                  <div key={w} className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
-                    {w.substring(0, 2)}
-                  </div>
-                ))}
-              </div>
-
-              {/* Days Grid */}
-              <div className="grid grid-cols-7 gap-1">
-                {daysCells.map((cell, idx) => {
-                  if (!cell) return <div key={idx} />;
-
-                  const ymd = formatDateYMD(cell);
-                  const isToday = ymd === formatDateYMD(new Date());
-                  const isDisabled = reservedSet.has(ymd);
-                  const isSelected = date === ymd;
-
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => onSelectDay(cell)}
-                      disabled={isDisabled}
-                      className={`
-                      h-9 w-9 rounded-full flex items-center justify-center text-sm font-medium transition-all
-                      ${isDisabled
-                          ? "text-red-300 cursor-not-allowed box-decoration-slice line-through"
-                          : isSelected
-                            ? "bg-emerald-600 text-white shadow-md shadow-emerald-200 scale-110"
-                            : "text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"}
-                      ${isToday && !isSelected ? "ring-1 ring-emerald-400 text-emerald-600 font-bold" : ""}
-                    `}
-                    >
-                      {cell.getDate()}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <button
-                onClick={() => { setDate(""); setShowCalendar(false); }}
-                className="w-full mt-4 text-xs font-semibold text-gray-400 hover:text-red-500 transition-colors py-1"
-              >
-                Clear Selection
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Time Picker */}
-        <div>
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
-            Start Time
-          </label>
-          <div className="relative">
-            <select
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className={`w-full appearance-none bg-white border px-4 py-3 rounded-xl text-sm font-medium shadow-sm transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-100
-              ${time ? "border-emerald-500 text-gray-900" : "border-gray-200 text-gray-500"}`}
-            >
-              <option value="" disabled>Select time</option>
-              {startTimes.map((t) => (
-                <option key={t} value={t}>{t}</option>
-              ))}
-            </select>
-            <Clock className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none ${time ? "text-emerald-600" : "text-gray-400"}`} />
-          </div>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="mt-6 space-y-3">
-        <button
-          onClick={handleRequest}
-          disabled={!date || !time}
-          className="w-full cursor-pointer bg-emerald-700 hover:bg-emerald-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold shadow-lg shadow-emerald-100 transition-all transform active:scale-[0.98]"
-        >
-          Request Booking
-        </button>
-
-        <button className="w-full text-center text-xs font-semibold text-gray-500 hover:text-gray-800 underline decoration-gray-300 underline-offset-2 transition-colors">
-          Read cancellation policy
-        </button>
-      </div>
-
+      <button className="w-full text-center mt-4 text-xs font-semibold text-gray-500 hover:text-gray-800 underline decoration-gray-300 underline-offset-2 transition-colors">
+        Read cancellation policy
+      </button>
     </aside>
   );
 }

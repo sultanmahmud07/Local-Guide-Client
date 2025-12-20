@@ -25,8 +25,11 @@ const Breadcrumb = ({title}:{title: string}) => {
         <HiChevronRight className="text-gray-400" />
 
         {/* Final (active) item */}
-        <span className="text-gray-500 font-semibold">
+        <span className="text-gray-500 font-semibold hidden md:block">
          {title}
+        </span>
+        <span className="text-primary font-semibold md:block">
+         {title.slice(0,20)}{title.length > 20 ? "..." : ""}
         </span>
       </nav>
     </div>
