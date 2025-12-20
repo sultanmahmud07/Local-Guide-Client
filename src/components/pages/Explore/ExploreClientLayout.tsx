@@ -295,9 +295,14 @@ export default function ExploreClientLayout({ initialResults, initialType }: Exp
                             <Filter className="w-3 h-3 mr-2" /> Filters
                         </Button>
 
-                        {/* <p className="text-sm text-gray-600">
+                        <div className="ll hidden md:block">
+                          <div className="flex items-center gap-4">
+                               {/* <Sort /> */}
+                            <p className="text-sm text-gray-600">
                              Showing {initialResults.length} results
-                        </p> */}
+                        </p>
+                          </div>
+                        </div>
                     </div>
                 </div>
 

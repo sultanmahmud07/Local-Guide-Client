@@ -1,6 +1,7 @@
 
 import BecomeLocalSearch from "@/components/pages/Home/BecomeLocalSearch";
 import ExperienceTravelArrow from "@/components/pages/Home/ExperienceTravelArrow";
+import FaqSection from "@/components/pages/Home/FaqSection";
 import FeatureStrip from "@/components/pages/Home/FeatureStrip";
 import HappyTravelers from "@/components/pages/Home/HappyTravelers";
 import Hero from "@/components/pages/Home/Hero";
@@ -20,6 +21,7 @@ export default function Home() {
       <ImpactHero />
       <HappyTravelers />
       <Reviews />
+      <FaqSection />
       <BecomeLocalSearch />
     </div>
   );

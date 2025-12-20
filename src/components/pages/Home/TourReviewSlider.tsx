@@ -2,7 +2,7 @@
 // components/module/TourReviewSlider.tsx
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react'; // Added useState
 import Image from 'next/image';
 import Link from 'next/link';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -14,14 +14,40 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { IReview } from '@/types/review.interface';
 
-// --- INTERFACE DEFINITION (Unchanged) ---
+// --- INTERFACE DEFINITION ---
 interface TourReviewSliderProps {
     reviews: IReview[];
     interval?: number;
     cardsPerView?: number;
 }
 
-// Helper to render star icons (Unchanged)
+// --- NEW COMPONENT: Comment with Read More Logic ---
+const ReviewComment = ({ comment }: { comment: string }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const isLongComment = comment && comment.length > 150; // Threshold for showing button
+
+    return (
+        <div className="">
+            <p className={`text-gray-600 leading-relaxed ${isExpanded ? '' : 'line-clamp-4'}`}>
+                {comment}
+            </p>
+            {isLongComment && (
+                <button 
+                    onClick={(e) => {
+                        e.preventDefault(); // Prevent clicking the parent Link
+                        e.stopPropagation(); // Stop event bubbling
+                        setIsExpanded(!isExpanded);
+                    }}
+                    className="text-emerald-700 text-xs font-bold mt-2 hover:underline uppercase tracking-wide focus:outline-none"
+                >
+                    {isExpanded ? 'Read Less' : 'Read More'}
+                </button>
+            )}
+        </div>
+    );
+};
+
+// --- HELPER: Render Stars ---
 const renderStars = (rating: number) => {
     const stars = [];
     const actualRating = Math.min(5, Math.max(0, rating));
@@ -38,8 +64,7 @@ const renderStars = (rating: number) => {
     return <div className="flex items-center gap-0.5">{stars}</div>;
 };
 
-// --- Custom Navigation Arrows (Improved Shadow/Contrast) ---
-
+// --- ARROWS ---
 const NextArrow = (props: any) => {
     const { onClick } = props;
     return (
@@ -73,15 +98,12 @@ const PrevArrow = (props: any) => {
 // --- MAIN SLIDER COMPONENT ---
 export default function TourReviewSlider({ reviews, interval = 5000, cardsPerView = 3 }: TourReviewSliderProps) {
 
-    // Filter reviews and ensure data integrity for safe rendering
     const validReviews = reviews.filter(r =>
         r.comment && r.comment.length > 10 && r.user && r.guide && r.tour
     );
     const totalReviews = validReviews.length;
     const slidesToShow = Math.min(cardsPerView, totalReviews || 1);
 
-
-    // ✅ Slider settings (Adapted for stability and responsiveness)
     const settings = {
         dots: false,
         infinite: totalReviews > slidesToShow,
@@ -94,8 +116,6 @@ export default function TourReviewSlider({ reviews, interval = 5000, cardsPerVie
         arrows: totalReviews > slidesToShow,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
-
-        // Responsive settings
         responsive: [
             {
                 breakpoint: 1024,
@@ -121,43 +141,38 @@ export default function TourReviewSlider({ reviews, interval = 5000, cardsPerVie
     }
 
     return (
-        <div className="relative pb-4"> {/* Added pb-4 for arrow clearance */}
-
-            {/* --- Slick Slider Container --- */}
+        <div className="relative pb-4">
             <Slider {...settings}>
                 {validReviews.map((review) => (
-                    // Link wraps the entire card
                     <div
                         key={review?._id}
                         className="p-3 block h-full"
                     >
-                        {/* Design Improvement: Use soft pink border/background accent */}
                         <Card className="h-full p-6 flex flex-col justify-between border-2 border-rose-100 bg-white shadow-lg hover:shadow-2xl transition-all duration-300">
 
                             {/* Top: Rating and Comment */}
                             <div>
                                 <div className="flex justify-between items-center mb-3">
                                     {renderStars(review?.rating)}
-                                    {/* Use relative time or standardized format for user friendliness */}
                                     <p className="text-xs text-gray-500">
                                         {format(new Date(review?.createdAt), 'MMM dd, yyyy')}
                                     </p>
                                 </div>
-                                <Link
-                                    href={`/tour/${review?.tour?._id}`}>
-
+                                
+                                <Link href={`/tour/${review?.tour?._id}`}>
                                     <p className="text-lg hover:text-secondary hover:underline font-semibold text-gray-800 line-clamp-2 mb-3">
                                         {review?.tour?.title}
                                     </p>
                                 </Link>
-                                <p className="text-gray-600 leading-relaxed line-clamp-4">
-                                    {review?.comment}
-                                </p>
+
+                                {/* ✅ REPLACED OLD COMMENT WITH NEW COMPONENT */}
+                                <ReviewComment comment={review?.comment} />
                             </div>
 
                             {/* Bottom: Reviewer and Guide Info */}
-                            <div className="mt-6 pt-4 border-t border-dashed border-gray-200">
+                            <div className="mt-auto pt-4 border-t border-dashed border-gray-200">
                                 <div className="flex items-center justify-between">
+                                    
                                     {/* Reviewer */}
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 shrink-0">
@@ -170,7 +185,6 @@ export default function TourReviewSlider({ reviews, interval = 5000, cardsPerVie
                                             />
                                         </div>
                                         <Link href={`/profile/${review?.user?._id}`}>
-
                                             <div>
                                                 <p className="text-sm font-bold text-primary">{review?.user?.name}</p>
                                                 <p className="text-xs text-gray-500">Traveler</p>
@@ -178,11 +192,9 @@ export default function TourReviewSlider({ reviews, interval = 5000, cardsPerVie
                                         </Link>
                                     </div>
 
-                                    {/* Guide (The Local) */}
-                                    <Link
-                                        href={`/view-guide/${review?.guide?._id}`}>
-
-                                        <div className="flex flex-col items-end ">
+                                    {/* Guide */}
+                                    <Link href={`/view-guide/${review?.guide?._id}`}>
+                                        <div className="flex flex-col items-end">
                                             <p className="text-xs text-gray-500">Local Host</p>
                                             <p className="text-sm font-semibold text-secondary hover:text-primary">{review?.guide?.name}</p>
                                         </div>
@@ -193,7 +205,6 @@ export default function TourReviewSlider({ reviews, interval = 5000, cardsPerVie
                     </div>
                 ))}
             </Slider>
-
         </div>
     );
 }

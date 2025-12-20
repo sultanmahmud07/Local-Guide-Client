@@ -64,13 +64,13 @@ const Footer: React.FC = () => {
                 <Link href="/explore" className="hover:text-white transition">Explore Tours</Link>
               </li>
               <li>
-                <Link href="/guides" className="hover:text-white transition">Find Local Guides</Link>
+                <Link href="/explore?type=guide" className="hover:text-white transition">Find Local Guides</Link>
               </li>
               <li>
                 <Link href="/become-a-guide" className="hover:text-white transition">Become a Guide</Link>
               </li>
               <li>
-                <Link href="/my-bookings" className="hover:text-white transition">My Bookings</Link>
+                <Link href="/my-booking" className="hover:text-white transition">My Bookings</Link>
               </li>
             </ul>
           </div>

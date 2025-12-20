@@ -102,18 +102,18 @@ export default function BookingFormClient({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Meeting location radios */}
       <div>
-        <div className="flex items-center gap-4">
-          <label className={`px-3 py-2 rounded-full border ${meetingOption === "guide" ? "ring-2 ring-emerald-300" : "bg-white"}`}>
+        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+          <label className={`px-3 py-2 w-full rounded md:rounded-full border ${meetingOption === "guide" ? "ring-2 ring-emerald-300" : "bg-white"}`}>
             <input type="radio" name="meeting" value="guide" className="hidden" checked={meetingOption === "guide"} onChange={() => setMeetingOption("guide")} />
             <span className="text-sm">I&apos;ll let the guide suggest</span>
           </label>
 
-          <label className={`px-3 py-2 rounded-full border ${meetingOption === "later" ? "ring-2 ring-emerald-300" : "bg-white"}`}>
+          <label className={`px-3 py-2 w-full rounded md:rounded-full border ${meetingOption === "later" ? "ring-2 ring-emerald-300" : "bg-white"}`}>
             <input type="radio" name="meeting" value="later" className="hidden" checked={meetingOption === "later"} onChange={() => setMeetingOption("later")} />
             <span className="text-sm">I&apos;ll decide later</span>
           </label>
 
-          <label className={`px-3 py-2 rounded-full border ${meetingOption === "place" ? "ring-2 ring-emerald-300" : "bg-white"}`}>
+          <label className={`px-3 py-2 w-full rounded md:rounded-full border ${meetingOption === "place" ? "ring-2 ring-emerald-300" : "bg-white"}`}>
             <input type="radio" name="meeting" value="place" className="hidden" checked={meetingOption === "place"} onChange={() => setMeetingOption("place")} />
             <span className="text-sm">I&apos;d like to meet at</span>
           </label>
@@ -163,7 +163,7 @@ export default function BookingFormClient({
         <textarea className="mt-2 w-full p-2 border rounded min-h-20" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Any preferences or accessibility needs?" />
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-col md:flex-row gap-3">
         <button type="submit" className="px-6 cursor-pointer py-3 bg-emerald-700 text-white rounded-md  font-medium">Confirm & Request</button>
         <button type="button" className="px-6 py-3 border border-primary cursor-pointer rounded-md text-gray-700" onClick={() => { router.back()}}>Back to tour</button>
       </div>

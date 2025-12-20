@@ -7,15 +7,15 @@ const Reviews = async () => {
   const reviews: IReview[] = (res?.data || []) as IReview[];
 
   return (
-    <section className="py-12 md:py-20 bg-pink-50/50"> {/* Added subtle background for visual separation */}
+    <section className="py-8 md:py-16 bg-pink-50/50"> {/* Added subtle background for visual separation */}
       <div className="main-container">
-        
+
         {/* Improved Typography and Contrast */}
-        <div className="text-center mb-6 md:mb-10">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900">
-            Travelers <span className="text-primary">Love Our Locals</span>
+        <div className="space-y-1 text-center mb-6 md:mb-10">
+          <h2 className="font-oswald text-3xl md:text-5xl font-bold uppercase tracking-tight text-gray-900">
+            Travelers <span className="text-emerald-700">Love Our Locals</span>
           </h2>
-          <p className="text-lg text-gray-600 mt-2">
+          <p className="text-gray-500 text-sm md:text-base font-medium max-w-md mx-auto">
             Authentic reviews from guests about our tours and local hosts.
           </p>
         </div>
