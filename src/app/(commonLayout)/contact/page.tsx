@@ -1,9 +1,20 @@
-import { Mail, Phone, MapPin, Send, Clock, MessageSquare } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import ContactForm from '@/components/pages/Contact/ContactForm';
+import { Metadata } from 'next';
 
+export const metadata: Metadata = {
+      title: "Contact Us | NativeWays Support & Inquiries",
+      description: "Have questions or need assistance? Get in touch with the NativeWays support team. We are here to help travelers and guides 24/7 with bookings, safety, and general inquiries.",
+      keywords: [
+            "customer support",
+            "contact NativeWays",
+            "travel help",
+            "nativeways phone number",
+            "nativeways email",
+            "help center"
+      ],
+}
 const ContactPage = () => {
       return (
             <div className="bg-gray-50 min-h-screen pt-16">
@@ -21,7 +32,7 @@ const ContactPage = () => {
                                     Get in Touch
                               </h1>
                               <p className="text-emerald-100 text-lg">
-                                    Have a question about a tour? Want to become a guide? We're here to help you navigate your journey.
+                                    Have a question about a tour? Want to become a guide? We&apos;re here to help you navigate your journey.
                               </p>
                         </div>
                   </section>
@@ -108,7 +119,7 @@ const ContactPage = () => {
                                     {/* Contact Form */}
                                     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 md:p-10">
                                           <h2 className="text-2xl font-bold text-gray-900 mb-2">Send us a Message</h2>
-                                          <p className="text-gray-500 mb-8">Fill out the form below and we'll get back to you within 24 hours.</p>
+                                          <p className="text-gray-500 mb-8">Fill out the form below and we&apos;ll get back to you within 24 hours.</p>
 
                                           <ContactForm />
                                     </div>

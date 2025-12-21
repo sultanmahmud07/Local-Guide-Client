@@ -1,10 +1,31 @@
-// app/tours/[slug]/page.tsx (or wherever your page is located)
 import RightBookingCard from "@/components/module/Tour/BookingRequest";
 import TourDetails from "@/components/module/Tour/TourDetails";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import TopGap from "@/components/shared/TopGap";
 import { getReservedData } from "@/services/booking/myBooking.service";
-import { getTourBySlug } from "@/services/tour/tour.service";
+import { getTourBySlug, getTours } from "@/services/tour/tour.service";
+import { ITour } from "@/types/booking.interface";
+
+export const generateStaticParams = async () => {
+  const tours = await getTours("limit=100");
+  return tours.data.map((tour: ITour) => ({
+    slug: String(tour.slug),
+  }));
+};
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const { slug } = await params;
+  const tour = await getTourBySlug(slug);
+
+  return {
+    title: tour?.title,
+    description: tour?.description,
+  };
+};
+
 
 export default async function TourDetailPage({
   params,

@@ -3,9 +3,30 @@ import GuideReviews from "@/components/pages/BeAGuide/GuideReviews";
 import ProfileCard from "@/components/pages/GuideProfile/ProfileCard";
 import ProfileContent from "@/components/pages/GuideProfile/ProfileContent";
 import TopGap from "@/components/shared/TopGap";
-import { getGuidProfileWithTour } from "@/services/public/guide.services";
+import { getFeaturedGuide, getGuidProfileWithTour } from "@/services/public/guide.services";
 import { getReviewByGuid } from "@/services/review/reviews.service";
 import { ITourGet } from "@/types/booking.interface";
+
+export const generateStaticParams = async () => {
+  const guide = await getFeaturedGuide();
+  return guide.data.map((guide: ITourGet) => ({
+    id: String(guide._id),
+  }));
+};
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  const guide = await getGuidProfileWithTour(id);
+
+  return {
+    title: `${guide?.name} Local Guide Profile - Native Ways`,
+    description: guide?.biography || 'Guide Profile Page',
+  };
+};
 
 export default async function GuidDetailPage({
   params,

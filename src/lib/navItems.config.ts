@@ -127,7 +127,7 @@ export const adminNavItems: NavSection[] = [
         ],
     },
     {
-        title: "Listing Management",
+        title: "Booking Management",
         items: [
             {
                 title: "All Bookings",
@@ -147,6 +147,18 @@ export const adminNavItems: NavSection[] = [
                 icon: "Hospital", // ✅ String
                 roles: ["ADMIN"],
             },
+        ],
+    } ,
+    {
+        title: "Tour Management",
+        items: [
+            {
+                title: "All Listings",
+                href: "/admin/dashboard/all-listing",
+                icon: "Calendar", // ✅ String
+                badge: "3",
+                roles: ["ADMIN"],
+            }
         ],
     }
 ]

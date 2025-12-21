@@ -3,7 +3,23 @@ import { IGuide } from "@/types/user.interface";
 import { ITourGet } from "@/types/booking.interface";
 import ExploreClientLayout from "@/components/pages/Explore/ExploreClientLayout";
 import { getAllGuides, getAllTours } from "@/services/search/search.service";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Explore Authentic Local Tours | NativeWays",
+  description: "Discover unique travel experiences led by passionate local guides. Browse tours, check reviews, and book your next native adventure today.",
+  keywords: [
+    "local tours",
+    "travel guides",
+    "authentic experiences",
+    "NativeWays",
+    "book local guide",
+    "travel activities",
+    "cultural tours"
+  ]
+};
+
+// ... Rest of your page component
 interface exploreToursProps {
   searchParams: Promise<{
     search?: string;
@@ -40,7 +56,7 @@ const ExploreToursPage = async ({
     console.error("Failed to fetch explore data:", error);
     // Handle error state gracefully
   }
-  
+
   return (
     <ExploreClientLayout
       initialResults={results}

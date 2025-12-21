@@ -77,7 +77,19 @@ const Navbar = (props: Props) => {
                       key={index}
                       onClick={() => setNavToggle(false)}
                       href={link.href}
-                      className={`flex font-semibold transition text-sm items-center gap-2 `}
+                      className={`
+                        relative group flex items-center gap-2 font-semibold text-sm transition-colors duration-300
+        after:absolute 
+        after:content-[''] 
+        after:bg-emerald-600 
+        after:h-0.5 
+        after:w-0 
+        after:left-0 
+        after:-bottom-1.5 
+        after:transition-all 
+        after:duration-300 
+        hover:after:w-full
+        `}
                     >
                       {link.label}
                     </NavLink>

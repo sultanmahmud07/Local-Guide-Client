@@ -1,9 +1,23 @@
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Users, Heart, ShieldCheck, Globe, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button'; // Assuming you have shadcn/ui button, or use standard HTML button
+import { Button } from '@/components/ui/button'; 
+import { Metadata } from 'next';
 
+export const metadata: Metadata = {
+  title: "About NativeWays | Our Mission to Connect the World",
+  description: "Learn about the NativeWays story. We are bridging the gap between curious travelers and passionate local experts to create authentic, unforgettable journeys.",
+  keywords: [
+    "about NativeWays",
+    "travel startup",
+    "sustainable tourism",
+    "cultural exchange",
+    "our story",
+    "local travel community"
+  ]
+};
+
+// ... Page component
 const AboutPage = () => {
   return (
     <div className="bg-white pt-16 min-h-screen">
@@ -22,7 +36,7 @@ const AboutPage = () => {
                 Redefining Travel through <span className="text-emerald-600">Local Connections</span>
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed max-w-lg mx-auto md:mx-0">
-                NativeWays isn't just a booking platform. It's a bridge between curious travelers and passionate locals, unlocking authentic experiences you won't find in a guidebook.
+                NativeWays isn&apos;t just a booking platform. It&apos;s a bridge between curious travelers and passionate locals, unlocking authentic experiences you won&apos;t find in a guidebook.
               </p>
               <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link href="/explore?type=tours">
@@ -142,7 +156,7 @@ const AboutPage = () => {
               <h2 className="text-3xl md:text-5xl font-bold">Our Story</h2>
               <div className="h-1 w-20 bg-emerald-500"></div>
               <p className="text-gray-300 text-lg leading-relaxed">
-                NativeWays was born from a simple realization: the most memorable travel moments don't happen in 5-star hotels; they happen when you share a meal with a local family in Dhaka, navigate the Sundarbans with a boatman who knows every creek, or learn the history of Sonargaon from someone whose ancestors lived there.
+                NativeWays was born from a simple realization: the most memorable travel moments don&apos;t happen in 5-star hotels; they happen when you share a meal with a local family in Dhaka, navigate the Sundarbans with a boatman who knows every creek, or learn the history of Sonargaon from someone whose ancestors lived there.
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
                 We built this platform to organize the unorganized. To give skilled local guides a digital storefront and to give travelers a safe way to find them.
