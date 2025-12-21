@@ -10,7 +10,7 @@ const TourCardSkeleton = () => {
         <div className="absolute top-3 right-3 w-8 h-8 bg-gray-300 rounded-full" />
       </div>
 
-      <div className="p-4 flex flex-col flex-grow space-y-4">
+      <div className="p-4 flex flex-col grow space-y-4">
         {/* 2. Meta Info (Car, Time, People icons) */}
         <div className="flex items-center gap-3">
           <div className="h-3 w-4 bg-gray-200 rounded animate-pulse" />
@@ -50,7 +50,7 @@ const TourCardSkeleton = () => {
         </div>
 
         {/* Spacer to push footer to bottom */}
-        <div className="flex-grow" />
+        <div className="grow" />
 
         {/* 7. Footer (Price + Button) */}
         <div className="flex items-end justify-between pt-3 mt-2 border-t border-gray-50">

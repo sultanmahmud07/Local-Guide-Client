@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';   
-import { Heart, MapPin, Globe, Star, Users } from 'lucide-react'; 
+import { MapPin, Globe, Star, Users } from 'lucide-react'; 
 
 const GuideCard = ({ guide }: { guide: IGuide }) => {
     
@@ -65,13 +65,13 @@ const GuideCard = ({ guide }: { guide: IGuide }) => {
                 )}
 
                 {/* Wishlist Button */}
-                <button
+                {/* <button
                     type="button"
                     className="absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-md transition-colors hover:bg-white"
                     aria-label="Save guide"
                 >
                     <Heart className="w-5 h-5 text-gray-700 hover:text-red-500 transition-colors" />
-                </button>
+                </button> */}
             </div>
 
             {/* Content */}
