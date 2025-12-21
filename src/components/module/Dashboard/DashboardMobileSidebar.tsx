@@ -8,6 +8,7 @@ import { getIconComponent } from "@/lib/icon-mapper";
 import { cn } from "@/lib/utils";
 import { NavSection } from "@/types/dashboard.interface";
 import { UserInfo } from "@/types/user.interface";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,16 +20,21 @@ interface DashboardMobileSidebarContentProps {
 
 const DashboardMobileSidebar = ({
   userInfo,
-  navItems,
-  dashboardHome,
+  navItems
 }: DashboardMobileSidebarContentProps) => {
   const pathname = usePathname();
   return (
     <div className=" flex h-full flex-col">
       {/* Logo */}
       <div className="flex h-16 items-center border-b px-6">
-        <Link href={dashboardHome}>
-          <span className="text-xl font-bold text-primary">PH Healthcare</span>
+        <Link href={"/"} className="flex items-center space-x-2">
+          <Image
+            src="/logo/site-logo.png"
+            alt="logo"
+            width={200}
+            height={100}
+            className="w-20"
+          />
         </Link>
       </div>
       <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
@@ -61,11 +67,11 @@ const DashboardMobileSidebar = ({
                     >
                       <Icon className="h-4 w-4" />
                       <span className="flex-1">{item.title}</span>
-                      {item.badge && (
+                      {/* {item.badge && (
                         <Badge variant={isActive ? "secondary" : "default"}>
                           {item.badge}
                         </Badge>
-                      )}
+                      )} */}
                     </Link>
                   );
                 })}

@@ -97,14 +97,14 @@ const TablePagination = ({ currentPage, totalPages }: TablePaginationProps) => {
         <ChevronRight className="h-4 w-4 ml-1" />
       </Button>
 
-      <span className="text-sm text-muted-foreground ml-2">
+      <span className="text-sm text-muted-foreground ml-2 hidden md:block">
         {/* Page 9 of 20 */}
         Page {currentPage} of {totalPages}
       </span>
 
       {/* Items per page selector */}
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Items per page:</span>
+        <span className="text-sm text-muted-foreground hidden md:block">Items per page:</span>
         <Select
           value={currentLimit}
           onValueChange={changeLimit}
